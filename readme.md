@@ -14,8 +14,9 @@
 需要导入以下 css 和 js
 
 ```html
+
 <link rel="stylesheet" href="example/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="example/bootstrap/font/bootstrap-icons.css">
+<link rel="stylesheet" href="example/bootstrap-icons/bootstrap-icons.css">
 
 <script src="example/static/js/jquery.min.js"></script>
 <script src="example/bootstrap/js/bootstrap.bundle.min.js"></script>

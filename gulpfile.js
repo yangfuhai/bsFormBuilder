@@ -18,37 +18,29 @@ var comment = '/*\n' +
 // var changelog = require('gulp-conventional-changelog');
 
 gulp.task('js-minify', function () {
-    return gulp.src('bs-form-builder.js')
-
-        .pipe(uglify({
-            compress: true,
-            // mangle: true,
-            output: {
-                // beautify: true,
-                // comments: "all"
-            }
-        }))
+    return gulp.src('src/bs-form-builder.js')
+        .pipe(uglify({}))
         .pipe(header(comment, {
             pkg: pkg
         }))
         .pipe(rename('bs-form-builder.min.js'))
-        .pipe(gulp.dest('.'));
+        .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('js-concat', function () {
     return gulp.src([
-        'example/static/js/sortable.min.js',
-        'bs-form-builder.min.js',
+        'bower_components/Sortable/sortable.min.js',
+        'dist/bs-form-builder.min.js',
     ])
         .pipe(concat('bs-form-builder.min.all.js'))
-        .pipe(gulp.dest('.'));
+        .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('css-minify', function () {
-    return gulp.src('bs-form-builder.css')
+    return gulp.src('src/bs-form-builder.css')
         .pipe(uglifycss())
         .pipe(rename('bs-form-builder.min.css'))
-        .pipe(gulp.dest('.'));
+        .pipe(gulp.dest('./dist'));
 });
 
 // gulp.task("default", gulp.series(js, css));

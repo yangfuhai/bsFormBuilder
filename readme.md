@@ -5,20 +5,18 @@
 ## 使用方法
 
 ```html
-
-<div id="builder" class="row"></div>
+<div id="builder"></div>
 <script>
-    $('#builder').bsFormBuilder({});
+    $('#builder').bsFormBuilder({...});
 </script>
-
 ```
 
 需要导入以下 css 和 js
 
 ```html
-
 <link rel="stylesheet" href="example/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="example/bootstrap/font/bootstrap-icons.css">
+
 <script src="example/static/js/jquery.min.js"></script>
 <script src="example/bootstrap/js/bootstrap.bundle.min.js"></script>
 

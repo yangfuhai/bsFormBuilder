@@ -1,0 +1,42 @@
+{
+  "name": "bs-form-builder",
+  "version": "1.0.0",
+  "author": {
+    "name": "Michael <fuhai999@gmail.com>"
+  },
+  "description": "A form builder dev on jquery and bootstrap.",
+  "license": "LGPL",
+  "homepage": "https://gitee.com/fuhai/bs-form-builder",
+  "main": "./jquery.mousewheel.js",
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/fuhai/bs-form-builder"
+  },
+  "bugs": {
+    "url": "https://gitee.com/fuhai/bs-form-builder/issues"
+  },
+  "keywords": [
+    "jquery",
+    "bootstrap",
+    "bootstrap-form-builder",
+    "formbuilder",
+    "form-builder",
+    "jquery-form-builder"
+  ],
+  "files": [
+    "bs-form-builder.js",
+    "readme.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "gulp",
+    "test": "gulp test"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-uglify": "^3.0.2",
+    "gulp-uglifycss": "^1.1.0"
+  }
+}

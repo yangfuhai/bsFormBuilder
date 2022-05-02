@@ -13,5 +13,6 @@ logs
 *.DS_Store
 *.patch
 ~$*
-*/*.jar
 module_*.xml
+node_modules
+package-lock.json

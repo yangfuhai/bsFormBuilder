@@ -17,14 +17,14 @@
 
 ```html
 
-<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="example/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="bootstrap-font/bootstrap-icons.css">
-<link rel="stylesheet" href="static/css/bs-form-builder.css">
+<link rel="stylesheet" href="bs-form-builder.css">
 
-<script src="static/js/jquery.min.js"></script>
-<script src="bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="static/js/sortable.min.js"></script>
-<script src="static/js/bs-form-builder.js"></script>
+<script src="example/static/js/jquery.min.js"></script>
+<script src="example/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="example/static/js/sortable.min.js"></script>
+<script src="bs-form-builder.js"></script>
 ```
 
 ## Bs-Form-Builder 提供的方法和接口

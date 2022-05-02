@@ -1,0 +1,17 @@
+**/target/
+.idea
+*.iml
+.project
+.settings
+*.jar
+*.log
+*.class
+.logs
+logs
+*.iws
+*.classpath
+*.DS_Store
+*.patch
+~$*
+*/*.jar
+module_*.xml

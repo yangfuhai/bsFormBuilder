@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>form表单示例</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="static/css/bs-form-builder.css">
+    <script src="static/js/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <form class="form-horizontal p-4">
+            <div class="form-group row">
+                <label for="title" class="col-sm-2 col-form-label">标题：</label>
+                <div class="col-sm-10">
+                    <input type="title" class="form-control" placeholder="请输入" id="title">
+                </div>
+            </div>
+            <div class="form-group row">
+                <legend class="col-form-label col-sm-2 pt-0">性别：</legend>
+                <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="sex" id="radio1" value="option1" checked>
+                        <label class="form-check-label" for="radio1">男</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="sex" id="radio2" value="option2">
+                        <label class="form-check-label" for="radio2">女</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <legend class="col-form-label col-sm-2 pt-0">爱好：</legend>
+                <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="study">
+                        <label class="form-check-label" for="study">学习
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="running">
+                        <label class="form-check-label" for="running">跑步
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="palygame">
+                        <label class="form-check-label" for="palygame">玩游戏
+                      </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="rate" class="col-sm-2 col-form-label">评分：</label>
+                <div class="col-sm-10">
+                    <ul class="jp-rate">
+                        <li><i class="bi bi-star"></i></li>
+                        <li><i class="bi bi-star"></i></li>
+                        <li><i class="bi bi-star"></i></li>
+                        <li><i class="bi bi-star"></i></li>
+                        <li><i class="bi bi-star"></i></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="desc" class="col-sm-2 col-form-label">反馈说明：</label>
+                <div class="col-sm-10">
+                    <textarea name="" id="" cols="30" rows="5" class="w-100">请输入反馈信息</textarea>
+                </div>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-dark">取消</button>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>

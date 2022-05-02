@@ -160,11 +160,15 @@
                 '               <div class="form-group clearfix">' +
                 '                     <div class="row pdlr-15">' +
                 '                           {{~for (var i=0;i<$data.grid;i++)}}' +
-                '                           <div class="col-{{12/$data.grid}} bs-form-container"></div>' +
+                '                           <div class="col-{{12/$data.grid}} bs-form-container">{{$children[i]}}</div>' +
                 '                           {{~end}}' +
                 '                      </div>' +
                 '                </div>' +
                 '        </div>',
+            "onDataCreate": function () {
+                // childrenCount 必须等于 grid 的数量
+                return {"childrenCount": 2}
+            },
             "onAdd": function (bsFormBuilder, data) {
                 var $row = $('#' + data.elementId).find(".row");
                 $row.children().each(function (index, item) {
@@ -185,7 +189,7 @@
                     }
                 });
             },
-            "onPropChange": function (bsFormBuilder, propName, value) {
+            "onPropChange": function (bsFormBuilder, data, propName, value) {
                 if (propName !== "grid") {
                     return false;
                 }
@@ -193,6 +197,8 @@
                 var intValue = Number.parseInt(value);
                 var $row = $('#' + currentData.elementId).find(".row");
                 var gridCount = $row.children().length;
+
+                data.childrenCount = intValue;
 
                 // 当前存在 grid 数量大于设置的数据，需要移除最后的几个 grid
                 if (gridCount > intValue) {
@@ -535,7 +541,8 @@
                 //当前组件定义了 onPropChange 监听方法，并且该方法执行成功了
                 //那么，可以理解为该方法会去更新 html 内容，而不通过系统继续渲染了
                 if (typeof bsFormBuilder.currentData.component.onPropChange === "function"
-                    && bsFormBuilder.currentData.component.onPropChange(bsFormBuilder, tag, value)) {
+                    && bsFormBuilder.currentData.component.onPropChange(bsFormBuilder
+                        , bsFormBuilder.currentData, tag, value)) {
                     return;
                 }
 
@@ -679,8 +686,8 @@
          * @private
          */
         createComponentData: function (component) {
-            var data = component.onData && typeof component.onData === "function"
-                ? component.onData() : {};
+            var data = component.onDataCreate && typeof component.onDataCreate === "function"
+                ? component.onDataCreate() : {};
 
             //组件的 id
             data.elementId = this.genRandomId();
@@ -729,21 +736,31 @@
 
         /**
          * 渲染模板，替换掉模板里的 {{xxx}} 数据
-         * @param template 模板内容
          * @param data 数据
          * @private
          */
-        _templateSimpleRender: function (component, template, data) {
-            // var re = /\{\{(.+?)\}\}/g;
-            // var result = template;
-            // while (match = re.exec(template)) {
-            //     var replace = match[0];
-            //     var value = data[match[1]] || "";
-            //     result = result.replace(replace, value)
-            // }
-            // return result;
+        _templateSimpleRender: function (data) {
+
+            //有子节点 component
+            var children = [];
+
+            //container 类型必须定义 childrenCount 数据
+            if (data.childrenCount && data.childrenCount > 0) {
+                for (let i = 0; i < data.childrenCount; i++) {
+                    let childArray = data.children ? data.children[i] : [];
+                    let htmlContent = "";
+                    if (childArray) {
+                        for (let item of childArray) {
+                            let html = this._renderComponentTemplate(item, false);
+                            if (html) htmlContent += html.outerHTML;
+                        }
+                    }
+                    children[i] = htmlContent;
+                }
+            }
 
 
+            let template = data.component.template;
             let body = template.replace(/\'/g, "&#39;")
                 .replace(/\"/g, "&quot;")
                 .replace(/[\r\n\t]/g, "")
@@ -756,16 +773,17 @@
                 });
             body = 'let ret=""; ret += "' + body + '";return ret;';
 
-            var paras = ["$builder", "$component", "$data", "id", "type", "name", "rows", "style", "label", "placeholder", "value"];
+            var paras = ["$builder", "$component", "$data", "$children"
+                , "id", "type", "name", "rows", "style", "label", "placeholder", "value"];
             let func = new Function(...paras, body);
 
             var values = paras.map(k => data[k] || "");
             values[0] = this;
-            values[1] = component;
+            values[1] = data.component;
             values[2] = data;
-            let ret = func(...values);
+            values[3] = children;
 
-            return ret.replace(/&#39;/g, '\'').replace(/\&quot;/g, '"');
+            return func(...values).replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
         },
 
 
@@ -814,10 +832,11 @@
             } else {
                 //若模板未定义 render 函数，或者定义的 render 并不是一个函数
                 //则使用 bsFormBuilder 自己的 render 函数
-                if (!component.render || typeof component.render !== "function") {
-                    component.render = this._templateSimpleRender;
+                if (component.render && typeof component.render === "function") {
+                    template = component.render(component, component.template, data);
+                } else {
+                    template = this._templateSimpleRender(data);
                 }
-                template = component.render(component, component.template, data);
             }
 
             var $template = $(template).attr("id", data.elementId);
@@ -829,6 +848,7 @@
                     '           </div>')
                     .addClass('active')
             }
+            
             //为 template 配置 id 属性，让 id 的值和 component 的 id 值一致
             //这样，用户点击这个 template div 的时候，才能通过其 id 去查找 component 数据
             return $template[0];
@@ -886,13 +906,22 @@
                 return;
             }
 
+            //复制数据，并重新初始化数据的 elementId 和 id 属性
             var newData = this._deepCopy(orignalData, true);
 
+            //通过 data 来渲染 html
             var html = this._renderComponentTemplate(newData, false);
 
+            //复制的 element
             var $orignalElement = $("#" + elementId);
             $orignalElement.after(html);
 
+            //追加 html 后，回调 component 的 onAdd 方法
+            if (typeof newData.component.onAdd === "function") {
+                newData.component.onAdd(this, newData);
+            }
+
+            //追加数据到 array 里
             var parentArray = this.getParentArrayByElementId(elementId);
             parentArray.push(newData);
 
@@ -944,9 +973,9 @@
 
 
         /**
-         * 根据 elementId 来删除 data 里的数据
-         * @param dataArray
-         * @param elementId
+         * 根据 elementId 来删除梳理里的 data 数据
+         * @param dataArray 要删除的数组
+         * @param elementId 根据 elementId 来删除
          */
         removeDataByElementIdInArray: function (dataArray, elementId) {
             if (!dataArray || dataArray.length === 0) {
@@ -1003,16 +1032,17 @@
         },
 
         /**
-         * 对data数据进行排序
+         * 刷新 data 的 index 数据
          * @param $parentElement
          */
         refreshDataIndex: function ($parentElement) {
             var bsFormBuilder = this;
-            $parentElement.find(".bs-form-item").each(function (index, item) {
+            $parentElement.children(".bs-form-item").each(function (index, item) {
                 var id = $(item).attr("id");
                 bsFormBuilder.getDataByElementId(id)['index'] = index;
             })
         },
+
 
         /**
          * 添加组件

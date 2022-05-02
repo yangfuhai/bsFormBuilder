@@ -165,10 +165,6 @@
                 '                      </div>' +
                 '                </div>' +
                 '        </div>',
-            "onDataCreate": function () {
-                // childrenCount 必须等于 grid 的数量
-                return {"childrenCount": 2}
-            },
             "onAdd": function (bsFormBuilder, data) {
                 var $row = $('#' + data.elementId).find(".row");
                 $row.children().each(function (index, item) {
@@ -197,8 +193,6 @@
                 var intValue = Number.parseInt(value);
                 var $row = $('#' + currentData.elementId).find(".row");
                 var gridCount = $row.children().length;
-
-                data.childrenCount = intValue;
 
                 // 当前存在 grid 数量大于设置的数据，需要移除最后的几个 grid
                 if (gridCount > intValue) {
@@ -799,13 +793,10 @@
          */
         renderDefault: function (data) {
 
-            //有子节点 component
-            var children = [];
-
-            //container 类型必须定义 childrenCount 数据
-            if (data.childrenCount && data.childrenCount > 0) {
-                for (let i = 0; i < data.childrenCount; i++) {
-                    let childArray = data.children ? data.children[i] : [];
+            let children = [];
+            if (typeof data.children === "object") {
+                for (let key of Object.keys(data.children)) {
+                    let childArray = data.children ? data.children[key] : [];
                     let htmlContent = "";
                     if (childArray) {
                         for (let item of childArray) {
@@ -813,9 +804,15 @@
                             if (html) htmlContent += html.outerHTML;
                         }
                     }
-                    children[i] = htmlContent;
+                    children[key] = htmlContent;
                 }
             }
+
+            let childrenProxy = new Proxy(children, {
+                get: function (target, attr) {
+                    return target[attr] || "";
+                }
+            })
 
 
             let template = data.component.template;
@@ -839,7 +836,7 @@
             values[0] = this;
             values[1] = data.component;
             values[2] = data;
-            values[3] = children;
+            values[3] = childrenProxy;
 
             return func(...values).replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
         },

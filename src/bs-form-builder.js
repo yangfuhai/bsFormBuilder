@@ -302,8 +302,8 @@
             //初始化默认的组件库
             this._initComponents();
 
-            //渲染拖动的组件
-            this._renderDragComponents();
+            //初始化拖动的组件
+            this._initDragComponents();
 
             //初始化表单事件监听
             this._initEvents();
@@ -313,7 +313,7 @@
 
             //onInit 回调
             if (typeof this.options.onInit === "function") {
-                this.options.onInit();
+                this.options.onInit(this);
             }
 
         },
@@ -496,6 +496,64 @@
 
 
         /**
+         * 渲染拖动的组件库
+         */
+        _initDragComponents: function () {
+            if (!this.components || this.components.length === 0) {
+                return;
+            }
+
+            //基础组件
+            var baseDrags = [];
+
+            //辅助组件
+            var assistDrags = [];
+
+            //容器组件
+            var containerDrags = [];
+
+            for (let component of Object.values(this.components)) {
+                if (component && component.drag && component.drag.type) {
+                    //copy component.tag to drag.tag
+                    component.drag['tag'] = component.tag;
+                    if (component.drag.type === 'base') {
+                        baseDrags.push(component.drag);
+                    } else if (component.drag.type === 'assist') {
+                        assistDrags.push(component.drag)
+                    } else if (component.drag.type === 'container') {
+                        containerDrags.push(component.drag);
+                    }
+                } else {
+                    console.error("Component define error! it must need drag.type. component content:", component);
+                }
+            }
+
+            //根据 index 进行排序
+            baseDrags.sort((a, b) => a.index = b.index);
+            assistDrags.sort((a, b) => a.index = b.index);
+            containerDrags.sort((a, b) => a.index = b.index);
+
+
+            var $baseDragsDiv = $('.base-drags');
+            for (let drag of baseDrags) {
+                $baseDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="' + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
+            }
+
+
+            var $assistDragsDiv = $('.assist-drags');
+            for (let drag of assistDrags) {
+                $assistDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="' + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
+            }
+
+
+            var $containerDragsDiv = $('.container-drags');
+            for (let drag of containerDrags) {
+                $containerDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="' + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
+            }
+        },
+
+
+        /**
          * 初始化 bsFormBuilder 的事件机制
          * @private
          */
@@ -547,7 +605,7 @@
                 }
 
                 //更新 html 内容
-                var newHtml = bsFormBuilder._renderComponentTemplate(bsFormBuilder.currentData, true);
+                var newHtml = bsFormBuilder.render(bsFormBuilder.currentData, true);
                 $("#" + bsFormBuilder.currentData.elementId).replaceWith(newHtml);
             })
         },
@@ -615,7 +673,7 @@
                 data = this.createComponentData(this.components[tag]);
 
                 //渲染 component template
-                var template = this._renderComponentTemplate(data, false);
+                var template = this.render(data, false);
                 $(evt.item).replaceWith(template);
             }
 
@@ -739,7 +797,7 @@
          * @param data 数据
          * @private
          */
-        _templateSimpleRender: function (data) {
+        renderDefault: function (data) {
 
             //有子节点 component
             var children = [];
@@ -751,7 +809,7 @@
                     let htmlContent = "";
                     if (childArray) {
                         for (let item of childArray) {
-                            let html = this._renderComponentTemplate(item, false);
+                            let html = this.render(item, false);
                             if (html) htmlContent += html.outerHTML;
                         }
                     }
@@ -794,13 +852,13 @@
          * @returns {*[]}
          * @private
          */
-        _deepCopy: function (target, wthNewElementIdAndId) {
+        deepCopy: function (target, wthNewElementIdAndId) {
             var newObject = Array.isArray(target) ? [] : {};
             if (target && typeof target === "object") {
                 for (let key in target) {
                     if (target.hasOwnProperty(key)) {
                         if (target[key] && typeof target[key] === "object") {
-                            newObject[key] = this._deepCopy(target[key], wthNewElementIdAndId);
+                            newObject[key] = this.deepCopy(target[key], wthNewElementIdAndId);
                         } else {
                             var value = target[key];
                             if (key === "elementId" || key === "id") {
@@ -822,7 +880,7 @@
          * @returns {*}
          * @private
          */
-        _renderComponentTemplate: function (data, withActive) {
+        render: function (data, withActive) {
             var component = data.component;
             var template = null;
 
@@ -830,12 +888,12 @@
             if (typeof component.template === "function") {
                 template = component.template(component, data);
             } else {
-                //若模板未定义 render 函数，或者定义的 render 并不是一个函数
-                //则使用 bsFormBuilder 自己的 render 函数
+                //若模板未定义 renderDefault 函数，或者定义的 renderDefault 并不是一个函数
+                //则使用 bsFormBuilder 自己的 renderDefault 函数
                 if (component.render && typeof component.render === "function") {
                     template = component.render(component, component.template, data);
                 } else {
-                    template = this._templateSimpleRender(data);
+                    template = this.renderDefault(data);
                 }
             }
 
@@ -848,7 +906,7 @@
                     '           </div>')
                     .addClass('active')
             }
-            
+
             //为 template 配置 id 属性，让 id 的值和 component 的 id 值一致
             //这样，用户点击这个 template div 的时候，才能通过其 id 去查找 component 数据
             return $template[0];
@@ -907,10 +965,10 @@
             }
 
             //复制数据，并重新初始化数据的 elementId 和 id 属性
-            var newData = this._deepCopy(orignalData, true);
+            var newData = this.deepCopy(orignalData, true);
 
             //通过 data 来渲染 html
-            var html = this._renderComponentTemplate(newData, false);
+            var html = this.render(newData, false);
 
             //复制的 element
             var $orignalElement = $("#" + elementId);
@@ -1041,84 +1099,6 @@
                 var id = $(item).attr("id");
                 bsFormBuilder.getDataByElementId(id)['index'] = index;
             })
-        },
-
-
-        /**
-         * 添加组件
-         * @param component
-         */
-        addComponent: function (component) {
-            this.components.push(component);
-        },
-
-
-        /**
-         * 删除组件
-         * @param tag
-         */
-        delComponent: function (tag) {
-            this.components = this.components.filter(item => item.tag === tag)
-        },
-
-
-        /**
-         * 渲染拖动的组件库
-         */
-        _renderDragComponents: function () {
-            if (!this.components || this.components.length === 0) {
-                return;
-            }
-
-            //基础组件
-            var baseDrags = [];
-
-            //辅助组件
-            var assistDrags = [];
-
-            //容器组件
-            var containerDrags = [];
-
-            for (let component of Object.values(this.components)) {
-                if (component && component.drag && component.drag.type) {
-                    //copy component.tag to drag.tag
-                    component.drag['tag'] = component.tag;
-                    if (component.drag.type === 'base') {
-                        baseDrags.push(component.drag);
-                    } else if (component.drag.type === 'assist') {
-                        assistDrags.push(component.drag)
-                    } else if (component.drag.type === 'container') {
-                        containerDrags.push(component.drag);
-                    }
-                } else {
-                    console.error("Component define error! it must need drag.type. component content:", component);
-                }
-            }
-
-            //根据 index 进行排序
-            baseDrags.sort((a, b) => a.index = b.index);
-            assistDrags.sort((a, b) => a.index = b.index);
-            containerDrags.sort((a, b) => a.index = b.index);
-
-
-            var $baseDragsDiv = $('.base-drags');
-            for (let drag of baseDrags) {
-                $baseDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="' + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
-            }
-
-
-            var $assistDragsDiv = $('.assist-drags');
-            for (let drag of assistDrags) {
-                $assistDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="' + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
-            }
-
-
-            var $containerDragsDiv = $('.container-drags');
-            for (let drag of containerDrags) {
-                $containerDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="' + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
-            }
-
-
         },
 
 

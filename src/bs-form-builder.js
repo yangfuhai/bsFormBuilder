@@ -2,11 +2,8 @@
 
     //默认配置
     var defaultOptions = {
-        prevId: 'prevBtn',
-        prevText: 'Previous',
-        nextId: 'nextBtn',
-        nextText: 'Next'
-        //……
+        mode: "builder", // 模式 builder,view
+        useComponents: [], //使用的组件 use components
     };
 
     //每个组件(component) 的默认属性
@@ -241,7 +238,8 @@
 
     //BsFormBuilder 类的定义以及初始化
     var BsFormBuilder = function (element, options) {
-        this.$rootElement = $(element);
+
+        //bsFormBuilder 配置信息
         this.options = $.extend(defaultOptions, options);
 
         //每个组件的默认属性
@@ -249,6 +247,12 @@
 
         //每个 prop 显示的 html 模板
         this.propTemplates = $.extend(defaultPropTemplates, options.propTemplates);
+
+        //当前的开启的组件
+        this.useComponents = options.useComponents || [];
+
+        //根节点元素
+        this.$rootEl = $(element);
 
         //设计容器 div
         this.$container = null;
@@ -263,18 +267,20 @@
         this.components = {};
 
         //渲染的数据, map(key == id, value == component)
-        // this.containerComponents = {};
         this.datas = [];
 
         //当前获得焦点的组件
-        // this.currentComponent = null;
         this.currentData = null;
 
         //组件序号记录器，用于在添加组件的时候，生成组件的 name
         this.componentCounter = 1;
 
         //初始化
-        this.init();
+        if (this.options.mode === "view") {
+            this._initViewMode();
+        } else {
+            this._initBuilderMode();
+        }
     }
 
 
@@ -282,16 +288,33 @@
     BsFormBuilder.prototype = {
 
         /**
-         * 初始化
+         * 初始化 view
+         * @private
          */
-        init: function () {
+        _initViewMode: function () {
+            //初始化 view 的 html 结构
+            this._initViewStructure();
 
+            //初始化 view 的 data 数据
+            this._initViewData();
+
+            //渲染 view 的数据到 html
+            this._renderViewData();
+
+            //onInit 回调
+            this._invokeOnInitCallback();
+        },
+
+        /**
+         * 初始化 Builder
+         */
+        _initBuilderMode: function () {
             //初始化 html 基础结构
-            this._initHtmlStructure();
+            this._initBuilderStructure();
 
-            this.$container = this.$rootElement.find('.bsFormBuilderContainer');
-            this.$containerPlaceHolder = this.$rootElement.find('.placeholder-box');
-            this.$propsPanel = this.$rootElement.find("#component-props-content");
+            this.$container = this.$rootEl.find('.bsFormBuilderContainer');
+            this.$containerPlaceHolder = this.$rootEl.find('.placeholder-box');
+            this.$propsPanel = this.$rootEl.find("#component-props-content");
 
             //初始化默认的组件库
             this._initComponents();
@@ -306,19 +329,53 @@
             this._initSortables();
 
             //onInit 回调
+            this._invokeOnInitCallback();
+
+        },
+
+        /**
+         * 回调 onInit
+         * @private
+         */
+        _invokeOnInitCallback: function () {
             if (typeof this.options.onInit === "function") {
                 this.options.onInit(this);
             }
+        },
+
+
+        /**
+         * 初始化 view mode 的数据
+         * @private
+         */
+        _initViewData: function () {
 
         },
 
 
         /**
-         * 初始化 html 基础结构
+         * 渲染 view 的数据
          * @private
          */
-        _initHtmlStructure: function () {
-            this.$rootElement.append(' <div class="row bsFormBuilderRoot">' +
+        _renderViewData: function () {
+
+        },
+
+
+        /**
+         * 初始化 view 的 html 结构
+         * @private
+         */
+        _initViewStructure: function () {
+            this.$rootEl.append('<div class="row bsFormViewRoot"><div class="col-12 bsFormViewContainer"></div></div>');
+        },
+
+        /**
+         * 初始化 builder 的 html 结构
+         * @private
+         */
+        _initBuilderStructure: function () {
+            this.$rootEl.append(' <div class="row bsFormBuilderRoot">' +
                 '            <!--左侧拖拽区域-->' +
                 '            <div class="col-md-3 col-sm-4 ">' +
                 '                <div class="bs-drag-panel pd10 border-right">' +

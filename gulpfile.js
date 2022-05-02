@@ -15,8 +15,6 @@ var comment = '/*\n' +
     ' * Released under the <%= pkg.license %> license.\n' +
     '*/\n\n';
 
-// var changelog = require('gulp-conventional-changelog');
-
 gulp.task('js-minify', function () {
     return gulp.src('src/bs-form-builder.js')
         .pipe(uglify({}))
@@ -42,8 +40,6 @@ gulp.task('css-minify', function () {
         .pipe(rename('bs-form-builder.min.css'))
         .pipe(gulp.dest('./dist'));
 });
-
-// gulp.task("default", gulp.series(js, css));
 
 gulp.task('default', gulp.series([
     'js-minify',

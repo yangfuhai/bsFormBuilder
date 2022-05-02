@@ -756,12 +756,13 @@
                 });
             body = 'let ret=""; ret += "' + body + '";return ret;';
 
-            var paras = ["$component", "$data", "id", "type", "name", "rows", "style", "label", "placeholder", "value"];
+            var paras = ["$builder", "$component", "$data", "id", "type", "name", "rows", "style", "label", "placeholder", "value"];
             let func = new Function(...paras, body);
 
-            var values = paras.map(k => data[k] || "");//
-            values[0] = component;
-            values[1] = data;
+            var values = paras.map(k => data[k] || "");
+            values[0] = this;
+            values[1] = component;
+            values[2] = data;
             let ret = func(...values);
 
             return ret.replace(/&#39;/g, '\'').replace(/\&quot;/g, '"');
@@ -798,7 +799,7 @@
 
         /**
          * 渲染 component 的模板内容
-         * @param component 组件内容
+         * @param data 组件内容
          * @param withActive 是否让当前的组件处于 "选中" 状态
          * @returns {*}
          * @private

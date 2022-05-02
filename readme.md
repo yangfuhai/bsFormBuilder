@@ -11,19 +11,18 @@
 </script>
 ```
 
-在使用前，需要导入以下依赖的 css 和 js 文件。
+在使用前，需要导入 bootstrap 和 jquery 的相关文件。
 
 ```html
+<link href="path/bootstrap.min.css" rel="stylesheet">
+<link href="path/bootstrap-icons.css" rel="stylesheet">
 
-<link rel="stylesheet" href="example/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="example/bootstrap-icons/bootstrap-icons.css">
-
-<script src="example/static/js/jquery.min.js"></script>
-<script src="example/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="path/jquery.min.js"></script>
+<script src="path/bootstrap.bundle.min.js"></script>
 
 <!-- 导入 bs-form-builder 依赖-->
-<link rel="stylesheet" href="bs-form-builder.min.css">
-<script src="bs-form-builder.min.all.js"></script>
+<link href="path/bs-form-builder.min.css" rel="stylesheet">
+<script src="path/bs-form-builder.min.all.js"></script>
 ```
 
 ## Bs-Form-Builder 提供的方法和接口

@@ -18,13 +18,13 @@
 ```html
 
 <link rel="stylesheet" href="example/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="bootstrap-font/bootstrap-icons.css">
-<link rel="stylesheet" href="bs-form-builder.css">
-
+<link rel="stylesheet" href="example/bootstrap/font/bootstrap-icons.css">
 <script src="example/static/js/jquery.min.js"></script>
 <script src="example/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="example/static/js/sortable.min.js"></script>
-<script src="bs-form-builder.js"></script>
+
+<!-- 导入 bs-form-builder 依赖-->
+<link rel="stylesheet" href="bs-form-builder.min.css">
+<script src="bs-form-builder.min.all.js"></script>
 ```
 
 ## Bs-Form-Builder 提供的方法和接口

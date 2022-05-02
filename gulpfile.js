@@ -40,7 +40,7 @@ gulp.task('js-concat', function () {
         'example/static/js/sortable.min.js',
         'bs-form-builder.min.js',
     ])
-        .pipe(concat('bs-form-builder-all.min.js'))
+        .pipe(concat('bs-form-builder.min.all.js'))
         .pipe(gulp.dest('.'));
 });
 

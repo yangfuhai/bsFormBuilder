@@ -602,6 +602,15 @@
                 }
             }
 
+            //插件定义的 components 定义
+            if (window.bsComponentsDef) {
+                for (let component of window.bsComponentsDef) {
+                    if (component) {
+                        this.components[component.tag] = component;
+                    }
+                }
+            }
+
             //支持用户自定义的 component 覆盖系统默认的 component
             for (let component of customComponents) {
                 if (component) {
@@ -1241,16 +1250,34 @@
                 return;
             }
 
+            let component = this.currentData.component;
+
             this.$propsPanel.html('');
 
             //组件定义的 "私有" 属性
-            var componentProps = typeof this.currentData.component.props === "object" ?
-                this.currentData.component.props : [];
+            var componentProps = typeof component.props === "object" ?
+                component.props : [];
+
+            //组件定义的过滤器
+            let propsfilter = typeof component.propsfilter === "function"
+                ? component.propsfilter(this, this.currentData)
+                : (typeof component.propsfilter === "object" ? component.propsfilter : []);
+
+            for (let prop of componentProps) {
+                propsfilter.push(prop.name);
+            }
 
             //全部属性
             var allProps = this.defaultProps.concat(componentProps);
 
             for (let prop of allProps) {
+                // 若组件定义了 propsfilter 过滤
+                // 那么，定义的 propsfilter 只有包含 prop，prop 才能正常被渲染
+                if (propsfilter && propsfilter.length > 0
+                    && propsfilter.indexOf(prop.name) < 0) {
+                    continue;
+                }
+
                 var template = this.propTemplates[prop.type];
                 if (typeof template === "function") {
                     template = template();
@@ -1260,17 +1287,32 @@
                 var $template = $(template);
                 var input = $template.find('.form-control');
                 input.attr("id", id);
-                input.attr("disabled", prop.disabled);
                 input.attr("data-attr", prop.name);
+
+                if (typeof prop.disabled === "boolean" && prop.disabled) {
+                    input.attr("disabled", "true");
+                }
+
+                // 配置 placeholder
+                if (prop.placeholder) {
+                    input.attr("placeholder", prop.placeholder);
+                }
 
                 var value = this.currentData[prop.name];
                 if (!value && typeof prop.defaultValue !== "undefined") {
                     value = prop.defaultValue;
                 }
-                if (value) {
-                    input.val(value);
-                }
 
+
+                //设置 value 的值
+                if (value) {
+                    //若 porp 定义了 onValue 方法
+                    if (typeof prop.onValue === "function") {
+                        prop.onValue(value, this.currentData);
+                    } else {
+                        input.val(value);
+                    }
+                }
 
                 $template.find("label").attr("for", id).text(prop.label);
                 this.$propsPanel.append($template[0]);

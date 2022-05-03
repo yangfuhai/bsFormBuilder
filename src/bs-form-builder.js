@@ -188,27 +188,28 @@
                 }
                 var currentData = bsFormBuilder.currentData;
                 var intValue = Number.parseInt(value);
-                var $row = $('#' + currentData.elementId).find(".row");
+                var $row = $('#' + currentData.elementId).children(".form-group").children();
                 var gridCount = $row.children().length;
 
                 // 当前存在 grid 数量大于设置的数据，需要移除最后的几个 grid
                 if (gridCount > intValue) {
                     for (let i = 0; i < gridCount - intValue; i++) {
-                        var $lastElement = $row.children(":last");
-                        var bsItemSortable = $lastElement.data("bsItemSortable");
+                        var $lastCol = $row.children(":last");
+                        var bsItemSortable = $lastCol.data("bsItemSortable");
 
                         //销毁 sortable
                         if (bsItemSortable) {
                             bsItemSortable.destroy();
                         }
 
-                        var parentId = $lastElement.closest(".bs-form-item").attr("id");
-                        var index = $lastElement.attr("data-index");
+                        var index = $lastCol.attr("data-index");
 
                         //移除 data 里的 children 数据
-                        delete bsFormBuilder.getDataByElementId(parentId).children[index];
+                        if (currentData.children && currentData.children[index]) {
+                            delete currentData.children[index];
+                        }
 
-                        $lastElement.remove();
+                        $lastCol.remove();
                     }
                 }
 

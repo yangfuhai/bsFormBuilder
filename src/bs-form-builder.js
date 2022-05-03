@@ -1279,7 +1279,7 @@
         /**
          * 导出 json
          */
-        exportDatasJson: function () {
+        exportToJson: function () {
             var exportData = this.deepCopy(this.datas, false);
             this._arrangeExportData(exportData);
             return JSON.stringify(exportData);

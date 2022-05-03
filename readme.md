@@ -70,7 +70,7 @@ Bs-Form-Builder 支持的方法如下：
 - getParentArrayByElementId(elementId)：通过节点 id 获取其所在的 数组
 - refreshDataIndex($parentElement)：刷新 data 的 index 属性
 - refreshPropsPanel()：渲染（刷新）属性面板
-- exportDatasJson()：导出 data 数据
+- exportToJson()：导出 data 数据
 - getDatas()：获取 datas 数据，并可以对其进行修改
 - addDataToRoot(data)：添加一个 data 到根节点
 - addDatasToRoot(array)：添加一个 data 数组到根节点

@@ -163,7 +163,7 @@
                 '                </div>' +
                 '        </div>',
             "onAdd": function (bsFormBuilder, data) {
-                var $row = $('#' + data.elementId).find(".row");
+                var $row = $('#' + data.elementId).children(".form-group").children();
                 $row.children().each(function (index, item) {
                     $(this).attr('data-index', index);
                     var sortable = $(this).data('bsItemSortable');

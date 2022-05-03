@@ -2,6 +2,17 @@
 
 一个基于 JQuery + Bootstrap (v4.x) 的表单构建工具。
 
+## 特点
+
+- 1、基于 JQuery + Bootstrap (v4.x)，简单易用
+- 2、拖动的 html 组件，支持通过 Json 自定义扩展
+- 3、组件的属性面板，支持通过 Json 自定义扩展
+- 4、支持导出 json，然后自己通过 json 来构建自己的 UI 页面
+- 5、支持导入 json 到 bsFormBuilder，用来进行二次编辑
+- 6、丰富的 API，方便二次开发和扩展
+- 7、支持 “模板” 功能，可以选择已有模板进行二次开发
+- 8、内置轻量的 html 渲染引擎，速度极快，极好用~~
+
 ## 使用方法
 
 ```html
@@ -54,11 +65,16 @@
 
 ### 2、方法调用
 
-通过 `$('#builder').bsFormBuilder('methodName',arguments...);` 方法调用。
+- 1、通过 `$('#builder').bsFormBuilder('methodName',arguments...);` 方法调用。
 
-Bs-Form-Builder 支持的方法如下：
 
-- init： 初始化
+- 2、或者可以通过 `$('#builder').bsFormBuilder().data('bsFormBuilder')` 来获取 `bsFormBuilder` 实例，然后直接调用其方法。
+
+
+
+**Bs-Form-Builder 支持的方法如下：**
+
+- init： 初始化，bsFormBuilder 自动调用
 - render(data, withActive)：通过 data 数据，来渲染出一个 html 内容
 - renderDefault(data)： 系统内置的默认渲染方法，当 component 未定义自己的 render 方法的时候，使用该方法进行渲染。
 - deepCopy(target, withNewElementIdAndId)：深度拷贝工具类
@@ -98,8 +114,8 @@ Bs-Form-Builder 支持的方法如下：
         "index": 100,
         "iconClass": "bi bi-terminal"
     },
-    "props": [],
-    "propsfilter":[],
+    "props": [ ],
+    "propsfilter":[ ],
     "template": '<div class="bs-form-item">' +
         '           <div class="form-group clearfix">' +
         '               <div class="form-label-left">' +

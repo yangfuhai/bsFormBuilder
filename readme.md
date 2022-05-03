@@ -74,7 +74,8 @@ Bs-Form-Builder 支持的方法如下：
 - getDatas()：获取 datas 数据，并可以对其进行修改
 - addDataToRoot(data)：添加一个 data 到根节点
 - addDatasToRoot(dataArray)：添加一个 data 数组到根节点
-- refreshData(data)：刷新 data 数据到 html
+- updateDataAttr(data, attr, value)：更新一个 data 的属性，并同步到 html 显示
+- refreshDataElement(data)：刷新 data 数据到 html
 - isViewMode()：是否是视图模式
 - isBuilderMode()：是否是构建模式（构建工具）
 

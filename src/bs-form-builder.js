@@ -1345,7 +1345,7 @@
          * 刷新数据到 html 显示
          * @param data
          */
-        refreshData: function (data) {
+        refreshDataElement: function (data) {
             var newHtml = this.render(data, true);
             $("#" + data.elementId).replaceWith(newHtml);
         },
@@ -1357,17 +1357,22 @@
          * @param value
          */
         updateDataAttr: function (data, attr, value) {
+            if (!data) {
+                console.error("data must not be null.");
+                return;
+            }
+
             //更新组件的 data 数据
             data[attr] = value;
 
             //当前组件定义了 onPropChange 监听方法，并且该方法执行成功了
             //那么，可以理解为该方法会去更新 html 内容，而不通过系统继续渲染了
-            if (typeof data.component.onPropChange === "function"
+            if (data.component && typeof data.component.onPropChange === "function"
                 && data.component.onPropChange(this, data, attr, value)) {
                 return;
             }
 
-            this.refreshData(data);
+            this.refreshDataElement(data);
         },
 
         /**

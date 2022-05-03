@@ -194,12 +194,20 @@
                 // 当前存在 grid 数量大于设置的数据，需要移除最后的几个 grid
                 if (gridCount > intValue) {
                     for (let i = 0; i < gridCount - intValue; i++) {
-                        var $lastElement = $row.find(":last");
+                        var $lastElement = $row.children(":last");
                         var bsItemSortable = $lastElement.data("bsItemSortable");
-                        if (bsFormBuilder) {
-                            //销毁 bsItemSortable
+
+                        //销毁 sortable
+                        if (bsItemSortable) {
                             bsItemSortable.destroy();
                         }
+
+                        var parentId = $lastElement.closest(".bs-form-item").attr("id");
+                        var index = $lastElement.attr("data-index");
+
+                        //移除 data 里的 children 数据
+                        delete bsFormBuilder.getDataByElementId(parentId).children[index];
+
                         $lastElement.remove();
                     }
                 }
@@ -301,7 +309,7 @@
             this._initComponents();
 
             //初始化 data 数据
-            this._initData();
+            this._initData(this.options.datas, 0);
 
             //渲染 view 的数据到 html
             this._renderViewData();
@@ -328,7 +336,7 @@
             this._initDragComponents();
 
             //初始化 data 数据
-            this._initData();
+            this._initData(this.options.datas, 0);
 
             //初始化 options 导入的 data 的数据
             this._initDataComponents();
@@ -359,31 +367,43 @@
          * 初始化 options.datas 的 mode 的数据
          * @private
          */
-        _initData: function () {
-            if (this.options && typeof this.options.datas === "object") {
-                for (let data of this.options.datas) {
-                    //此时的 data 是没有和 component 绑定的
-                    let component = this.components[data.tag];
-                    if (!component) {
-                        console.warn("Can not find tag: " + data.tag);
-                        continue;
-                    }
+        _initData: function (dataArray, layer) {
+            if (!dataArray || dataArray.length === 0) {
+                return;
+            }
+            for (let data of dataArray) {
+                //此时的 data 是没有和 component 绑定的
+                let component = this.components[data.tag];
+                if (!component) {
+                    console.warn("Can not find tag: " + data.tag);
+                    continue;
+                }
 
 
-                    //为 data 设置 component 的默认数据
-                    if (component.props) {
-                        for (const prop of component.props) {
-                            if (prop.defaultValue && !data[prop.name]) {
-                                data[prop.name] = prop.defaultValue;
-                            }
+                //为 data 设置 component 的默认数据
+                if (component.props) {
+                    for (const prop of component.props) {
+                        if (prop.defaultValue && !data[prop.name]) {
+                            data[prop.name] = prop.defaultValue;
                         }
                     }
+                }
 
+                data.component = component;
+
+                if (!data.elementId) {
                     data.elementId = this.genRandomId();
-                    data.component = component;
+                }
 
-                    //把 data 数据添加到 bsFormBuilder 的 datas 属性里
+                //把 data 数据添加到 bsFormBuilder 的 datas 属性里
+                if (layer === 0) {
                     this.datas.push(data);
+                }
+
+                if (data.children) {
+                    for (let arr of Object.values(data.children)) {
+                        this._initData(arr, layer + 1)
+                    }
                 }
             }
         },
@@ -395,7 +415,8 @@
          */
         _renderViewData: function () {
             for (let data of this.datas) {
-                this.$container.append(this.render(data, false))
+                var html = this.render(data, false).outerHTML;
+                this.$container.append(html)
             }
         },
 
@@ -646,8 +667,19 @@
          * 渲染初始化的数据
          */
         _initDataComponents: function () {
+            if (!this.datas || this.datas.length === 0) {
+                return;
+            }
+
+            this.$containerPlaceHolder.hide();
+
             for (let data of this.datas) {
-                this.$container.append(this.render(data, false))
+                var html = this.render(data, false).outerHTML;
+
+                console.log(">>>>>>_initDataComponents: ", html)
+
+                this.$container.append(html);
+                this._invokeComponentOnAdd(data);
             }
         },
 
@@ -814,13 +846,23 @@
 
 
             // component 定义了自己的 onAdd 方法
-            if (typeof data.component.onAdd === "function") {
-                data.component.onAdd(this, data);
-            }
+            this._invokeComponentOnAdd(data);
+
 
             //让当前的组件处于选中状态
             this.makeFormItemActive(data.elementId);
             this.refreshDataIndex($to);
+        },
+
+
+        /**
+         * 执行 component 的 onAdd 方法
+         * @private
+         */
+        _invokeComponentOnAdd: function (data) {
+            if (data.component && typeof data.component.onAdd === "function") {
+                data.component.onAdd(this, data);
+            }
         },
 
 
@@ -1076,9 +1118,8 @@
             $orignalElement.after(html);
 
             //追加 html 后，回调 component 的 onAdd 方法
-            if (typeof newData.component.onAdd === "function") {
-                newData.component.onAdd(this, newData);
-            }
+            this._invokeComponentOnAdd(newData);
+
 
             //追加数据到 array 里
             var parentArray = this.getParentArrayByElementId(elementId);

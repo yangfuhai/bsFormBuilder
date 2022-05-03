@@ -309,7 +309,7 @@
             this._initComponents();
 
             //初始化 data 数据
-            this._initData(this.options.datas, 0);
+            this._initData(this.options.datas, true);
 
             //渲染 view 的数据到 html
             this._refreshViewContainer();
@@ -336,7 +336,7 @@
             this._initDragComponents();
 
             //初始化 data 数据
-            this._initData(this.options.datas, 0);
+            this._initData(this.options.datas, true);
 
             //初始化 options 导入的 data 的数据
             this._refreshBuilderContainer();
@@ -367,7 +367,7 @@
          * 初始化 options.datas 的 mode 的数据
          * @private
          */
-        _initData: function (dataArray, layer) {
+        _initData: function (dataArray, pushToRoot) {
             if (!dataArray || dataArray.length === 0) {
                 return;
             }
@@ -399,12 +399,12 @@
 
                 if (data.children) {
                     for (let arr of Object.values(data.children)) {
-                        this._initData(arr, layer + 1)
+                        this._initData(arr, false)
                     }
                 }
 
                 //把 data 数据添加到 bsFormBuilder 的 datas 属性里
-                if (layer === 0) {
+                if (pushToRoot) {
                     this.datas.push(data);
                 }
             }
@@ -1320,7 +1320,7 @@
         },
 
         /**
-         * 添加一个 data 数据
+         * 添加 data 数据到 跟节点容器
          * @param data
          */
         addDataToRoot: function (data) {
@@ -1328,17 +1328,51 @@
         },
 
         /**
-         * 添加一个 data 数组到跟节点
+         * 添加一个 data 数组到跟节点容器
          * @param dataArray
          */
         addDatasToRoot: function (dataArray) {
-            this._initData(dataArray, 0);
+            this._initData(dataArray, true);
 
             if (this.isBuilderMode()) {
                 this._refreshBuilderContainer();
             } else if (this.isViewMode()) {
                 this._refreshViewContainer();
             }
+        },
+        /**
+         * 添加 data 数据到子容器节点
+         * @param data
+         */
+        addDataToContainer: function (data, containerElementId, index) {
+            this.addDatasToContainer([data], containerElementId, index);
+        },
+
+        /**
+         * 添加一个 data 数组到子容器节点
+         * @param dataArray
+         */
+        addDatasToContainer: function (dataArray, containerElementId, index) {
+
+            this._initData(dataArray, false);
+
+            var parentData = this.getDataByElementId(containerElementId);
+            if (!parentData) {
+                console.error("Can not find data by elementId: " + containerElementId);
+                return;
+            }
+
+            if (!parentData.children) {
+                parentData.children = {};
+            }
+
+            if (!parentData.children[index]) {
+                parentData.children[index] = [];
+            }
+
+            parentData.children[index].push(...dataArray);
+
+            this.refreshDataElement(parentData);
         },
 
         /**

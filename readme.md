@@ -73,7 +73,9 @@ Bs-Form-Builder 支持的方法如下：
 - exportDatasJson()：导出 data 数据
 - getDatas()：获取 datas 数据，并可以对其进行修改
 - addDataToRoot(data)：添加一个 data 到根节点
-- addDatasToRoot(dataArray)：添加一个 data 数组到根节点
+- addDatasToRoot(array)：添加一个 data 数组到根节点
+- addDataToContainer(data,containerElementId,index)：添加一个 data 到一个子container
+- addDatasToContainer(array,containerElementId,index)：添加一个 data 数组到一个子container
 - updateDataAttr(data, attr, value)：更新一个 data 的属性，并同步到 html 显示
 - refreshDataElement(data)：刷新 data 数据到 html
 - isViewMode()：是否是视图模式

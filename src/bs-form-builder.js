@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2016-2020, Michael Yang 杨福海 (fuhai999@gmail.com).
+ * <p>
+ * Licensed under the GNU Lesser General Public License (LGPL) ,Version 3.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.gnu.org/licenses/lgpl-3.0.txt
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function ($) {
 
     //默认配置
@@ -591,13 +606,16 @@
          * @private
          */
         _initComponents: function () {
+            var useComponents = this.options.useComponents;
+            if (!useComponents) useComponents = [];
+
             //用户自定义组件
             var customComponents = this.options.components
             && typeof this.options.components == "object"
                 ? this.options.components : [];
 
             for (let component of defaultComponents) {
-                if (component) {
+                if (component && (useComponents.length === 0 || useComponents.indexOf(component.tag) > -1)) {
                     this.components[component.tag] = component;
                 }
             }
@@ -605,7 +623,7 @@
             //插件定义的 components 定义
             if (window.bsComponentsDef) {
                 for (let component of window.bsComponentsDef) {
-                    if (component) {
+                    if (component && (useComponents.length === 0 || useComponents.indexOf(component.tag) > -1)) {
                         this.components[component.tag] = component;
                     }
                 }
@@ -613,7 +631,7 @@
 
             //支持用户自定义的 component 覆盖系统默认的 component
             for (let component of customComponents) {
-                if (component) {
+                if (component && (useComponents.length === 0 || useComponents.indexOf(component.tag) > -1)) {
                     this.components[component.tag] = component;
                 }
             }

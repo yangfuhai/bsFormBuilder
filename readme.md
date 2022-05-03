@@ -37,11 +37,13 @@
 {
   //模式: "view" 渲染结果,"builder" 构建工具
   mode: "view",
+  //使用哪些组件
+  useComponents:[],    
   //初始化数据
   datas: [],
-  //组件配置
+  //组件扩展配置，配置的内容可以覆盖掉系统的配置
   components: {},
-  //属性配置
+  //属性扩展配置
   props: {},
   //属性渲染的 html 模板配置
   propTemplates: {},

@@ -303,7 +303,7 @@
             //初始化 view 的 html 结构
             this._initViewStructure();
 
-            this.$container = this.$rootEl.find('.bsFormViewContainer');
+            this.$container = this.$rootEl.find('.bsFormContainer');
 
             //初始化默认的组件库
             this._initComponents();
@@ -312,7 +312,7 @@
             this._initData(this.options.datas, 0);
 
             //渲染 view 的数据到 html
-            this._renderViewData();
+            this._refreshViewContainer();
 
             //onInit 回调
             this._invokeOnInitCallback();
@@ -325,7 +325,7 @@
             //初始化 html 基础结构
             this._initBuilderStructure();
 
-            this.$container = this.$rootEl.find('.bsFormBuilderContainer');
+            this.$container = this.$rootEl.find('.bsFormContainer');
             this.$containerPlaceHolder = this.$rootEl.find('.placeholder-box');
             this.$propsPanel = this.$rootEl.find("#component-props-content");
 
@@ -339,7 +339,7 @@
             this._initData(this.options.datas, 0);
 
             //初始化 options 导入的 data 的数据
-            this._initDataComponents();
+            this._refreshBuilderContainer();
 
             //初始化表单事件监听
             this._initEvents();
@@ -415,7 +415,8 @@
          * 渲染 view 的数据
          * @private
          */
-        _renderViewData: function () {
+        _refreshViewContainer: function () {
+            $(".bsFormContainer").children(".bs-form-item").remove();
             for (let data of this.datas) {
                 var html = this.render(data, false).outerHTML;
                 this.$container.append(html)
@@ -428,7 +429,7 @@
          * @private
          */
         _initViewStructure: function () {
-            this.$rootEl.append('<div class="row bsFormViewRoot"><div class="col-12 bsFormViewContainer"></div></div>');
+            this.$rootEl.append('<div class="row bsFormViewRoot"><div class="col-12 bsFormContainer"></div></div>');
         },
 
         /**
@@ -493,7 +494,7 @@
                 '                        <i class="bi bi-trash pr-1"></i>清空' +
                 '                    </button>' +
                 '                </div>' +
-                '                <div style="width: 100%;" class="bsFormBuilderContainer">' +
+                '                <div style="width: 100%;" class="bsFormContainer">' +
                 '                    <div class="placeholder-box">从左侧拖入组件进行表单设计</div>' +
                 '                </div>' +
                 '            </div>' +
@@ -668,17 +669,17 @@
         /**
          * 渲染初始化的数据
          */
-        _initDataComponents: function () {
+        _refreshBuilderContainer: function () {
+            $(".bsFormContainer").children(".bs-form-item").remove();
             if (!this.datas || this.datas.length === 0) {
-                return;
-            }
-
-            this.$containerPlaceHolder.hide();
-
-            for (let data of this.datas) {
-                var html = this.render(data, false).outerHTML;
-                this.$container.append(html);
-                this._invokeComponentOnAdd(data);
+                this.$containerPlaceHolder.show();
+            } else {
+                this.$containerPlaceHolder.hide();
+                for (let data of this.datas) {
+                    var html = this.render(data, false).outerHTML;
+                    this.$container.append(html);
+                    this._invokeComponentOnAdd(data);
+                }
             }
         },
 
@@ -689,7 +690,7 @@
         _initEvents: function () {
             var bsFormBuilder = this;
             //container 下的每个 item 的点击事件
-            $(".bsFormBuilderContainer").on("click", ".bs-form-item", function (event) {
+            $(".bsFormContainer").on("click", ".bs-form-item", function (event) {
                 console.log("bs-form-item click >>>>>>", event)
                 event.stopPropagation();
                 bsFormBuilder.makeFormItemActive($(this).attr('id'));
@@ -697,14 +698,14 @@
 
 
             //container 下的每个 item 的 复制按钮 的点击事件
-            $(".bsFormBuilderContainer").on("click", ".bs-item-copy", function (event) {
+            $(".bsFormContainer").on("click", ".bs-item-copy", function (event) {
                 event.stopPropagation();
                 var currentId = $(this).closest('.bs-form-item').attr('id');
                 bsFormBuilder.copyFormItem(currentId);
             })
 
             //container 下的每个 item 的 复制按钮 的删除事件
-            $(".bsFormBuilderContainer").on("click", ".bs-item-del", function (event) {
+            $(".bsFormContainer").on("click", ".bs-item-del", function (event) {
                 event.stopPropagation();
                 var $bsFormItem = $(this).closest('.bs-form-item');
                 bsFormBuilder.deleteFormItem($bsFormItem.attr("id"));
@@ -712,30 +713,16 @@
 
             //监听属性面板的输入框的输入事件
             $("#component-props-content").on("keyup", "  .form-control", function (event) {
-                console.log("#component-props-tab keyup >>>>>>", event)
-                var tag = $(this).attr('data-tag');
+
+                var attr = $(this).attr('data-attr');
                 var value = $(this).val();
 
                 //没有选中的组件，理论上不存在这种情况
                 if (!bsFormBuilder.currentData) {
                     console.error("error: Current data not exits!!!")
-                    return;
+                } else {
+                    bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, attr, value)
                 }
-
-                //更新组件的 data 数据
-                bsFormBuilder.currentData[tag] = value;
-
-                //当前组件定义了 onPropChange 监听方法，并且该方法执行成功了
-                //那么，可以理解为该方法会去更新 html 内容，而不通过系统继续渲染了
-                if (typeof bsFormBuilder.currentData.component.onPropChange === "function"
-                    && bsFormBuilder.currentData.component.onPropChange(bsFormBuilder
-                        , bsFormBuilder.currentData, tag, value)) {
-                    return;
-                }
-
-                //更新 html 内容
-                var newHtml = bsFormBuilder.render(bsFormBuilder.currentData, true);
-                $("#" + bsFormBuilder.currentData.elementId).replaceWith(newHtml);
             })
         },
 
@@ -770,7 +757,7 @@
                 });
             }
 
-            new Sortable(document.querySelector('.bsFormBuilderContainer'), {
+            new Sortable(document.querySelector('.bsFormContainer'), {
                 group: 'shared',
                 animation: 150,
                 onAdd: function (evt) {
@@ -817,7 +804,7 @@
             var $to = $(evt.to);
 
             //拖动到 root 容器
-            if ($to.is(".bsFormBuilderContainer")) {
+            if ($to.is(".bsFormContainer")) {
                 delete data.parentDataId;
                 delete data.parentDataIndex;
                 this.datas.push(data);
@@ -990,17 +977,17 @@
         /**
          * 深度拷贝
          * @param target 拷贝目标
-         * @param wthNewElementIdAndId 是否为 elementId 和 id 设置新的值
+         * @param withNewElementIdAndId 是否为 elementId 和 id 设置新的值
          * @returns {*[]}
          * @private
          */
-        deepCopy: function (target, wthNewElementIdAndId) {
+        deepCopy: function (target, withNewElementIdAndId) {
             var newObject = Array.isArray(target) ? [] : {};
             if (target && typeof target === "object") {
                 for (let key in target) {
                     if (target.hasOwnProperty(key)) {
                         if (target[key] && typeof target[key] === "object") {
-                            newObject[key] = this.deepCopy(target[key], wthNewElementIdAndId);
+                            newObject[key] = this.deepCopy(target[key], withNewElementIdAndId);
                         } else {
                             var value = target[key];
                             if (key === "elementId" || key === "id") {
@@ -1078,7 +1065,7 @@
                 .addClass('active');
 
 
-            this.renderPropertiesPanel();
+            this.refreshPropsPanel();
         },
 
         /**
@@ -1088,7 +1075,7 @@
         deleteFormItem: function (elementId) {
             if (this.currentData && this.currentData.elementId === elementId) {
                 this.currentData = null;
-                this.renderPropertiesPanel();
+                this.refreshPropsPanel();
             }
 
             this.removeDataByElementId(elementId);
@@ -1244,9 +1231,9 @@
 
 
         /**
-         * 渲染属性设置组件
+         * 刷新右侧的属性面板
          */
-        renderPropertiesPanel: function () {
+        refreshPropsPanel: function () {
             if (!this.currentData) {
                 return;
             }
@@ -1271,7 +1258,7 @@
                 var input = $template.find('.form-control');
                 input.attr("id", id);
                 input.attr("disabled", prop.disabled);
-                input.attr("data-tag", prop.name);
+                input.attr("data-attr", prop.name);
 
                 var value = this.currentData[prop.name];
                 if (!value && typeof prop.defaultValue !== "undefined") {
@@ -1290,12 +1277,12 @@
         /**
          * 导出 json
          */
-        exportToJson: function () {
+        exportDatasJson: function () {
             var exportData = this.deepCopy(this.datas, false);
             this._arrangeExportData(exportData);
-            var json = JSON.stringify(exportData);
-            console.log(json);
+            return JSON.stringify(exportData);
         },
+
 
         /**
          * 整理导出数据
@@ -1325,6 +1312,78 @@
             }
         },
 
+        /**
+         * 获取 datas 数据，并可以对其进行修改
+         */
+        getDatas: function () {
+            return this.datas;
+        },
+
+        /**
+         * 添加一个 data 数据
+         * @param data
+         */
+        addDataToRoot: function (data) {
+            this.addDatasToRoot([data]);
+        },
+
+        /**
+         * 添加一个 data 数组到跟节点
+         * @param dataArray
+         */
+        addDatasToRoot: function (dataArray) {
+            this._initData(dataArray, 0);
+
+            if (this.isBuilderMode()) {
+                this._refreshBuilderContainer();
+            } else if (this.isViewMode()) {
+                this._refreshViewContainer();
+            }
+        },
+
+        /**
+         * 刷新数据到 html 显示
+         * @param data
+         */
+        refreshData: function (data) {
+            var newHtml = this.render(data, true);
+            $("#" + data.elementId).replaceWith(newHtml);
+        },
+
+        /**
+         * 更新 data 属性，并同步到 html
+         * @param data
+         * @param attr
+         * @param value
+         */
+        updateDataAttr: function (data, attr, value) {
+            //更新组件的 data 数据
+            data[attr] = value;
+
+            //当前组件定义了 onPropChange 监听方法，并且该方法执行成功了
+            //那么，可以理解为该方法会去更新 html 内容，而不通过系统继续渲染了
+            if (typeof data.component.onPropChange === "function"
+                && data.component.onPropChange(this, data, attr, value)) {
+                return;
+            }
+
+            this.refreshData(data);
+        },
+
+        /**
+         * 是否是视图模式
+         */
+        isViewMode: function () {
+            return this.options.mode === "view";
+        },
+
+
+        /**
+         * 是否是构建工具模式
+         */
+        isBuilderMode: function () {
+            return this.options.mode === "builder";
+        },
 
     }
 

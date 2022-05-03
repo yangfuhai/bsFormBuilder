@@ -320,13 +320,13 @@ select {
     background-color: #FAFAFA;
 }
 
-.bsFormBuilderContainer {
+.bsFormContainer {
     width: 100%;
     min-height: 800px;
     padding-top: 25px;
 }
 
-.bsFormBuilderContainer .sortable-ghost {
+.bsFormContainer .sortable-ghost {
     background: #007bff;
     border-radius: 5px;
     color: #fff;

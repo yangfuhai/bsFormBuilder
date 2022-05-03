@@ -185,7 +185,7 @@
                     <button type="button" class="btn btn-sm btn-danger btn-clear"><i class="bi bi-trash pr-1"></i>清空
                     </button>
                 </div>
-                <div style="width: 100%;" class="bsFormBuilderContainer">
+                <div style="width: 100%;" class="bsFormContainer">
                     <!--占位-->
                     <div class="placeholder-box">从左侧拖入组件进行表单设计</div>
 
@@ -824,7 +824,7 @@
         $('[data-toggle="tooltip"]').tooltip();
 
         // 中间内容的操作
-        $(".bsFormBuilderContainer").on("click", ".bs-form-item", function (event) {
+        $(".bsFormContainer").on("click", ".bs-form-item", function (event) {
             $(this).addClass("active").siblings().removeClass("active");
         })
         // 只显示年月日

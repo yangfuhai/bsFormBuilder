@@ -5,6 +5,7 @@
 ## 使用方法
 
 ```html
+
 <div id="builder"></div>
 <script>
     $('#builder').bsFormBuilder({...});
@@ -14,6 +15,7 @@
 在使用前，需要导入 bootstrap 和 jquery 的相关文件。
 
 ```html
+
 <link href="path/bootstrap.min.css" rel="stylesheet">
 <link href="path/bootstrap-icons.css" rel="stylesheet">
 
@@ -29,21 +31,22 @@
 
 ### 1、初始化
 
-通过 `$('#builder').bsFormBuilder({});` 进行初始化，`bsFormBuilder` 方法可以传入 options 配置，options 内容如下：
+通过 `$('#builder').bsFormBuilder({options...});` 进行初始化，`bsFormBuilder` 方法可以传入 options 配置，options 内容如下：
 
 ```json
 {
-    //组件配置
-    components:{},
-    
-    //属性配置
-    props:{},
-    
-    //属性渲染的 html 模板配置
-    propTemplates:{},
-    
-    //初始化回调方法
-    onInit:function(bsFormBuilder){},
+  //模式: "view" 渲染结果,"builder" 构建工具
+  mode: "view",
+  //初始化数据
+  datas: [],
+  //组件配置
+  components: {},
+  //属性配置
+  props: {},
+  //属性渲染的 html 模板配置
+  propTemplates: {},
+  //初始化回调方法
+  onInit: function(bsFormBuilder){},
 }
 ```
 
@@ -53,29 +56,27 @@
 
 Bs-Form-Builder 支持的方法如下：
 
-- init
-- _initHtmlStructure： 初始化 builder 的结构
-- _initComponents：初始化 bsFormBuilder 的 components 属性
-- _initEvents：初始化 bsFormBuilder 的事件机制
-- _initSortables：初始化 sortable 事件
-- _initDragComponents：初始化拖动的控件
-- render：通过 data 数据，来渲染出一个 html 内容
-- renderDefault： 系统内置的默认渲染方法，当 component 未定义自己的 render 方法的时候，使用该方法进行渲染。
-- deepCopy：深度拷贝工具类
-- createComponentData：通过 component 来创建一个 data 数据
-- genRandomId：生成一个随机的 id
-- makeFormItemActive：设置选择状态
-- deleteFormItem：删除一个 formItem
-- copyFormItem：复制一个 formItem
-- getDataByElementId：通过一个节点 id 获取 data 数据
-- removeDataByElementId：通过节点 id 移除 data 数据
-- getParentArrayByElementId：通过节点 id 获取其所在的 数组
-- refreshDataIndex：刷新 data 的 index 属性
-- renderPropertiesPanel：渲染（刷新）属性面板
-- exportDataJson：导出 data 数据
-
-
-
+- init： 初始化
+- render(data, withActive)：通过 data 数据，来渲染出一个 html 内容
+- renderDefault(data)： 系统内置的默认渲染方法，当 component 未定义自己的 render 方法的时候，使用该方法进行渲染。
+- deepCopy(target, withNewElementIdAndId)：深度拷贝工具类
+- createComponentData(component)：通过 component 来创建 data 数据
+- genRandomId()：生成一个随机的 id
+- makeFormItemActive(elementId)：设置选择状态
+- deleteFormItem(elementId)：删除一个 formItem
+- copyFormItem(elementId)：复制一个 formItem
+- getDataByElementId(elementId)：通过一个节点 id 获取 data 数据
+- removeDataByElementId(elementId)：通过节点 id 移除 data 数据
+- getParentArrayByElementId(elementId)：通过节点 id 获取其所在的 数组
+- refreshDataIndex($parentElement)：刷新 data 的 index 属性
+- refreshPropsPanel()：渲染（刷新）属性面板
+- exportDatasJson()：导出 data 数据
+- getDatas()：获取 datas 数据，并可以对其进行修改
+- addDataToRoot(data)：添加一个 data 到根节点
+- addDatasToRoot(dataArray)：添加一个 data 数组到根节点
+- refreshData(data)：刷新 data 数据到 html
+- isViewMode()：是否是视图模式
+- isBuilderMode()：是否是构建模式（构建工具）
 
 ### 3、组件扩展
 

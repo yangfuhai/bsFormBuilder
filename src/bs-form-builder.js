@@ -295,8 +295,13 @@
             //初始化 view 的 html 结构
             this._initViewStructure();
 
-            //初始化 view 的 data 数据
-            this._initViewData();
+            this.$container = this.$rootEl.find('.bsFormViewContainer');
+
+            //初始化默认的组件库
+            this._initComponents();
+
+            //初始化 data 数据
+            this._initData();
 
             //渲染 view 的数据到 html
             this._renderViewData();
@@ -322,6 +327,12 @@
             //初始化拖动的组件
             this._initDragComponents();
 
+            //初始化 data 数据
+            this._initData();
+
+            //初始化 options 导入的 data 的数据
+            this._initDataComponents();
+
             //初始化表单事件监听
             this._initEvents();
 
@@ -345,11 +356,36 @@
 
 
         /**
-         * 初始化 view mode 的数据
+         * 初始化 options.datas 的 mode 的数据
          * @private
          */
-        _initViewData: function () {
+        _initData: function () {
+            if (this.options && typeof this.options.datas === "object") {
+                for (let data of this.options.datas) {
+                    //此时的 data 是没有和 component 绑定的
+                    let component = this.components[data.tag];
+                    if (!component) {
+                        console.warn("Can not find tag: " + data.tag);
+                        continue;
+                    }
 
+
+                    //为 data 设置 component 的默认数据
+                    if (component.props) {
+                        for (const prop of component.props) {
+                            if (prop.defaultValue && !data[prop.name]) {
+                                data[prop.name] = prop.defaultValue;
+                            }
+                        }
+                    }
+
+                    data.elementId = this.genRandomId();
+                    data.component = component;
+
+                    //把 data 数据添加到 bsFormBuilder 的 datas 属性里
+                    this.datas.push(data);
+                }
+            }
         },
 
 
@@ -358,7 +394,9 @@
          * @private
          */
         _renderViewData: function () {
-
+            for (let data of this.datas) {
+                this.$container.append(this.render(data, false))
+            }
         },
 
 
@@ -603,6 +641,15 @@
             }
         },
 
+
+        /**
+         * 渲染初始化的数据
+         */
+        _initDataComponents: function () {
+            for (let data of this.datas) {
+                this.$container.append(this.render(data, false))
+            }
+        },
 
         /**
          * 初始化 bsFormBuilder 的事件机制
@@ -1207,7 +1254,25 @@
          * 导出 json
          */
         exportToJson: function () {
+            var exportData = this.deepCopy(this.datas, false);
+            this._removeComponentAttr(exportData);
+            var json = JSON.stringify(exportData);
+            console.log(json);
+        },
 
+        _removeComponentAttr: function (dataArray) {
+            if (!dataArray || dataArray.length === 0) {
+                return;
+            }
+            for (let data of dataArray) {
+                delete data.component;
+                delete data.elementId;
+                if (data.children) {
+                    for (let arr of Object.values(data.children)) {
+                        this._removeComponentAttr(arr);
+                    }
+                }
+            }
         },
 
 

@@ -184,7 +184,38 @@ bsFormBuilder 已经内置了 4 个属性：tag、id、name、label，任何组�
 - $data：当前 component 的数据
 - $children：html 数组，若当前是一个容器，那么该容器下的 html 内容。
 
+**props 描述**
+props 是一个组件的属性配置，系统内置了 4 个属性，我们可以通过这个来定义组件自己的属性。
 
+例如，textarea 需要定义行号属性，因此，需要添加如下的配置：
+
+```javascript
+{
+    name: "rows",
+    type: "input",
+    label: "行数",
+    placeholder: "请输入行数...",
+    defaultValue: 5,
+    disabled: false,
+    required: true,
+}
+```
+
+textarea 定义了名称为 rows 的属性，template 必须通过 `{{rows}}` 来接收该属性的设置：
+
+```html
+<textarea rows="{{rows}}">{{value}}</textarea>
+```
+
+**prop 属性描述**
+
+- name: 属性名称
+- type: 属性渲染类型，支持有：input/select/number/switch/checkbox/radio，可以扩展其他属性类型，或者复写这些属性的默认行为。
+- label: 属性在面板里的label
+- placeholder: 属性里 placeholder 内容
+- defaultValue: 属性的默认值
+- disabled: 属性面板里是否启用
+- required: 属性面板里是否必填
 
 ### 4、属性扩展
 

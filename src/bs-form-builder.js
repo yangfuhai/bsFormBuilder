@@ -367,16 +367,16 @@
          * 初始化 options.datas 的 mode 的数据
          * @private
          */
-        _initData: function (dataArray, pushToRoot) {
-            if (!dataArray || dataArray.length === 0) {
+        _initData: function (array, pushToRoot) {
+            if (!array || array.length === 0) {
                 return;
             }
 
             //根据 index 对 dataArray 进行升序排序
             //越小越靠前
-            dataArray.sort((a, b) => a.index - b.index);
+            array.sort((a, b) => a.index - b.index);
 
-            for (let data of dataArray) {
+            for (let data of array) {
                 //此时的 data 是没有和 component 绑定的
                 let component = this.components[data.tag];
                 if (!component) {
@@ -394,6 +394,8 @@
                     }
                 }
 
+                //初次导入的 data 是没有 component 和 elementId 属性的
+                //需要为 data 添加 component 和 elementId 属性
                 data.component = component;
                 data.elementId = this.genRandomId();
 
@@ -1126,16 +1128,16 @@
 
         /**
          * 根据 elementId 来查询
-         * @param dataArray
+         * @param array
          * @param elementId
          * @returns {null|*}
          */
-        getDataByElementIdInArray: function (dataArray, elementId) {
-            if (!dataArray || dataArray.length === 0) {
+        getDataByElementIdInArray: function (array, elementId) {
+            if (!array || array.length === 0) {
                 return null;
             }
 
-            for (let item of dataArray) {
+            for (let item of array) {
                 if (item && item.elementId === elementId) {
                     return item;
                 } else if (item.children && typeof item.children === "object") {
@@ -1160,18 +1162,18 @@
 
         /**
          * 根据 elementId 来删除梳理里的 data 数据
-         * @param dataArray 要删除的数组
+         * @param array 要删除的数组
          * @param elementId 根据 elementId 来删除
          */
-        removeDataByElementIdInArray: function (dataArray, elementId) {
-            if (!dataArray || dataArray.length === 0) {
+        removeDataByElementIdInArray: function (array, elementId) {
+            if (!array || array.length === 0) {
                 return;
             }
 
-            for (let i = 0; i < dataArray.length; i++) {
-                let item = dataArray[i];
+            for (let i = 0; i < array.length; i++) {
+                let item = array[i];
                 if (item && item.elementId === elementId) {
-                    dataArray.splice(i, 1);
+                    array.splice(i, 1);
                     break;
                 } else if (item.children && typeof item.children === "object") {
                     for (let childArray of Object.values(item.children)) {
@@ -1194,18 +1196,18 @@
 
         /**
          * 根据 elementId 来获取其所在的数组
-         * @param dataArray
+         * @param array
          * @param elementId
          */
-        getParentArrayByElementIdInArray: function (dataArray, elementId) {
-            if (!dataArray || dataArray.length === 0) {
+        getParentArrayByElementIdInArray: function (array, elementId) {
+            if (!array || array.length === 0) {
                 return null;
             }
 
-            for (let i = 0; i < dataArray.length; i++) {
-                let item = dataArray[i];
+            for (let i = 0; i < array.length; i++) {
+                let item = array[i];
                 if (item && item.elementId === elementId) {
-                    return dataArray;
+                    return array;
                 } else if (item.children && typeof item.children === "object") {
                     for (let childArray of Object.values(item.children)) {
                         let ret = this.getParentArrayByElementIdInArray(childArray, elementId);
@@ -1219,11 +1221,11 @@
 
         /**
          * 刷新 data 的 index 数据
-         * @param $parentElement
+         * @param $parentEl
          */
-        refreshDataIndex: function ($parentElement) {
+        refreshDataIndex: function ($parentEl) {
             var bsFormBuilder = this;
-            $parentElement.children(".bs-form-item").each(function (index, item) {
+            $parentEl.children(".bs-form-item").each(function (index, item) {
                 var id = $(item).attr("id");
                 bsFormBuilder.getDataByElementId(id)['index'] = index;
             })
@@ -1289,19 +1291,19 @@
          * 1、删除 component 数据
          * 2、删除 element 数据
          * 3、对 dataArray 根据 index 进行排序
-         * @param dataArray
+         * @param array
          * @private
          */
-        _arrangeExportData: function (dataArray) {
-            if (!dataArray || dataArray.length === 0) {
+        _arrangeExportData: function (array) {
+            if (!array || array.length === 0) {
                 return;
             }
 
             //根据 index 对 dataArray 进行升序排序
             //越小越靠前
-            dataArray.sort((a, b) => a.index - b.index);
+            array.sort((a, b) => a.index - b.index);
 
-            for (let data of dataArray) {
+            for (let data of array) {
                 delete data.component;
                 delete data.elementId;
                 if (data.children) {
@@ -1329,10 +1331,10 @@
 
         /**
          * 添加一个 data 数组到跟节点容器
-         * @param dataArray
+         * @param array
          */
-        addDatasToRoot: function (dataArray) {
-            this._initData(dataArray, true);
+        addDatasToRoot: function (array) {
+            this._initData(array, true);
 
             if (this.isBuilderMode()) {
                 this._refreshBuilderContainer();
@@ -1350,11 +1352,11 @@
 
         /**
          * 添加一个 data 数组到子容器节点
-         * @param dataArray
+         * @param array
          */
-        addDatasToContainer: function (dataArray, containerElementId, index) {
+        addDatasToContainer: function (array, containerElementId, index) {
 
-            this._initData(dataArray, false);
+            this._initData(array, false);
 
             var parentData = this.getDataByElementId(containerElementId);
             if (!parentData) {
@@ -1370,7 +1372,7 @@
                 parentData.children[index] = [];
             }
 
-            parentData.children[index].push(...dataArray);
+            parentData.children[index].push(...array);
 
             this.refreshDataElement(parentData);
         },

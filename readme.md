@@ -33,7 +33,7 @@
 
 通过 `$('#builder').bsFormBuilder({options...});` 进行初始化，`bsFormBuilder` 方法可以传入 options 配置，options 内容如下：
 
-```json
+```javascript
 {
   //模式: "view" 渲染结果,"builder" 构建工具
   mode: "view",

@@ -1281,9 +1281,6 @@
                 ? component.propsfilter(this, this.currentData)
                 : (typeof component.propsfilter === "object" ? component.propsfilter : []);
 
-            for (let prop of componentProps) {
-                propsfilter.push(prop.name);
-            }
 
             //全部属性
             var allProps = this.defaultProps.concat(componentProps);
@@ -1291,7 +1288,9 @@
             for (let prop of allProps) {
                 // 若组件定义了 propsfilter 过滤
                 // 那么，定义的 propsfilter 只有包含 prop，prop 才能正常被渲染
-                if (propsfilter && propsfilter.length > 0
+                // ps：只有系统定义的 props 才会被过滤，组件自己的 props 不会被过滤
+                if (componentProps.indexOf(prop) < 0
+                    && propsfilter && propsfilter.length > 0
                     && propsfilter.indexOf(prop.name) < 0) {
                     continue;
                 }

@@ -371,6 +371,11 @@
             if (!dataArray || dataArray.length === 0) {
                 return;
             }
+
+            //根据 index 对 dataArray 进行升序排序
+            //越小越靠前
+            dataArray.sort((a, b) => a.index - b.index);
+
             for (let data of dataArray) {
                 //此时的 data 是没有和 component 绑定的
                 let component = this.components[data.tag];
@@ -390,20 +395,17 @@
                 }
 
                 data.component = component;
-
-                if (!data.elementId) {
-                    data.elementId = this.genRandomId();
-                }
-
-                //把 data 数据添加到 bsFormBuilder 的 datas 属性里
-                if (layer === 0) {
-                    this.datas.push(data);
-                }
+                data.elementId = this.genRandomId();
 
                 if (data.children) {
                     for (let arr of Object.values(data.children)) {
                         this._initData(arr, layer + 1)
                     }
+                }
+
+                //把 data 数据添加到 bsFormBuilder 的 datas 属性里
+                if (layer === 0) {
+                    this.datas.push(data);
                 }
             }
         },
@@ -675,9 +677,6 @@
 
             for (let data of this.datas) {
                 var html = this.render(data, false).outerHTML;
-
-                console.log(">>>>>>_initDataComponents: ", html)
-
                 this.$container.append(html);
                 this._invokeComponentOnAdd(data);
             }
@@ -1286,9 +1285,6 @@
                 $template.find("label").attr("for", id).text(prop.label);
                 this.$propsPanel.append($template[0]);
             }
-
-
-            console.log(">>>>>>>renderPropertiesPanel")
         },
 
         /**
@@ -1296,21 +1292,34 @@
          */
         exportToJson: function () {
             var exportData = this.deepCopy(this.datas, false);
-            this._removeComponentAttr(exportData);
+            this._arrangeExportData(exportData);
             var json = JSON.stringify(exportData);
             console.log(json);
         },
 
-        _removeComponentAttr: function (dataArray) {
+        /**
+         * 整理导出数据
+         * 1、删除 component 数据
+         * 2、删除 element 数据
+         * 3、对 dataArray 根据 index 进行排序
+         * @param dataArray
+         * @private
+         */
+        _arrangeExportData: function (dataArray) {
             if (!dataArray || dataArray.length === 0) {
                 return;
             }
+
+            //根据 index 对 dataArray 进行升序排序
+            //越小越靠前
+            dataArray.sort((a, b) => a.index - b.index);
+
             for (let data of dataArray) {
                 delete data.component;
                 delete data.elementId;
                 if (data.children) {
                     for (let arr of Object.values(data.children)) {
-                        this._removeComponentAttr(arr);
+                        this._arrangeExportData(arr);
                     }
                 }
             }

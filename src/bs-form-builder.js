@@ -87,7 +87,7 @@
 
     //bsFormBuilder 内置组件
     var defaultComponents = [
-        //当行输入框
+        //单行输入框定义
         {
             "name": "输入框",
             "tag": "input",
@@ -108,7 +108,6 @@
                 '                       </div>' +
                 '                   </div>' +
                 '               </div>',
-            "onAddBefore": ""
         },
 
         //多行输入框
@@ -143,7 +142,6 @@
                 '                       </div>' +
                 '                   </div>' +
                 '               </div>',
-            "onAddBefore": ""
         },
 
 
@@ -990,9 +988,13 @@
                 });
             body = 'let ret=""; ret += "' + body + '";return ret;';
 
-            var paras = ["$builder", "$component", "$data", "$children"
-                , "id", "type", "name", "rows", "style", "label", "placeholder", "value"];
-            let func = new Function(...paras, body);
+
+            var allPropNames = this.defaultProps.map(prop => prop.name).concat(["value", "placeholder"]);
+            if (data.component.props) {
+                allPropNames = allPropNames.concat(data.component.props.map(prop => prop.name));
+            }
+
+            var paras = ["$builder", "$component", "$data", "$children"].concat(allPropNames);
 
             var values = paras.map(k => data[k] || "");
             values[0] = this;
@@ -1000,7 +1002,7 @@
             values[2] = data;
             values[3] = childrenProxy;
 
-            return func(...values).replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
+            return new Function(...paras, body)(...values).replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
         },
 
 
@@ -1050,7 +1052,7 @@
                 //若模板未定义 renderDefault 函数，或者定义的 renderDefault 并不是一个函数
                 //则使用 bsFormBuilder 自己的 renderDefault 函数
                 if (component.render && typeof component.render === "function") {
-                    template = component.render(component, component.template, data);
+                    template = component.render(this, component, data);
                 } else {
                     template = this.renderDefault(data);
                 }

@@ -114,6 +114,21 @@
                 '</div>';
         },
         checkbox: function () {
+            return '<div class="form-group clearfix">' +
+                '  <div class="form-label-left">' +
+                '    <legend class="col-form-label pt-0">{{label}}</legend>' +
+                '  </div>' +
+                '  <div class="flex-auto">' +
+                '    {{~ for(let option of options)}}' +
+                '    <div class="form-check form-check-inline">' +
+                '      <input class="form-check-input onchange" {{~ if(value.indexOf(option.value) >=0 )}} checked {{~end}} ' +
+                '           type="checkbox" data-attr="{{name}}" data-type="array"' +
+                '           id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
+                '      <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
+                '    </div>' +
+                '    {{~end}}' +
+                '  </div>' +
+                '</div>';
         },
         radio: function () {
         },
@@ -133,7 +148,18 @@
                 "index": 100,
                 "iconClass": "bi bi-terminal"
             },
-            "props": [],
+            "defaultOptions": [{text: "aaa", value: "bbbb"}, {text: "ccc", value: "dddd"}],
+            "props": [
+                {
+                    name: "rows",
+                    type: "checkbox",
+                    label: "行数",
+                    placeholder: "请输入行数...",
+                    // defaultValue: 3,
+                    disabled: false,
+                    required: true,
+                }
+            ],
             "template": '<div class="bs-form-item">' +
                 '                   <div class="form-group clearfix">' +
                 '                       <div class="form-label-left">' +
@@ -804,9 +830,29 @@
                 var attr = $(this).attr('data-attr');
                 var value = $(this).val();
 
-                // 若是 checkbox，value 值是 checkbox 的选中状态
-                if (event.currentTarget.type === "checkbox") {
-                    value = event.currentTarget.checked;
+                //数据类型
+                var type = $(this).attr("data-type");
+
+                //数据类型如果是数组
+                if (type === "array") {
+                    var oldValue = bsFormBuilder.currentData[attr] || [];
+                    var index = oldValue.indexOf(value);
+                    if (event.currentTarget.type === "checkbox") {
+                        //添加
+                        if (event.currentTarget.checked && index == -1) {
+                            oldValue.push(value)
+                        }
+                        //移除
+                        else if (!event.currentTarget.checked && index >= 0) {
+                            oldValue.splice(index, 1)
+                        }
+                    }
+                    value = oldValue;
+                } else {
+                    // 若是 checkbox，value 值是 checkbox 的选中状态
+                    if (event.currentTarget.type === "checkbox") {
+                        value = event.currentTarget.checked;
+                    }
                 }
 
 

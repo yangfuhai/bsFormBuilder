@@ -637,11 +637,6 @@
             var useComponents = this.options.useComponents;
             if (!useComponents) useComponents = [];
 
-            //用户自定义组件
-            var customComponents = this.options.components
-            && typeof this.options.components == "object"
-                ? this.options.components : [];
-
             for (let component of defaultComponents) {
                 if (component && (useComponents.length === 0 || useComponents.indexOf(component.tag) > -1)) {
                     this.components[component.tag] = component;
@@ -657,11 +652,17 @@
                 }
             }
 
-            //支持用户自定义的 component 覆盖系统默认的 component
+
+            //用户自定义组件
+            var customComponents = this.options.components
+            && typeof this.options.components == "object"
+                ? this.options.components : [];
+
+            //用户自定义的 component 继承来自已经存在的 component
+            //这样，用户可以不用配置系统已经存在的配置信息
             for (let component of customComponents) {
-                if (component && (useComponents.length === 0 || useComponents.indexOf(component.tag) > -1)) {
-                    this.components[component.tag] = component;
-                }
+                component = $.extend(this.components[component.tag], component);
+                this.components[component.tag] = component;
             }
         },
 

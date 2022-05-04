@@ -47,5 +47,47 @@ bsComponentsDef.push(...[
             '          </div>',
     },
 
+    //下拉菜单
+    {
+        "name": "下拉菜单",
+        "tag": "select",
+        "drag": {
+            "title": "下拉菜单",
+            "type": "base",
+            "index": 100,
+            "iconClass": "bi bi-info-circle"
+        },
+        // "propsfilter": ["id"],
+        props: [
+            {
+                name: "value",
+                type: "options",
+                label: "选项内容",
+                // placeholder: "提示内容...",
+                disabled: false,
+                required: true,
+                defaultValue: [
+                    {},
+                    {},
+                    {},
+                ],
+            }
+        ],
+        "template": '  <div class="bs-form-item" id="select_4">' +
+            '                        <div class="form-group clearfix">' +
+            '                            <div class="form-label-left">' +
+            '                                <legend class="col-form-label pt-0">{{label}}</legend>' +
+            '                            </div>' +
+            '                            <div class="flex-auto">' +
+            '                                <select class="custom-select">' +
+            '                                    {{~for(let option of value)}}' +
+            '                                    <option value="{{option.value}}" {{option.selected}}>{{option.text}}</option>' +
+            '                                    {{~end}}' +
+            '                                </select>' +
+            '                            </div>' +
+            '                        </div>' +
+            '                    </div>',
+    },
+
 ]);
 

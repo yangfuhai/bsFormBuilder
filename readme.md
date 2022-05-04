@@ -1,4 +1,4 @@
-# Bs-Form-Builder
+# bs-form-builder
 
 一个基于 JQuery + Bootstrap (v4.x) 的表单构建工具。
 

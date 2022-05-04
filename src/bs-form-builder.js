@@ -65,15 +65,29 @@
         input: function () {
             return '<div class="form-group clearfix">' +
                 '       <div class="form-label-left">' +
+                '             {{~ if(required)}}' +
                 '             <span class="red required">*</span>' +
-                '              <label></label>' +
+                '             {{~end}}' +
+                '              <label for="{{id}}">{{label}}</label>' +
                 '        </div>' +
                 '        <div class="flex-auto">' +
-                '             <input type="text" class="form-control">' +
+                '             <input id="{{id}}" type="text" data-attr="{{name}}" class="onkeyup form-control" value="{{value}}">' +
                 '        </div>' +
-                '    </div>'
+                '    </div>';
         },
         select: function () {
+            return '<div class="form-group clearfix">' +
+                '       <div class="form-label-left">' +
+                '            <legend class="col-form-label pt-0">{{label}}</legend>' +
+                '        </div>' +
+                '        <div class="flex-auto">' +
+                '            <select class="custom-select onchange" data-attr="{{name}}">' +
+                '                   {{~for (let option of options)}}' +
+                '                   <option value="{{option.value}}" {{~if(option.value == value)}}selected=""{{~end}}>{{option.text}}</option>' +
+                '                   {{~end}}' +
+                '             </select>' +
+                '        </div>' +
+                '    </div>'
         },
         number: function () {
         },
@@ -82,6 +96,8 @@
         checkbox: function () {
         },
         radio: function () {
+        },
+        options: function () {
         },
     }
 
@@ -126,7 +142,7 @@
                     type: "input",
                     label: "行数",
                     placeholder: "请输入行数...",
-                    defaultValue: 5,
+                    defaultValue: 3,
                     disabled: false,
                     required: true,
                 }
@@ -158,12 +174,26 @@
             "props": [
                 {
                     name: "grid",
-                    type: "input",
+                    type: "select",
                     label: "栅格数",
                     placeholder: "请输入行数...",
                     defaultValue: 2,
                     disabled: false,
                     required: true,
+                    options: [
+                        {
+                            value: 2,
+                            text: 2
+                        },
+                        {
+                            value: 3,
+                            text: 3
+                        },
+                        {
+                            value: 4,
+                            text: 4
+                        }
+                    ],
                 }
             ],
             "template": '<div class="bs-form-item">' +
@@ -740,8 +770,7 @@
             })
 
             //监听属性面板的输入框的输入事件
-            $("#component-props-content").on("keyup", "  .form-control", function (event) {
-
+            $("#component-props-content").on("keyup", ".onkeyup", function (event) {
                 var attr = $(this).attr('data-attr');
                 var value = $(this).val();
 
@@ -751,7 +780,20 @@
                 } else {
                     bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, attr, value)
                 }
-            })
+            });
+
+            //监听属性面板的输入框的输入事件
+            $("#component-props-content").on("change", ".onchange", function (event) {
+                var attr = $(this).attr('data-attr');
+                var value = $(this).val();
+
+                //没有选中的组件，理论上不存在这种情况
+                if (!bsFormBuilder.currentData) {
+                    console.error("error: Current data not exits!!!")
+                } else {
+                    bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, attr, value)
+                }
+            });
         },
 
 
@@ -979,7 +1021,7 @@
             let body = template.replace(/\'/g, "&#39;")
                 .replace(/\"/g, "&quot;")
                 .replace(/[\r\n\t]/g, "")
-                .replace(/\{\{~end\}\}/g, "\"}\"")
+                .replace(/\{\{~\s*end\s*\}\}/g, "\"}ret+=\"")
                 .replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
                     return '";' + p1 + '{ ret+="';
                 })
@@ -1302,40 +1344,40 @@
                     template = template();
                 }
 
-                var id = this.genRandomId();
-                var $template = $(template);
-                var input = $template.find('.form-control');
-                input.attr("id", id);
-                input.attr("data-attr", prop.name);
+                if (template) {
+                    var newProp = this.deepCopy(prop, false);
+                    newProp["id"] = this.genRandomId();
+                    newProp["value"] = this.currentData[prop.name];
 
-                if (typeof prop.disabled === "boolean" && prop.disabled) {
-                    input.attr("disabled", "true");
+                    var html = this.renderPropTemplate(newProp, template);
+                    this.$propsPanel.append(html);
                 }
-
-                // 配置 placeholder
-                if (prop.placeholder) {
-                    input.attr("placeholder", prop.placeholder);
-                }
-
-                var value = this.currentData[prop.name];
-                if (!value && typeof prop.defaultValue !== "undefined") {
-                    value = prop.defaultValue;
-                }
-
-
-                //设置 value 的值
-                if (value) {
-                    //若 porp 定义了 onValue 方法
-                    if (typeof prop.onValue === "function") {
-                        prop.onValue(value, this.currentData);
-                    } else {
-                        input.val(value);
-                    }
-                }
-
-                $template.find("label").attr("for", id).text(prop.label);
-                this.$propsPanel.append($template[0]);
             }
+        },
+
+        /**
+         * 渲染属性模板
+         * @param prop
+         * @param template
+         */
+        renderPropTemplate: function (prop, template) {
+            let body = template.replace(/\'/g, "&#39;")
+                .replace(/\"/g, "&quot;")
+                .replace(/[\r\n\t]/g, "")
+                .replace(/\{\{~\s*end\s*\}\}/g, "\"}ret+=\"")
+                .replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
+                    return '";' + p1 + '{ ret+="';
+                })
+                .replace(/\{\{(.+?)\}\}/g, (_, p1) => {
+                    return '"; ret+= ' + p1 + '; ret+="';
+                });
+            body = 'let ret=""; ret += "' + body + '";return ret;';
+
+
+            var paras = Object.keys(prop);
+            var values = paras.map(k => prop[k] || "");
+
+            return new Function(...paras, body)(...values).replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
         },
 
         /**

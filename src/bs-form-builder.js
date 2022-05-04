@@ -654,9 +654,12 @@
 
 
             //用户自定义组件
-            var customComponents = this.options.components
-            && typeof this.options.components == "object"
-                ? this.options.components : [];
+            var customComponents = this.options.components;
+            if (typeof customComponents === "function") {
+                customComponents = customComponents();
+            } else {
+                customComponents = customComponents || [];
+            }
 
             //用户自定义的 component 继承来自已经存在的 component
             //这样，用户可以不用配置系统已经存在的配置信息

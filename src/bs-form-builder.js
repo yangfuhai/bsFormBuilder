@@ -1009,17 +1009,19 @@
 
 
             let template = data.component.template;
-            let body = template.replace(/\'/g, "&#39;")
-                .replace(/\"/g, "&quot;")
-                .replace(/[\r\n\t]/g, "")
-                .replace(/\{\{.+\&#39;*.\}\}/g, function (x) {
+            let body = template.replace(/\'/g, "&#39;").replace(/\"/g, "&quot;").replace(/[\r\n\t]/g, "")
+                .replace(/\{\{.+\&#39;*.\}\}/g, x => {
                     return x.replace(/\&#39;/g, "\'")
                 })
-                .replace(/\{\{.+\&quot;*.\}\}/g, function (x) {
+                .replace(/\{\{.+\&quot;*.\}\}/g, x => {
                     return x.replace(/\&quot;/g, '"')
                 })
                 .replace(/\{\{~\s*end\s*\}\}/g, "\"}ret+=\"")
-                .replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
+                .replace(/\{\{~\s*else\s*\}\}/g, () => {
+                    return '";}else{ ret+="';
+                }).replace(/\{\{~\s*elseif.+?\}\}/g, (_) => {
+                    return _.replace("elseif", "}else if")
+                }).replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
                     return '";' + p1 + '{ ret+="';
                 })
                 .replace(/\{\{(.+?)\}\}/g, (_, p1) => {
@@ -1358,17 +1360,19 @@
          * @param template
          */
         renderPropTemplate: function (prop, template) {
-            let body = template.replace(/\'/g, "&#39;")
-                .replace(/\"/g, "&quot;")
-                .replace(/[\r\n\t]/g, "")
-                .replace(/\{\{.+\&#39;*.\}\}/g, function (x) {
+            let body = template.replace(/\'/g, "&#39;").replace(/\"/g, "&quot;").replace(/[\r\n\t]/g, "")
+                .replace(/\{\{.+\&#39;*.\}\}/g, x => {
                     return x.replace(/\&#39;/g, "\'")
                 })
-                .replace(/\{\{.+\&quot;*.\}\}/g, function (x) {
+                .replace(/\{\{.+\&quot;*.\}\}/g, x => {
                     return x.replace(/\&quot;/g, '"')
                 })
                 .replace(/\{\{~\s*end\s*\}\}/g, "\"}ret+=\"")
-                .replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
+                .replace(/\{\{~\s*else\s*\}\}/g, () => {
+                    return '";}else{ ret+="';
+                }).replace(/\{\{~\s*elseif.+?\}\}/g, (_) => {
+                    return _.replace("elseif", "}else if")
+                }).replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
                     return '";' + p1 + '{ ret+="';
                 })
                 .replace(/\{\{(.+?)\}\}/g, (_, p1) => {

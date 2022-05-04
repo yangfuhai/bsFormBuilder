@@ -1012,6 +1012,12 @@
             let body = template.replace(/\'/g, "&#39;")
                 .replace(/\"/g, "&quot;")
                 .replace(/[\r\n\t]/g, "")
+                .replace(/\{\{.+\&#39;*.\}\}/g, function (x) {
+                    return x.replace(/\&#39;/g, "\'")
+                })
+                .replace(/\{\{.+\&quot;*.\}\}/g, function (x) {
+                    return x.replace(/\&quot;/g, '"')
+                })
                 .replace(/\{\{~\s*end\s*\}\}/g, "\"}ret+=\"")
                 .replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
                     return '";' + p1 + '{ ret+="';
@@ -1355,6 +1361,12 @@
             let body = template.replace(/\'/g, "&#39;")
                 .replace(/\"/g, "&quot;")
                 .replace(/[\r\n\t]/g, "")
+                .replace(/\{\{.+\&#39;*.\}\}/g, function (x) {
+                    return x.replace(/\&#39;/g, "\'")
+                })
+                .replace(/\{\{.+\&quot;*.\}\}/g, function (x) {
+                    return x.replace(/\&quot;/g, '"')
+                })
                 .replace(/\{\{~\s*end\s*\}\}/g, "\"}ret+=\"")
                 .replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
                     return '";' + p1 + '{ ret+="';

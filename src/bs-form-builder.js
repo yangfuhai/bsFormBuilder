@@ -919,8 +919,6 @@
          * @private
          */
         _onDragEnd: function (evt) {
-            console.log(">>>> onDragEnd: ", evt)
-
             this.refreshDataIndex($(evt.from))
         },
 
@@ -1029,8 +1027,21 @@
                 });
             body = 'let ret=""; ret += "' + body + '";return ret;';
 
+            // 若 data 中不存在 options 数据，
+            // 那么查看下组件是否有 defaultOptions 配置
+            if (!data.options) {
+                var defaultOptions = data.component.defaultOptions;
+                if (typeof defaultOptions === "function") {
+                    defaultOptions = data.component.defaultOptions(this, data);
+                }
+                if (defaultOptions) {
+                    data.options = defaultOptions;
+                }
+            }
 
-            var allPropNames = this.defaultProps.map(prop => prop.name).concat(["value", "placeholder"]);
+
+            //default props + component.props + "value" + "placeholder" +"options"
+            var allPropNames = this.defaultProps.map(prop => prop.name).concat(["value", "placeholder", "options"]);
             if (data.component.props) {
                 allPropNames = allPropNames.concat(data.component.props.map(prop => prop.name));
             }
@@ -1298,7 +1309,8 @@
             var bsFormBuilder = this;
             $parentEl.children(".bs-form-item").each(function (index, item) {
                 var id = $(item).attr("id");
-                bsFormBuilder.getDataByElementId(id)['index'] = index;
+                var data = bsFormBuilder.getDataByElementId(id);
+                data['index'] = index;
             })
         },
 

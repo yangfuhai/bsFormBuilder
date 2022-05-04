@@ -57,20 +57,23 @@ bsComponentsDef.push(...[
             "index": 100,
             "iconClass": "bi bi-info-circle"
         },
-        // "propsfilter": ["id"],
         props: [
             {
                 name: "value",
                 type: "options",
                 label: "选项内容",
-                // placeholder: "提示内容...",
                 disabled: false,
                 required: true,
-                defaultValue: [
-                    {},
-                    {},
-                    {},
-                ],
+            }
+        ],
+        defaultOptions: [
+            {
+                text: "张三",
+                value: "zhangsan"
+            },
+            {
+                text: "李四",
+                value: "lisi"
             }
         ],
         "template": '  <div class="bs-form-item" id="select_4">' +
@@ -80,8 +83,8 @@ bsComponentsDef.push(...[
             '                            </div>' +
             '                            <div class="flex-auto">' +
             '                                <select class="custom-select">' +
-            '                                    {{~for(let option of value)}}' +
-            '                                    <option value="{{option.value}}" {{option.selected}}>{{option.text}}</option>' +
+            '                                    {{~for(let option of options)}}' +
+            '                                    <option value="{{option.value}}" {{~if (option.value == value)}} selected {{~end}}>{{option.text}}</option>' +
             '                                    {{~end}}' +
             '                                </select>' +
             '                            </div>' +

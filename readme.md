@@ -16,7 +16,6 @@
 ## 使用方法
 
 ```html
-
 <div id="builder"></div>
 <script>
     $('#builder').bsFormBuilder({...});
@@ -26,7 +25,6 @@
 在使用前，需要导入 bootstrap 和 jquery 的相关文件。
 
 ```html
-
 <link href="path/bootstrap.min.css" rel="stylesheet">
 <link href="path/bootstrap-icons.css" rel="stylesheet">
 
@@ -130,7 +128,6 @@
     onAdd:function (bsFormBuilder, data) {},
     onPropChange:function (bsFormBuilder, data, propName, value) {},
     render:function (bsFormBuilder, component, data) {},
-
 }
 ```
 
@@ -190,9 +187,9 @@ bsFormBuilder 已经内置了 4 个属性：tag、id、name、label，任何组�
 
 **template 语法：**
 
-- 变量名称：{{propName}} 
-- for循环：{{~ for(let item of array)}}  --  {{~end}}
-- if循环：{{~ if( x === "string")}}  --  {{~end}}
+- 输出：{{attr}} 
+- for循环：{{~ for(let item of array)}}  -{{item.name}}-  {{~end}}
+- if循环：{{~ if( x === "string")}}  -{{x}}-  {{~end}}
 
 **template 内置变量：**
 - $bsFormBuilder : bsFormBuilder 实例

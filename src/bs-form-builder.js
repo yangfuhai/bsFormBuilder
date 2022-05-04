@@ -769,8 +769,8 @@
                 bsFormBuilder.deleteFormItem($bsFormItem.attr("id"));
             })
 
-            //监听属性面板的输入框的输入事件
-            $("#component-props-content").on("keyup", ".onkeyup", function (event) {
+            //props 事件
+            var propsEventFunction = function (event) {
                 var attr = $(this).attr('data-attr');
                 var value = $(this).val();
 
@@ -780,20 +780,11 @@
                 } else {
                     bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, attr, value)
                 }
-            });
+            }
 
             //监听属性面板的输入框的输入事件
-            $("#component-props-content").on("change", ".onchange", function (event) {
-                var attr = $(this).attr('data-attr');
-                var value = $(this).val();
-
-                //没有选中的组件，理论上不存在这种情况
-                if (!bsFormBuilder.currentData) {
-                    console.error("error: Current data not exits!!!")
-                } else {
-                    bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, attr, value)
-                }
-            });
+            $("#component-props-content").on("keyup", ".onkeyup", propsEventFunction)
+                .on("change", ".onchange", propsEventFunction);
         },
 
 

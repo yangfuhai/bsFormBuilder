@@ -924,6 +924,52 @@
 
 
         /**
+         * 获取渲染方法
+         * @param template
+         * @private
+         */
+        _getRenderMethodBody: function (template) {
+            let body = template.replace(/\'/g, "&#39;")
+                .replace(/\"/g, "&quot;")
+                .replace(/[\r\n\t]/g, "")
+                .replace(/\{\{.+\&#39;*.\}\}/g, x => {
+                    return x.replace(/\&#39;/g, "\'")
+                })
+                .replace(/\{\{.+\&quot;*.\}\}/g, x => {
+                    return x.replace(/\&quot;/g, '"')
+                })
+                .replace(/\{\{~\s*end\s*\}\}/g, "\"}ret+=\"")
+                .replace(/\{\{~\s*else\s*\}\}/g, () => {
+                    return '";}else{ ret+="';
+                }).replace(/\{\{~\s*elseif.+?\}\}/g, (_) => {
+                    return _.replace("elseif", "}else if")
+                }).replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
+                    return '";' + p1 + '{ ret+="';
+                })
+                .replace(/\{\{(.+?)\}\}/g, (_, p1) => {
+                    return '"; ret+= ' + p1 + '; ret+="';
+                });
+            return 'let ret=""; ret += "' + body + '";return ret;';
+        },
+
+
+        /**
+         * 初始化 data 的 options
+         * @param data
+         * @private
+         */
+        _initDataOptionsIfNecessary: function (data) {
+            if (!data.options) {
+                var defaultOptions = data.component.defaultOptions;
+                if (typeof defaultOptions === "function") {
+                    defaultOptions = data.component.defaultOptions(this, data);
+                }
+                data.options = defaultOptions || [];
+            }
+        },
+
+
+        /**
          * 初始化 component 的 data 数据
          * @param component
          * @private
@@ -1006,38 +1052,11 @@
             })
 
 
-            let template = data.component.template;
-            let body = template.replace(/\'/g, "&#39;").replace(/\"/g, "&quot;").replace(/[\r\n\t]/g, "")
-                .replace(/\{\{.+\&#39;*.\}\}/g, x => {
-                    return x.replace(/\&#39;/g, "\'")
-                })
-                .replace(/\{\{.+\&quot;*.\}\}/g, x => {
-                    return x.replace(/\&quot;/g, '"')
-                })
-                .replace(/\{\{~\s*end\s*\}\}/g, "\"}ret+=\"")
-                .replace(/\{\{~\s*else\s*\}\}/g, () => {
-                    return '";}else{ ret+="';
-                }).replace(/\{\{~\s*elseif.+?\}\}/g, (_) => {
-                    return _.replace("elseif", "}else if")
-                }).replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
-                    return '";' + p1 + '{ ret+="';
-                })
-                .replace(/\{\{(.+?)\}\}/g, (_, p1) => {
-                    return '"; ret+= ' + p1 + '; ret+="';
-                });
-            body = 'let ret=""; ret += "' + body + '";return ret;';
+            let body = this._getRenderMethodBody(data.component.template);
 
             // 若 data 中不存在 options 数据，
             // 那么查看下组件是否有 defaultOptions 配置
-            if (!data.options) {
-                var defaultOptions = data.component.defaultOptions;
-                if (typeof defaultOptions === "function") {
-                    defaultOptions = data.component.defaultOptions(this, data);
-                }
-                if (defaultOptions) {
-                    data.options = defaultOptions;
-                }
-            }
+            this._initDataOptionsIfNecessary(data);
 
 
             //default props + component.props + "value" + "placeholder" +"options"
@@ -1054,7 +1073,8 @@
             values[2] = data;
             values[3] = childrenProxy;
 
-            return new Function(...paras, body)(...values).replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
+            return new Function(...paras, body)(...values)
+                .replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
         },
 
 
@@ -1360,7 +1380,10 @@
                     newProp["id"] = this.genRandomId();
                     newProp["value"] = this.currentData[prop.name];
 
-                    var html = this.renderPropTemplate(newProp, template);
+                    this._initDataOptionsIfNecessary(this.currentData);
+                    newProp["options"] = this.currentData.options;
+
+                    var html = this.renderPropTemplate(newProp, this.currentData, template);
                     this.$propsPanel.append(html);
                 }
             }
@@ -1369,35 +1392,24 @@
         /**
          * 渲染属性模板
          * @param prop
+         * @param data
          * @param template
+         * @returns {*}
          */
-        renderPropTemplate: function (prop, template) {
-            let body = template.replace(/\'/g, "&#39;").replace(/\"/g, "&quot;").replace(/[\r\n\t]/g, "")
-                .replace(/\{\{.+\&#39;*.\}\}/g, x => {
-                    return x.replace(/\&#39;/g, "\'")
-                })
-                .replace(/\{\{.+\&quot;*.\}\}/g, x => {
-                    return x.replace(/\&quot;/g, '"')
-                })
-                .replace(/\{\{~\s*end\s*\}\}/g, "\"}ret+=\"")
-                .replace(/\{\{~\s*else\s*\}\}/g, () => {
-                    return '";}else{ ret+="';
-                }).replace(/\{\{~\s*elseif.+?\}\}/g, (_) => {
-                    return _.replace("elseif", "}else if")
-                }).replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
-                    return '";' + p1 + '{ ret+="';
-                })
-                .replace(/\{\{(.+?)\}\}/g, (_, p1) => {
-                    return '"; ret+= ' + p1 + '; ret+="';
-                });
-            body = 'let ret=""; ret += "' + body + '";return ret;';
+        renderPropTemplate: function (prop, data, template) {
 
+            var body = this._getRenderMethodBody(template);
 
-            var paras = Object.keys(prop);
+            var paras = Object.keys(prop).concat(["$prop", "$data"]);
+
             var values = paras.map(k => prop[k] || "");
+            values[0] = prop;
+            values[1] = data;
 
-            return new Function(...paras, body)(...values).replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
+            return new Function(...paras, body)(...values)
+                .replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
         },
+
 
         /**
          * 导出 json

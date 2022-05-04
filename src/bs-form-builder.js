@@ -941,13 +941,15 @@
                 .replace(/\{\{~\s*end\s*\}\}/g, "\"}ret+=\"")
                 .replace(/\{\{~\s*else\s*\}\}/g, () => {
                     return '";}else{ ret+="';
-                }).replace(/\{\{~\s*elseif.+?\}\}/g, (_) => {
-                    return _.replace("elseif", "}else if")
-                }).replace(/\{\{~(.+?)\}\}/g, (_, p1) => {
-                    return '";' + p1 + '{ ret+="';
                 })
-                .replace(/\{\{(.+?)\}\}/g, (_, p1) => {
-                    return '"; ret+= ' + p1 + '; ret+="';
+                .replace(/\{\{~\s*elseif.+?\}\}/g, x => {
+                    return x.replace("elseif", "}else if")
+                })
+                .replace(/\{\{~(.+?)\}\}/g, (_, x) => {
+                    return '";' + x + '{ ret+="';
+                })
+                .replace(/\{\{(.+?)\}\}/g, (_, x) => {
+                    return '"; ret+= ' + x + '; ret+="';
                 });
             return 'let ret=""; ret += "' + body + '";return ret;';
         },

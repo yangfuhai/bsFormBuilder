@@ -783,8 +783,37 @@
             }
 
             //监听属性面板的输入框的输入事件
-            $("#component-props-content").on("keyup", ".onkeyup", propsEventFunction)
-                .on("change", ".onchange", propsEventFunction);
+            $("#component-props-content").on("keyup", ".onkeyup", propsEventFunction);
+            $("#component-props-content").on("change", ".onchange", propsEventFunction);
+
+
+            //刷新 currentData 的 options 数据
+            var refreshOptions = function (event) {
+                var options = [];
+                var optionItems = $(this).closest(".options").children();
+                optionItems.each(function (index, item) {
+                    var text = $(item).children(".option-input.text").val();
+                    var value = $(item).children(".option-input.value").val();
+                    options.push({text, value});
+                });
+                bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, "options", options);
+            }
+
+
+            $("#component-props-content").on("keyup", ".option-input", refreshOptions);
+
+            //删除 item
+            $("#component-props-content").on("click", ".option-delete", function (event) {
+                $(this).closest(".options-item").remove();
+                refreshOptions(event);
+            });
+            //添加 item
+            $("#component-props-content").on("click", ".option-add", function (event) {
+                // $(this).closest(".options-item").remove();
+                refreshOptions(event);
+            });
+
+
         },
 
 

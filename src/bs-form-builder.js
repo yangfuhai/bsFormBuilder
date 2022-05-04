@@ -92,6 +92,18 @@
         number: function () {
         },
         switch: function () {
+            return '<div class="form-group clearfix">' +
+                '  <div class="form-label-left">' +
+                '    <legend class="col-form-label pt-0" for="{{id}}">{{label}}</legend>' +
+                '  </div>' +
+                '  <div class="flex-auto">' +
+                '    <div class="custom-control custom-switch">' +
+                '      <input type="checkbox" value="true" {{~if(value)}} checked {{~end}} data-attr="{{name}}" ' +
+                '           class="custom-control-input onchange" id="{{id}}" />' +
+                '      <label class="custom-control-label" for="{{id}}"></label>' +
+                '    </div>' +
+                '  </div>' +
+                '</div>';
         },
         checkbox: function () {
         },
@@ -145,6 +157,12 @@
                     defaultValue: 3,
                     disabled: false,
                     required: true,
+                },
+                {
+                    name: "enable",
+                    type: "switch",
+                    label: "启用",
+                    defaultValue: true,
                 }
             ],
             "template": '<div class="bs-form-item">' +
@@ -777,6 +795,12 @@
             var propsEventFunction = function (event) {
                 var attr = $(this).attr('data-attr');
                 var value = $(this).val();
+
+                // 若是 checkbox，value 值是 checkbox 的选中状态
+                if (event.currentTarget.type === "checkbox"){
+                    value = event.currentTarget.checked;
+                }
+
 
                 //没有选中的组件，理论上不存在这种情况
                 if (!bsFormBuilder.currentData) {
@@ -1435,7 +1459,7 @@
 
             var body = this._getRenderMethodBody(template);
 
-            var paras = Object.keys(prop).concat(["$prop", "$data"]);
+            var paras = ["$prop", "$data"].concat(Object.keys(prop));
 
             var values = paras.map(k => prop[k] || "");
             values[0] = prop;
@@ -1567,6 +1591,9 @@
                 console.error("data must not be null.");
                 return;
             }
+
+            if (value === "true") value = true;
+            else if (value === "false") value = false;
 
             //更新组件的 data 数据
             data[attr] = value;

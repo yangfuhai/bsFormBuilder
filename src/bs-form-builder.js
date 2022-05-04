@@ -90,6 +90,14 @@
                 '    </div>'
         },
         number: function () {
+            return '<div class="form-group clearfix">' +
+                '  <div class="form-label-left">' +
+                '    <label for="{{id}}">{{label}}</label>' +
+                '  </div>' +
+                '  <div class="flex-auto">' +
+                '    <input type="number" data-attr="{{name}}" class="form-control onchange onkeyup" value="{{value}}" />' +
+                '  </div>' +
+                '</div>';
         },
         switch: function () {
             return '<div class="form-group clearfix">' +
@@ -151,7 +159,7 @@
             "props": [
                 {
                     name: "rows",
-                    type: "input",
+                    type: "number",
                     label: "行数",
                     placeholder: "请输入行数...",
                     defaultValue: 3,
@@ -797,7 +805,7 @@
                 var value = $(this).val();
 
                 // 若是 checkbox，value 值是 checkbox 的选中状态
-                if (event.currentTarget.type === "checkbox"){
+                if (event.currentTarget.type === "checkbox") {
                     value = event.currentTarget.checked;
                 }
 
@@ -1591,6 +1599,12 @@
                 console.error("data must not be null.");
                 return;
             }
+
+            //若没有传入 value 值，设置为默认值
+            if ((!value || value === "") && data.component.defaultValue) {
+                value = data.component.defaultValue;
+            }
+
 
             if (value === "true") value = true;
             else if (value === "false") value = false;

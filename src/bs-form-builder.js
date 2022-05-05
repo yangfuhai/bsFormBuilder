@@ -24,7 +24,18 @@
                 text: '导出',
                 mainClass: 'btn-primary',
                 iconClass: 'bi bi-arrow-up pr-1',
-                onclick: ''
+                onclick: function (event, builder) {
+                    var text = builder.exportToJson();
+
+                    var anchor = document.createElement('a');
+                    anchor.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                    anchor.setAttribute('download', "bsFormBuilder.json");
+                    anchor.style.display = 'none';
+
+                    document.body.appendChild(anchor);
+                    anchor.click();
+                    document.body.removeChild(anchor);
+                }
             },
             {
                 text: '预览',
@@ -39,19 +50,19 @@
                 onclick: ''
             },
         ],
-        buttonTemplate: '<button type="button" class="btn btn-sm {{mainClass}}" onclick="{{onclick}}">' +
+        buttonTemplate: '<button type="button" class="btn btn-sm {{mainClass}}" >' +
             '  <i class="{{iconClass}}"></i>{{text}}' +
             '</button>',
-        templateLoadUrl:'',
-        templateItemTemplate:'<div class="bs-template-item" id="{{id}}">' +
-                            '  <div class="bs-template-item-image">' +
-                            '    <img src="{{imageUrl}}" class="img-fluid" />' +
-                            '  </div>' +
-                            '  <div class="bs-template-item-desc">' +
-                            '    <span class="bs-template-item-title">{{title}}</span>' +
-                            '    <button type="button" class="btn btn-link">加载此模板</button>' +
-                            '  </div>' +
-                            '</div>',
+        templateLoadUrl: '',
+        templateItemTemplate: '<div class="bs-template-item" id="{{id}}">' +
+            '  <div class="bs-template-item-image">' +
+            '    <img src="{{imageUrl}}" class="img-fluid" />' +
+            '  </div>' +
+            '  <div class="bs-template-item-desc">' +
+            '    <span class="bs-template-item-title">{{title}}</span>' +
+            '    <button type="button" class="btn btn-link">加载此模板</button>' +
+            '  </div>' +
+            '</div>',
     };
 
     //每个组件(component) 的默认属性
@@ -655,16 +666,26 @@
             }
 
             let body = this._getRenderMethodBody(template);
+            let bsFormBuilder = this;
 
             let buttons = this.options.buttons || [];
             for (let button of buttons) {
-                let paras = ["$button", "text", "mainClass", "iconClass", "onclick"];
+                let paras = ["$button", "text", "mainClass", "iconClass"];
 
                 let values = paras.map(k => button[k] || "");
                 values[0] = button;
 
+                let id = this.genRandomId();
+
                 let html = this._invokeRenderBody(body, paras, values);
-                $(".bsFormActions").append(html);
+                let $html = $(html).attr("id", id);
+                $html.appendTo(".bsFormActions");
+
+                if (typeof button.onclick === "function") {
+                    $html.on("click", function (event) {
+                        button.onclick(event, bsFormBuilder);
+                    });
+                }
             }
         },
 

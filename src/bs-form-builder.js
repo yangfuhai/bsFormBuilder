@@ -154,6 +154,20 @@
                 '</div>';
         },
         radio: function () {
+            return '<div class="form-group clearfix">' +
+                '  <div class="form-label-left">' +
+                '    <legend class="col-form-label pt-0">{{label}}</legend>' +
+                '  </div>' +
+                '  <div class="flex-auto">' +
+                '    {{~ for(let option of options)}}' +
+                '    <div class="form-check form-check-inline">' +
+                '      <input class="form-check-input onchange" type="radio" {{~ if(value.indexOf(option.value) >=0 )}} checked {{~end}} ' +
+                '           data-attr="{{name}}" id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
+                '      <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
+                '    </div>' +
+                '    {{~end}}' +
+                '  </div>' +
+                '</div>';
         },
         options: function () {
             return '<div class="option-box options">' +
@@ -185,19 +199,6 @@
                 "index": 100,
                 "iconClass": "bi bi-terminal"
             },
-            "defaultOptions": [{text: "aaa", value: "bbbb"}, {text: "ccc", value: "dddd"}],
-            "withOptions": true,
-            "props": [
-                {
-                    name: "rows",
-                    type: "number",
-                    label: "行数",
-                    placeholder: "请输入行数...",
-                    // defaultValue: 3,
-                    disabled: false,
-                    required: true,
-                }
-            ],
             "template": '<div class="bs-form-item">' +
                 '                   <div class="form-group clearfix">' +
                 '                       <div class="form-label-left">' +
@@ -229,12 +230,6 @@
                     defaultValue: 3,
                     disabled: false,
                     required: true,
-                },
-                {
-                    name: "enable",
-                    type: "switch",
-                    label: "启用",
-                    defaultValue: true,
                 }
             ],
             "template": '<div class="bs-form-item">' +
@@ -264,12 +259,9 @@
             "props": [
                 {
                     name: "grid",
-                    type: "select",
+                    type: "radio",
                     label: "栅格数",
-                    placeholder: "请输入行数...",
                     defaultValue: 2,
-                    disabled: false,
-                    required: true,
                     options: [
                         {
                             value: 2,

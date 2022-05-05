@@ -31,7 +31,7 @@ bsComponentsDef.push(...[
         "propsfilter": ["id"],
         props: [
             {
-                name: "value",
+                name: "title",
                 type: "input",
                 label: "提示内容",
                 placeholder: "提示内容...",
@@ -44,7 +44,7 @@ bsComponentsDef.push(...[
             '    <i class="d-inline-block bi bi-exclamation-circle"' +
             '      data-toggle="tooltip"' +
             '      data-placement="right"' +
-            '      title="{{value}}"' +
+            '      title="{{title}}"' +
             '    ></i>' +
             '  </div>' +
             '</div>',

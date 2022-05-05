@@ -2,6 +2,9 @@
 
 一个基于 JQuery + Bootstrap (v4.x) 的表单构建工具。
 
+![bsFormBuilder](./assets/images/bsformbuilder.png)
+
+
 ## 特点
 
 - 1、基于 JQuery + Bootstrap (v4.x)，简单易用

@@ -719,9 +719,7 @@
                 let values = paras.map(k => button[k] || "");
                 values[0] = button;
 
-                let html = new Function(...paras, body)(...values)
-                    .replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
-
+                let html = this._invokeRenderBody(body, paras, values);
                 $(".bsFormActions").append(html);
             }
         },
@@ -1105,6 +1103,26 @@
 
 
         /**
+         * 执行 body 方法，返回 string 结果
+         * @param body
+         * @param paras
+         * @param values
+         * @returns {string|*}
+         * @private
+         */
+        _invokeRenderBody: function (body, paras, values) {
+            try {
+                return new Function(...paras, body)(...values)
+                    .replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
+            } catch (err) {
+                console.error("template error >>>", err);
+                console.error("template >>>", template);
+                return "";
+            }
+        },
+
+
+        /**
          * 初始化 data 的 options
          * @param data
          * @private
@@ -1253,8 +1271,7 @@
             values[2] = data;
             values[3] = childrenProxy;
 
-            return new Function(...paras, body)(...values)
-                .replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
+            return this._invokeRenderBody(body, paras, values);
         },
 
 
@@ -1614,15 +1631,7 @@
             values[0] = prop;
             values[1] = data;
 
-            try {
-                return new Function(...paras, body)(...values)
-                    .replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
-            } catch (err) {
-                console.error(err);
-                console.error("template >>>", template);
-                return "";
-            }
-
+            return this._invokeRenderBody(body, paras, values);
         },
 
 

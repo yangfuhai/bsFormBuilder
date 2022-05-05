@@ -400,7 +400,12 @@
         this.options = $.extend(defaultOptions, options);
 
         //每个组件的默认属性
-        this.defaultProps = $.extend(defaultProps, options.props);
+        this.defaultProps = options.defaultOptions || [];
+        for (let defaultProp of defaultProps) {
+            if (this.defaultProps.map(item => item.tag).indexOf(defaultProp.tag) === -1) {
+                this.defaultProps.push(defaultProp);
+            }
+        }
 
         //每个 prop 显示的 html 模板
         this.propTemplates = $.extend(defaultPropTemplates, options.propTemplates);

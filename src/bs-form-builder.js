@@ -21,7 +21,7 @@
         useComponents: [], //使用的组件 use components
         actionButtons: [
             {
-                text: '导出',
+                text: '导出 JSON',
                 mainClass: 'btn-primary',
                 iconClass: 'bi bi-arrow-up pr-1',
                 onclick: function (event, builder) {
@@ -38,16 +38,38 @@
                 }
             },
             {
+                text: '导出 HTML',
+                mainClass: 'btn-primary',
+                iconClass: 'bi bi-arrow-up pr-1',
+                onclick: function (event, builder) {
+                    var text = builder.exportToHtml();
+
+                    var anchor = document.createElement('a');
+                    anchor.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                    anchor.setAttribute('download', "bsFormBuilder.html");
+                    anchor.style.display = 'none';
+
+                    document.body.appendChild(anchor);
+                    anchor.click();
+                    document.body.removeChild(anchor);
+                }
+            },
+            {
                 text: '预览',
                 mainClass: 'btn-primary',
                 iconClass: 'bi bi-eye pr-1',
-                onclick: ''
+                onclick: function () {
+                    alert('请自定义 [预览] 按钮的功能，这里的所有按钮和功能都是可以自定义的')
+                }
             },
             {
                 text: '删除',
                 mainClass: 'btn-danger',
                 iconClass: 'bi bi-trash pr-1',
-                onclick: ''
+                onclick: function () {
+                    alert('请自定义 [删除] 按钮的功能，这里的所有按钮和功能都是可以自定义的')
+
+                }
             },
         ],
         actionButtonTemplate: '<button type="button" class="btn btn-sm {{mainClass}}" >' +
@@ -228,7 +250,7 @@
                 '    </div>' +
                 '    <div class="flex-auto">' +
                 '      <input type="text" class="form-control" id="{{id}}"' +
-                '        placeholder="{{placeholder}} value="{{value}}" />' +
+                '        placeholder="{{placeholder}}" value="{{value}}" />' +
                 '    </div>' +
                 '  </div>' +
                 '</div>',
@@ -402,7 +424,7 @@
         //每个组件的默认属性
         this.defaultProps = options.defaultOptions || [];
         for (let defaultProp of defaultProps) {
-            if (this.defaultProps.map(item => item.tag).indexOf(defaultProp.tag) === -1) {
+            if (this.defaultProps.map(item => item.name).indexOf(defaultProp.name) === -1) {
                 this.defaultProps.push(defaultProp);
             }
         }
@@ -1613,6 +1635,18 @@
             var exportData = this.deepCopy(this.datas, false);
             this._arrangeExportData(exportData);
             return JSON.stringify(exportData);
+        },
+
+
+        /**
+         * 导出 html
+         */
+        exportToHtml: function () {
+            var html = "";
+            for (let data of this.datas) {
+                html += this.render(data, false).outerHTML;
+            }
+            return html;
         },
 
 

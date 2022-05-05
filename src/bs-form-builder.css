@@ -334,3 +334,32 @@ select {
     text-align: center;
     font-size: 12px;
 }
+
+.divider-title {
+    display: table;
+    white-space: nowrap;
+    text-align: center;
+    background: 0 0;
+    font-weight: 500;
+    color: #17233d;
+    font-size: 12px;
+    margin: 16px 0;
+}
+
+.divider-title::before {
+    content: "";
+    display: table-cell;
+    top: 50%;
+    width: 50%;
+    border-top: 1px solid #e8eaec;
+    transform: translateY(50%);
+}
+
+.divider-title::after {
+    content: "";
+    display: table-cell;
+    top: 50%;
+    width: 50%;
+    border-top: 1px solid #e8eaec;
+    transform: translateY(50%);
+}

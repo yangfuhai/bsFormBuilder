@@ -39,12 +39,15 @@ bsComponentsDef.push(...[
                 required: true,
             }
         ],
-        "template": ' <div class="bs-form-item" id="tips">' +
-            '             <div class="form-group clearfix">' +
-            '                 <i class="d-inline-block bi bi-exclamation-circle" data-toggle="tooltip"' +
-            '                    data-placement="right" title="{{value}}"></i>' +
-            '             </div>' +
-            '          </div>',
+        "template": '<div class="bs-form-item" id="tips">' +
+            '  <div class="form-group clearfix">' +
+            '    <i class="d-inline-block bi bi-exclamation-circle"' +
+            '      data-toggle="tooltip"' +
+            '      data-placement="right"' +
+            '      title="{{value}}"' +
+            '    ></i>' +
+            '  </div>' +
+            '</div>',
     },
 
     //下拉菜单
@@ -55,41 +58,33 @@ bsComponentsDef.push(...[
             "title": "下拉菜单",
             "type": "base",
             "index": 100,
-            "iconClass": "bi bi-info-circle"
+            "iconClass": "bi bi-card-checklist"
         },
-        props: [
-            {
-                name: "value",
-                type: "options",
-                label: "选项内容",
-                disabled: false,
-                required: true,
-            }
-        ],
+        withOptions: true,
         defaultOptions: [
             {
-                text: "张三",
-                value: "zhangsan"
+                text: "选项1",
+                value: "value1"
             },
             {
-                text: "李四",
-                value: "lisi"
+                text: "选项2",
+                value: "value2"
             }
         ],
-        "template": '  <div class="bs-form-item" id="select_4">' +
-            '                        <div class="form-group clearfix">' +
-            '                            <div class="form-label-left">' +
-            '                                <legend class="col-form-label pt-0">{{label}}</legend>' +
-            '                            </div>' +
-            '                            <div class="flex-auto">' +
-            '                                <select class="custom-select">' +
-            '                                    {{~for(let option of options)}}' +
-            '                                    <option value="{{option.value}}" {{~if (option.value == value)}} selected {{~end}}>{{option.text}}</option>' +
-            '                                    {{~end}}' +
-            '                                </select>' +
-            '                            </div>' +
-            '                        </div>' +
-            '                    </div>',
+        "template": '<div class="bs-form-item">' +
+            '  <div class="form-group clearfix">' +
+            '    <div class="form-label-left">' +
+            '      <legend class="col-form-label pt-0">{{label}}</legend>' +
+            '    </div>' +
+            '    <div class="flex-auto">' +
+            '      <select class="custom-select">' +
+            '        {{~for(let option of options)}}' +
+            '        <option value="{{option.value}}">{{option.text}}</option>' +
+            '        {{~end}}' +
+            '      </select>' +
+            '    </div>' +
+            '  </div>' +
+            '</div>',
     },
 
 ]);

@@ -133,6 +133,20 @@
         radio: function () {
         },
         options: function () {
+            return '<div class="option-box options">' +
+                '  <div class="divider-title option-filtered">选项</div>' +
+                '  {{~for (let option of options)}}' +
+                '  <div class="form-group form-check-inline clearfix option-item">' +
+                '    <i class="bi bi-arrows-move pointer pr-2 option-handle"></i>' +
+                '    <input type="text" value="{{option.text}}" class="form-control mr-2 option-input text" />' +
+                '    <input type="text" value="{{option.value}}" class="form-control mr-2 option-input value" />' +
+                '    <i class="bi bi-dash-square pointer option-delete"></i>' +
+                '  </div>' +
+                '  {{~end}}' +
+                '  <div class="text-center option-filtered">' +
+                '    <button type="button" class="btn btn-primary btn-sm option-add">添 加</button>' +
+                '  </div>' +
+                '</div>';
         },
     }
 
@@ -149,10 +163,11 @@
                 "iconClass": "bi bi-terminal"
             },
             "defaultOptions": [{text: "aaa", value: "bbbb"}, {text: "ccc", value: "dddd"}],
+            "withOptions": true,
             "props": [
                 {
                     name: "rows",
-                    type: "checkbox",
+                    type: "number",
                     label: "行数",
                     placeholder: "请输入行数...",
                     // defaultValue: 3,
@@ -865,34 +880,27 @@
             }
 
             //监听属性面板的输入框的输入事件
-            $("#component-props-content").on("keyup", ".onkeyup", propsEventFunction);
-            $("#component-props-content").on("change", ".onchange", propsEventFunction);
+            this.$propsPanel.on("keyup", ".onkeyup", propsEventFunction);
+            this.$propsPanel.on("change", ".onchange", propsEventFunction);
 
 
-            //刷新 currentData 的 options 数据
-            var refreshOptions = function (event) {
-                var options = [];
-                var optionItems = $(this).closest(".options").children();
-                optionItems.each(function (index, item) {
-                    var text = $(item).children(".option-input.text").val();
-                    var value = $(item).children(".option-input.value").val();
-                    options.push({text, value});
-                });
-                bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, "options", options);
-            }
-
-
-            $("#component-props-content").on("keyup", ".option-input", refreshOptions);
+            this.$propsPanel.on("keyup", ".option-input", function () {
+                bsFormBuilder._syncCurrentDataOptionsFromPropSetting();
+            });
 
             //删除 item
-            $("#component-props-content").on("click", ".option-delete", function (event) {
-                $(this).closest(".options-item").remove();
-                refreshOptions(event);
+            this.$propsPanel.on("click", ".option-delete", function (event) {
+                $(this).closest(".option-item").remove();
+                bsFormBuilder._syncCurrentDataOptionsFromPropSetting();
             });
+
             //添加 item
-            $("#component-props-content").on("click", ".option-add", function (event) {
-                // $(this).closest(".options-item").remove();
-                refreshOptions(event);
+            this.$propsPanel.on("click", ".option-add", function (event) {
+                var options = bsFormBuilder.currentData.options || [];
+                options.push({text: "选项", value: "值"})
+
+                bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, "options", options);
+                bsFormBuilder.refreshPropsPanel();
             });
 
 
@@ -1072,7 +1080,7 @@
          * @private
          */
         _initDataOptionsIfNecessary: function (data) {
-            if (!data.options) {
+            if (data.component.withOptions && !data.options) {
                 var defaultOptions = data.component.defaultOptions;
                 if (typeof defaultOptions === "function") {
                     defaultOptions = data.component.defaultOptions(this, data);
@@ -1081,6 +1089,35 @@
             }
         },
 
+        /**
+         * 获取属性模板
+         * @param type
+         * @returns {*}
+         * @private
+         */
+        _getPropTemplateByType: function (type) {
+            let template = this.propTemplates[type];
+            if (typeof template === "function") {
+                template = template();
+            }
+            return template;
+        },
+
+
+        /**
+         * 同步 currentData 的 options
+         * @private
+         */
+        _syncCurrentDataOptionsFromPropSetting: function () {
+            var options = [];
+            var optionItems = this.$propsPanel.children(".options").children(".option-item");
+            optionItems.each(function (index, item) {
+                var text = $(item).children(".option-input.text").val();
+                var value = $(item).children(".option-input.value").val();
+                options.push({text, value});
+            });
+            this.updateDataAttr(this.currentData, "options", options);
+        },
 
         /**
          * 初始化 component 的 data 数据
@@ -1458,6 +1495,11 @@
 
             let component = this.currentData.component;
 
+            //销毁旧的 sortable
+            var oldSortable = this.$propsPanel.children(".options").data("sortable");
+            if (oldSortable) oldSortable.destroy();
+
+
             this.$propsPanel.html('');
 
             //组件定义的 "私有" 属性
@@ -1470,8 +1512,9 @@
                 : (typeof component.propsfilter === "object" ? component.propsfilter : []);
 
 
-            //全部属性
+            // 全部属性
             var allProps = this.defaultProps.concat(componentProps);
+
 
             for (let prop of allProps) {
                 // 若组件定义了 propsfilter 过滤
@@ -1483,24 +1526,46 @@
                     continue;
                 }
 
-                var template = this.propTemplates[prop.type];
-                if (typeof template === "function") {
-                    template = template();
+                var template = this._getPropTemplateByType(prop.type);
+
+                var newProp = this.deepCopy(prop, false);
+                newProp["id"] = this.genRandomId();
+                newProp["value"] = this.currentData[prop.name];
+
+                var html = this.renderPropTemplate(newProp, this.currentData, template);
+                this.$propsPanel.append(html);
+            }
+
+            // 渲染 options 功能
+            if (this.currentData.options || this.currentData.component.withOptions) {
+                let prop = {
+                    id: this.genRandomId(),
+                    options: this.currentData.options || [],
                 }
 
-                if (template) {
-                    var newProp = this.deepCopy(prop, false);
-                    newProp["id"] = this.genRandomId();
-                    newProp["value"] = this.currentData[prop.name];
+                let template = this._getPropTemplateByType("options");
+                let html = this.renderPropTemplate(prop, this.currentData, template);
+                this.$propsPanel.append(html);
 
-                    this._initDataOptionsIfNecessary(this.currentData);
-                    newProp["options"] = this.currentData.options;
+                this._initOptionsSortable();
 
-                    var html = this.renderPropTemplate(newProp, this.currentData, template);
-                    this.$propsPanel.append(html);
-                }
             }
         },
+
+        /**
+         * 初始化 Options 的 dragable 组件
+         */
+        _initOptionsSortable: function () {
+            var $optionsEl = this.$propsPanel.children(".options");
+            var sortable = new Sortable($optionsEl[0], {
+                handle: '.option-handle', // handle's class
+                filter: '.filtered', // 'filtered' class is not draggable
+                animation: 150,
+                onEnd: () => this._syncCurrentDataOptionsFromPropSetting(),
+            });
+            $optionsEl.data("sortable", sortable);
+        },
+
 
         /**
          * 渲染属性模板

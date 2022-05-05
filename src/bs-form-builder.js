@@ -19,7 +19,7 @@
     var defaultOptions = {
         mode: "builder", // 模式 builder,view
         useComponents: [], //使用的组件 use components
-        buttons: [
+        actionButtons: [
             {
                 text: '导出',
                 mainClass: 'btn-primary',
@@ -50,7 +50,7 @@
                 onclick: ''
             },
         ],
-        buttonTemplate: '<button type="button" class="btn btn-sm {{mainClass}}" >' +
+        actionButtonTemplate: '<button type="button" class="btn btn-sm {{mainClass}}" >' +
             '  <i class="{{iconClass}}"></i>{{text}}' +
             '</button>',
         templateLoadUrl: '',
@@ -222,15 +222,16 @@
                 "iconClass": "bi bi-terminal"
             },
             "template": '<div class="bs-form-item">' +
-                '                   <div class="form-group clearfix">' +
-                '                       <div class="form-label-left">' +
-                '                           <label for="label">{{label}}</label>' +
-                '                       </div>' +
-                '                       <div class="flex-auto">' +
-                '                           <input type="text" class="form-control" id="{{id}}" placeholder="{{placeholder}}" value="{{value}}">' +
-                '                       </div>' +
-                '                   </div>' +
-                '               </div>',
+                '  <div class="form-group clearfix">' +
+                '    <div class="form-label-left">' +
+                '      <label for="label">{{label}}</label>' +
+                '    </div>' +
+                '    <div class="flex-auto">' +
+                '      <input type="text" class="form-control" id="{{id}}"' +
+                '        placeholder="{{placeholder}} value="{{value}}" />' +
+                '    </div>' +
+                '  </div>' +
+                '</div>',
         },
 
         //多行输入框
@@ -660,7 +661,7 @@
 
 
         _initFormActionButtons: function () {
-            let template = this.options.buttonTemplate;
+            let template = this.options.actionButtonTemplate;
             if (!template || template === "") {
                 return;
             }
@@ -668,8 +669,8 @@
             let body = this._getRenderMethodBody(template);
             let bsFormBuilder = this;
 
-            let buttons = this.options.buttons || [];
-            for (let button of buttons) {
+            let actionButtons = this.options.actionButtons || [];
+            for (let button of actionButtons) {
                 let paras = ["$button", "text", "mainClass", "iconClass"];
 
                 let values = paras.map(k => button[k] || "");
@@ -812,7 +813,7 @@
         _initEvents: function () {
             var bsFormBuilder = this;
             //container 下的每个 item 的点击事件
-            $(".bsFormContainer").on("click", ".bs-form-item", function (event) {
+            this.$container.on("click", ".bs-form-item", function (event) {
                 console.log("bs-form-item click >>>>>>", event)
                 event.stopPropagation();
                 bsFormBuilder.makeFormItemActive($(this).attr('id'));
@@ -820,14 +821,14 @@
 
 
             //container 下的每个 item 的 复制按钮 的点击事件
-            $(".bsFormContainer").on("click", ".bs-item-copy", function (event) {
+            this.$container.on("click", ".bs-item-copy", function (event) {
                 event.stopPropagation();
                 var currentId = $(this).closest('.bs-form-item').attr('id');
                 bsFormBuilder.copyFormItem(currentId);
             })
 
             //container 下的每个 item 的 复制按钮 的删除事件
-            $(".bsFormContainer").on("click", ".bs-item-del", function (event) {
+            this.$container.on("click", ".bs-item-del", function (event) {
                 event.stopPropagation();
                 var $bsFormItem = $(this).closest('.bs-form-item');
                 bsFormBuilder.deleteFormItem($bsFormItem.attr("id"));
@@ -1757,6 +1758,26 @@
          */
         isBuilderMode: function () {
             return this.options.mode === "builder";
+        },
+
+
+        /**
+         * 销毁整个组件
+         */
+        destroy: function () {
+            this.options = null;
+            this.defaultProps = null;
+            this.propTemplates = null;
+            this.useComponents = null;
+            this.$container = null;
+            this.$containerPlaceHolder = null;
+            this.$propsPanel = null;
+            this.components = null;
+            this.datas = null;
+            this.currentData = null;
+            this.$rootEl.data('bsFormBuilder', null);
+            this.$rootEl.html('');
+            this.$rootEl = null;
         },
 
     }

@@ -161,7 +161,8 @@
                 '  <div class="flex-auto">' +
                 '    {{~ for(let option of options)}}' +
                 '    <div class="form-check form-check-inline">' +
-                '      <input class="form-check-input onchange" type="radio" {{~ if(value.indexOf(option.value) >=0 )}} checked {{~end}} ' +
+                '      <input class="form-check-input onchange" name="{{id}}" type="radio" ' +
+                '           {{~ if(value == option.value )}} checked {{~end}} ' +
                 '           data-attr="{{name}}" id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
                 '      <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
                 '    </div>' +
@@ -1613,8 +1614,15 @@
             values[0] = prop;
             values[1] = data;
 
-            return new Function(...paras, body)(...values)
-                .replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
+            try {
+                return new Function(...paras, body)(...values)
+                    .replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
+            } catch (err) {
+                console.error(err);
+                console.error("template >>>", template);
+                return "";
+            }
+
         },
 
 

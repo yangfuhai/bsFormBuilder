@@ -94,7 +94,8 @@
 - refreshDataIndex($parentElement)：刷新 data 的 index 属性
 - refreshPropsPanel()：渲染（刷新）属性面板
 - renderPropTemplate(prop, data, template)：渲染属性模板
-- exportToJson()：导出 data 数据
+- exportToJson()：导出 json 数据
+- exportToHtml()：导出 html 数据
 - getDatas()：获取 datas 数据，并可以对其进行修改
 - addDataToRoot(data)：添加一个 data 到根节点
 - addDatasToRoot(array)：添加一个 data 数组到根节点
@@ -296,13 +297,15 @@ $('#builder').bsFormBuilder(options)
 git clone https://gitee.com/fuhai/bs-form-builder.git
 ```
 
-2、编译
+2、安装依赖
 
 ```shell
 npm install
 ```
 
-3、构建
+> PS：在安装依赖的过程中，可能会出现网络错误，请配置好网络环境，或者多安装几次...
+
+3、构建编译
 
 ```shell
 npm run build

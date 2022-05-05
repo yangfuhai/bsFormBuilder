@@ -56,8 +56,8 @@
   actionButtonTemplate:'',     
   //组件扩展配置，配置的内容可以覆盖掉系统的配置
   components: {},
-  //属性扩展配置
-  props: {},
+  //每个组件的默认属性
+  defaultProps: [],
   //属性渲染的 html 模板配置
   propTemplates: {},
   //初始化回调方法
@@ -157,12 +157,6 @@ bsFormBuilder 已经内置了 4 个属性：tag、id、name、label，任何组�
 {
     "name": "多行输入框",
     "tag": "textarea",
-    "drag": {
-        "title": "多行输入框",
-        "type": "base",
-        "index": 100,
-        "iconClass": "bi bi-textarea-resize"
-    },
     "props": [
         {
             name: "rows",
@@ -173,7 +167,8 @@ bsFormBuilder 已经内置了 4 个属性：tag、id、name、label，任何组�
             disabled: false,
             required: true,
         }
-    ]
+    ],
+     "template":"...."   
 }
 ```
 
@@ -225,4 +220,70 @@ textarea 定义了名称为 rows 的属性，template 必须通过 `{{rows}}` �
 
 ### 4、属性扩展
 
+理论上，属性面板支持 input、select、number、switch、checkbox、radio 这 6 种属性类型，已经够用了，不过 
+bs-form-builder 依然支持通过在初始化的时候，通过初始化函数来扩展自己的属性面板设置类型。
+
+属性扩展如下：
+
+```javascript
+var options = {
+    propTemplates: {
+        otherType:function (){
+            return '<div> </div>'
+        }
+    },
+    defaultProps:[
+        {
+            name: "属性名称",
+            type: "otherType",
+            label: "属性label",
+            placeholder: "请输入行数..."
+        }
+    ]
+}
+$('#builder').bsFormBuilder(options)
+```
+
+或者
+
+```javascript
+var options = {
+    propTemplates: {
+        otherType:function (){
+            return '<div> </div>'
+        }
+    },
+    components:{
+        component1 :{
+            "name": "自定义组件1",
+            "tag": "component1",
+            "props": [
+                {
+                    name: "属性名称1",
+                    type: "otherType",
+                    label: "属性名称1",
+                }
+            ],
+            "template":"...."
+        },
+        component2 :{
+            "name": "自定义组件2",
+            "tag": "component2",
+            "props": [
+                {
+                    name: "属性名称2",
+                    type: "otherType",
+                    label: "属性名称2",
+                }
+            ],
+            "template":"...."
+        }
+    }
+}
+$('#builder').bsFormBuilder(options)
+```
+
+
 ### 5、交流社区
+
+QQ群：117662146

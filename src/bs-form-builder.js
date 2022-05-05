@@ -19,6 +19,29 @@
     var defaultOptions = {
         mode: "builder", // 模式 builder,view
         useComponents: [], //使用的组件 use components
+        buttons: [
+            {
+                text: '导出',
+                mainClass: 'btn-primary',
+                iconClass: 'bi bi-arrow-up pr-1',
+                onclick: ''
+            },
+            {
+                text: '预览',
+                mainClass: 'btn-primary',
+                iconClass: 'bi bi-eye pr-1',
+                onclick: ''
+            },
+            {
+                text: '删除',
+                mainClass: 'btn-danger',
+                iconClass: 'bi bi-trash pr-1',
+                onclick: ''
+            },
+        ],
+        buttonTemplate: '<button type="button" class="btn btn-sm {{mainClass}}" onclick="{{onclick}}">' +
+            '  <i class="{{iconClass}}"></i>{{text}}' +
+            '</button>',
     };
 
     //每个组件(component) 的默认属性
@@ -443,6 +466,9 @@
             //初始化默认的组件库
             this._initComponents();
 
+            //初始化操作按钮
+            this._initFormActionButtons();
+
             //初始化拖动的组件
             this._initDragComponents();
 
@@ -593,19 +619,7 @@
                 '            </div>' +
                 '            <!-- 中间内容 -->' +
                 '            <div class="bs-container-panel col-md-6  col-sm-4">' +
-                '                <div class="w-100 pd10 border-bottom text-right pt-1 pb-1">' +
-                '                    <button type="button" class="btn btn-primary btn-sm btn-export mr-2">' +
-                '                        <i class="bi bi-box-arrow-in-up pr-1"></i>导出' +
-                '                    </button>' +
-                '                    <button type="button" class="btn btn-primary btn-sm btn-import mr-2">' +
-                '                        <i class="bi bi-box-arrow-in-down pr-1"></i>导入' +
-                '                    </button>' +
-                '                    <button type="button" class="btn btn-primary btn-sm btn-component mr-2">' +
-                '                        <i class="bi bi-eye pr-1"></i>预览' +
-                '                    </button>' +
-                '                    <button type="button" class="btn btn-sm btn-danger btn-clear">' +
-                '                        <i class="bi bi-trash pr-1"></i>清空' +
-                '                    </button>' +
+                '                <div class="w-100 pd10 border-bottom text-right pt-1 pb-1 bsFormActions">' +
                 '                </div>' +
                 '                <div style="width: 100%;" class="bsFormContainer">' +
                 '                    <div class="placeholder-box">从左侧拖入组件进行表单设计</div>' +
@@ -694,6 +708,29 @@
                 '                </div>' +
                 '            </div>' +
                 '        </div>')
+        },
+
+
+        _initFormActionButtons: function () {
+            let template = this.options.buttonTemplate;
+            if (!template || template === "") {
+                return;
+            }
+
+            let body = this._getRenderMethodBody(template);
+
+            let buttons = this.options.buttons || [];
+            for (let button of buttons) {
+                let paras = ["$button", "text", "mainClass", "iconClass", "onclick"];
+
+                let values = paras.map(k => button[k] || "");
+                values[0] = button;
+
+                let html = new Function(...paras, body)(...values)
+                    .replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
+
+                $(".bsFormActions").append(html);
+            }
         },
 
         /**

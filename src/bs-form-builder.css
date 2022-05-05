@@ -363,3 +363,7 @@ select {
     border-top: 1px solid #e8eaec;
     transform: translateY(50%);
 }
+
+.bsFormActions button{
+    margin-right: 0.5rem;
+}

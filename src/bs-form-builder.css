@@ -198,7 +198,7 @@ select {
     font-weight: bold;
 }
 
-.item-body {
+.bs-template-item {
     border: 1px solid #f6f6f6;
     padding: 20px;
     border-radius: 5px;
@@ -206,7 +206,7 @@ select {
     margin-bottom: 10px;
 }
 
-.item-body:hover {
+.bs-template-item:hover {
     border: 1px solid #007bff;
 }
 

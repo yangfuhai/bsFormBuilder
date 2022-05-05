@@ -42,6 +42,16 @@
         buttonTemplate: '<button type="button" class="btn btn-sm {{mainClass}}" onclick="{{onclick}}">' +
             '  <i class="{{iconClass}}"></i>{{text}}' +
             '</button>',
+        templateLoadUrl:'',
+        templateItemTemplate:'<div class="bs-template-item" id="{{id}}">' +
+                            '  <div class="bs-template-item-image">' +
+                            '    <img src="{{imageUrl}}" class="img-fluid" />' +
+                            '  </div>' +
+                            '  <div class="bs-template-item-desc">' +
+                            '    <span class="bs-template-item-title">{{title}}</span>' +
+                            '    <button type="button" class="btn btn-link">加载此模板</button>' +
+                            '  </div>' +
+                            '</div>',
     };
 
     //每个组件(component) 的默认属性
@@ -603,8 +613,7 @@
                 '                            </div>' +
                 '                        </div>' +
                 '                        <div class="tab-pane fade" id="template" role="tabpanel" aria-labelledby="module-tab">' +
-                '                            <div id="item-list" class="item-list">' +
-                '                                <div class="text-center">没有更多了</div>' +
+                '                            <div id="bs-template-item-list" class="bs-template-item-list">' +
                 '                            </div>' +
                 '                        </div>' +
                 '                    </div>' +
@@ -627,75 +636,10 @@
                 '                               href="#component-props-content"' +
                 '                               role="tab" aria-controls="component" aria-selected="true">组件属性</a>' +
                 '                        </li>' +
-                '                        <li class="nav-item w-50">' +
-                '                            <a class="nav-link" id="form-props-tab" data-toggle="tab"' +
-                '                               href="#form-props-content"' +
-                '                               role="tab"' +
-                '                               aria-controls="module" aria-selected="false">表单属性</a>' +
-                '                        </li>' +
                 '                    </ul>' +
                 '                    <div class="tab-content pt-3">' +
                 '                        <div class="tab-pane fade show active" id="component-props-content" role="tabpanel"' +
                 '                             aria-labelledby="component-props-tab">' +
-                '                        </div>' +
-                '                        <div class="tab-pane fade" id="form-props-content" role="tabpanel"' +
-                '                             aria-labelledby="form-props-tab">' +
-                '                              <div class="form-group clearfix">' +
-                '                                    <div class="form-label-left">' +
-                '                                        <span class="red">*</span>' +
-                '                                        <label for="formItemId">表单id</label>' +
-                '                                    </div>' +
-                '                                    <div class="flex-auto">' +
-                '                                        <input type="text" class="form-control" id="formItemId" value="formItem"' +
-                '                                               disabled>' +
-                '                                    </div>' +
-                '                            </div>' +
-                '                            <div class="form-group clearfix">' +
-                '                                <div class="form-label-left">' +
-                '                                    <label for="label">表单类型</label>' +
-                '                                </div>' +
-                '                                <div class="flex-auto">' +
-                '                                    <div class="form-check form-check-inline">' +
-                '                                        <input class="form-check-input" type="radio" name="formtype" id="radio1"' +
-                '                                               value="option1" checked>' +
-                '                                        <label class="form-check-label" for="radio1">内置</label>' +
-                '                                    </div>' +
-                '                                    <div class="form-check form-check-inline">' +
-                '                                        <input class="form-check-input" type="radio" name="formtype" id="radio2"' +
-                '                                               value="option2">' +
-                '                                        <label class="form-check-label" for="radio2">弹窗</label>' +
-                '                                    </div>' +
-                '                                </div>' +
-                '                            </div>' +
-                '                            <div class="form-group clearfix">' +
-                '                                <div class="form-label-left">' +
-                '                                    <label for="label">表单按钮</label>' +
-                '                                </div>' +
-                '                                <div class="flex-auto">' +
-                '                                    <div class="form-check form-check-inline">' +
-                '                                        <input class="form-check-input" type="radio" name="postBtn" id="radioBtn1"' +
-                '                                               value="option1" checked>' +
-                '                                        <label class="form-check-label" for="radioBtn1">开启</label>' +
-                '                                    </div>' +
-                '                                    <div class="form-check form-check-inline">' +
-                '                                        <input class="form-check-input" type="radio" name="postBtn" id="radioBtn2"' +
-                '                                               value="option2">' +
-                '                                        <label class="form-check-label" for="radioBtn2">关闭</label>' +
-                '                                    </div>' +
-                '                                </div>' +
-                '                            </div>' +
-                '                            <div class="form-group clearfix">' +
-                '                                <div class="form-label-left">' +
-                '                                    <label for="name">表单宽度</label>' +
-                '                                </div>' +
-                '                                <div class="flex-auto">' +
-                '                                    <input type="number" min="1" class="form-control jp-range"' +
-                '                                           value="254">' +
-                '                                    <span>-</span>' +
-                '                                    <input type="number" min="1" class="form-control jp-range"' +
-                '                                           value="254">' +
-                '                                </div>' +
-                '                            </div>' +
                 '                        </div>' +
                 '                    </div>' +
                 '                </div>' +

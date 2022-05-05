@@ -44,12 +44,16 @@
 
 ```javascript
 {
-  //模式: "view" 渲染结果,"builder" 构建工具
+  //模式: "view" 预览模式, "builder" 构建工具模式
   mode: "view",
   //使用哪些组件
   useComponents:[],    
   //初始化数据
-  datas: [],
+  datas:[],
+  //操作按钮列表      
+  actionButtons:[],
+  //操作按钮模板
+  actionButtonTemplate:'',     
   //组件扩展配置，配置的内容可以覆盖掉系统的配置
   components: {},
   //属性扩展配置
@@ -86,6 +90,7 @@
 - getParentArrayByElementId(elementId)：通过节点 id 获取其所在的 数组
 - refreshDataIndex($parentElement)：刷新 data 的 index 属性
 - refreshPropsPanel()：渲染（刷新）属性面板
+- renderPropTemplate(prop, data, template)：渲染属性模板
 - exportToJson()：导出 data 数据
 - getDatas()：获取 datas 数据，并可以对其进行修改
 - addDataToRoot(data)：添加一个 data 到根节点
@@ -96,6 +101,7 @@
 - refreshDataElement(data)：刷新 data 数据到 html
 - isViewMode()：是否是视图模式
 - isBuilderMode()：是否是构建模式（构建工具）
+- destroy()：销毁整个组件
 
 ### 3、组件扩展
 
@@ -107,27 +113,22 @@
     "name": "输入框",
     "tag": "input",
     "drag": {
-        "title": "输入框",
-        "type": "base",
-        "index": 100,
-        "iconClass": "bi bi-terminal"
-    },
-    "props": [ ],
-    "propsfilter":[ ],
+            "title": "输入框",
+            "type": "base",
+            "index": 100,
+            "iconClass": "bi bi-terminal"
+         },
     "template": '<div class="bs-form-item">' +
-        '           <div class="form-group clearfix">' +
-        '               <div class="form-label-left">' +
-        '                   <label for="label">{{label}}</label>' +
-        '               </div>' +
-        '               <div class="flex-auto">' +
-        '                   <input type="text" class="form-control" id="{{id}}" placeholder="{{placeholder}}" value="{{value}}">' +
-        '               </div>' +
-        '           </div>' +
-         '          </div>' +
-        '       </div>',
-    onAdd:function (bsFormBuilder, data) {},
-    onPropChange:function (bsFormBuilder, data, propName, value) {},
-    render:function (bsFormBuilder, component, data) {},
+                '  <div class="form-group clearfix">' +
+                '    <div class="form-label-left">' +
+                '      <label for="label">{{label}}</label>' +
+                '    </div>' +
+                '    <div class="flex-auto">' +
+                '      <input type="text" class="form-control" id="{{id}}"' +
+                '        placeholder="{{placeholder}} value="{{value}}" />' +
+                '    </div>' +
+                '  </div>' +
+                '</div>',
 }
 ```
 
@@ -137,6 +138,8 @@
 - drag：右侧显示的内容
 - props：组件支持的属性配置
 - propsfilter：系统属性过滤配置，若为配置则显示系统存在的 props 定义
+- withOptions：该属性是否带有 options 配置
+- defaultOptions：options 的默认配置值
 - template：模板，可以是一个 string 字符串，也可以是一个返回一个 string 的 function(component, data)。
 - onAdd：当组件被添加到 html 的时候回调，或者被拖动的时候，注意：当组件从一个子容器被拖动到另一个子容器，也会调用此方法。
 - onPropChange：当属性被修改的时候，回调。
@@ -163,25 +166,14 @@ bsFormBuilder 已经内置了 4 个属性：tag、id、name、label，任何组�
     "props": [
         {
             name: "rows",
-            type: "input",
+            type: "number",
             label: "行数",
             placeholder: "请输入行数...",
-            defaultValue: 5,
+            defaultValue: 3,
             disabled: false,
             required: true,
         }
-    ],
-    "template": '<div class="bs-form-item">' +
-        '                   <div class="form-group clearfix">' +
-        '                       <div class="form-label-left">' +
-        '                           <label for="{{id}}">{{label}}</label>' +
-        '                       </div>' +
-        '                       <div class="flex-auto">' +
-        '                           <textarea name="{{name}}" class="form-control" id="{{id}}" rows="{{rows}}"' +
-        '                                     placeholder="{{placeholder}}">{{value}}</textarea>' +
-        '                       </div>' +
-        '                   </div>' +
-        '               </div>',
+    ]
 }
 ```
 
@@ -190,6 +182,7 @@ bsFormBuilder 已经内置了 4 个属性：tag、id、name、label，任何组�
 - 输出：{{attr}} 
 - for循环：{{~ for(let item of array)}}  -{{item.name}}-  {{~end}}
 - if循环：{{~ if( x === "string")}}  -{{x}}-  {{~end}}
+- if-elseif-else循环：{{~ if( x === "string")}} - {{~elseif(x === "other")} - {{~else}} - {{~end}}
 
 **template 内置变量：**
 - $bsFormBuilder : bsFormBuilder 实例

@@ -287,3 +287,24 @@ $('#builder').bsFormBuilder(options)
 ### 5、交流社区
 
 QQ群：117662146
+
+
+## 二次开发
+
+1、下载代码
+
+```shell
+git clone https://gitee.com/fuhai/bs-form-builder.git
+```
+
+2、编译
+
+```shell
+npm install
+```
+
+3、构建
+
+```shell
+npm run build
+```

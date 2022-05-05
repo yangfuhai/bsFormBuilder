@@ -13,7 +13,7 @@
 - 7、支持 “模板” 功能，可以选择已有模板进行二次开发
 - 8、内置轻量的 html 渲染引擎，速度极快，极好用~~
 
-## 使用方法
+## 快速使用
 
 ```html
 <div id="builder"></div>
@@ -36,7 +36,7 @@
 <script src="path/bs-form-builder.min.all.js"></script>
 ```
 
-## Bs-Form-Builder 提供的方法和接口
+## 开发文档
 
 ### 1、初始化
 
@@ -284,10 +284,6 @@ $('#builder').bsFormBuilder(options)
 ```
 
 
-### 5、交流社区
-
-QQ群：117662146
-
 
 ## 二次开发
 
@@ -308,3 +304,7 @@ npm install
 ```shell
 npm run build
 ```
+
+## 交流社区
+
+QQ群：117662146

@@ -1,16 +1,16 @@
 {
-  "name": "bs-form-builder",
+  "name": "bsFormBuilder",
   "version": "1.0.0",
   "author": "Michael <fuhai999@gmail.com>",
   "description": "A Form Builder base on JQuery and Bootstrap.",
   "license": "LGPL",
-  "homepage": "https://gitee.com/fuhai/bs-form-builder",
+  "homepage": "https://gitee.com/fuhai/bsFormBuilder",
   "repository": {
     "type": "git",
-    "url": "https://gitee.com/fuhai/bs-form-builder"
+    "url": "https://gitee.com/fuhai/bsFormBuilder"
   },
   "bugs": {
-    "url": "https://gitee.com/fuhai/bs-form-builder/issues"
+    "url": "https://gitee.com/fuhai/bsFormBuilder/issues"
   },
   "keywords": [
     "jquery",

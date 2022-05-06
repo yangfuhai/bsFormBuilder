@@ -1,5 +1,5 @@
 {
-  "name": "bs-form-builder",
+  "name": "bsFormBuilder",
   "description": "A Form Builder base on JQuery and Bootstrap.",
   "main": "bs-form-builder.js",
   "authors": [

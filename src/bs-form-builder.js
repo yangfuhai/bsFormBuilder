@@ -1136,6 +1136,14 @@
          */
         _invokeComponentOnDelete: function (data) {
 
+            //销毁 component 的 sortable
+            $("#" + data.elementId).find('.bs-form-container').each(function () {
+                var sortable = $(this).data('bsItemSortable');
+                if (sortable) {
+                    sortable.destroy();
+                }
+            });
+
             if (data.component && typeof data.component.onDelete === "function") {
                 data.component.onDelete(this, data);
             }
@@ -1467,13 +1475,7 @@
                 return;
             }
 
-            //销毁 component 的 sortable
-            $("#" + data.elementId).find('.bs-form-container').each(function () {
-                var sortable = $(this).data('bsItemSortable');
-                if (sortable) {
-                    sortable.destroy();
-                }
-            });
+
 
             this._invokeComponentOnDelete(data);
             delete data;

@@ -25,9 +25,20 @@ gulp.task('js-minify', function () {
         .pipe(gulp.dest('./dist'));
 });
 
+gulp.task('js-minify-components', function () {
+    return gulp.src('src/bs-form-builder-components.js')
+        .pipe(uglify({}))
+        .pipe(header(comment, {
+            pkg: pkg
+        }))
+        .pipe(rename('bs-form-builder-components.min.js'))
+        .pipe(gulp.dest('./dist'));
+});
+
 gulp.task('js-concat', function () {
     return gulp.src([
         'bower_components/Sortable/sortable.min.js',
+        'dist/bs-form-builder-components.min.js',
         'dist/bs-form-builder.min.js',
     ])
         .pipe(concat('bs-form-builder.min.all.js'))
@@ -43,6 +54,7 @@ gulp.task('css-minify', function () {
 
 gulp.task('default', gulp.series([
     'js-minify',
+    'js-minify-components',
     'js-concat',
     'css-minify'
 ]));

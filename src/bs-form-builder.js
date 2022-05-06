@@ -429,7 +429,7 @@
             }
         }
 
-        //每个 prop 显示的 html 模板
+        //每个属性类型渲染的 html
         this.propTemplates = $.extend(defaultPropTemplates, options.propTemplates);
 
         //当前的开启的组件
@@ -450,7 +450,7 @@
         //所有的组件, map(key== tag, value == component)
         this.components = {};
 
-        //渲染的数据, map(key == id, value == component)
+        //渲染的数据
         this.datas = [];
 
         //当前获得焦点的组件
@@ -554,12 +554,13 @@
                 return;
             }
 
-            //根据 index 对 dataArray 进行升序排序
-            //越小越靠前
+            //根据 index 对 arra 进行升序排序
+            //index 越小越靠前
             array.sort((a, b) => a.index - b.index);
 
             for (let data of array) {
-                //此时的 data 是没有和 component 绑定的
+
+                //若系统没有此 data 定义的组件，忽略此 data 数据
                 let component = this.components[data.tag];
                 if (!component) {
                     console.warn("Can not find tag: " + data.tag);
@@ -567,7 +568,7 @@
                 }
 
 
-                //为 data 设置 component 的默认数据
+                //为 data 设置默认数据，默认数据来源于 component 的 defaultValue 属性
                 if (component.props) {
                     for (const prop of component.props) {
                         if (prop.defaultValue && !data[prop.name]) {

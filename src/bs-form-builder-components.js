@@ -87,5 +87,112 @@ bsComponentsDef.push(...[
             '</div>',
     },
 
+    //单选框
+    {
+        "name": "单选框",
+        "tag": "radio",
+        "drag": {
+            "title": "单选框",
+            "type": "base",
+            "index": 100,
+            "iconClass": "bi bi-record2"
+        },
+        withOptions: true,
+        defaultOptions: [
+            {
+                text: "选项1",
+                value: "value1"
+            },
+            {
+                text: "选项2",
+                value: "value2"
+            }
+        ],
+        "template": '<div class="bs-form-item">' +
+                    '  <div class="form-group clearfix">' +
+                    '    <div class="form-label-left">' +
+                    '      <label for="label">{{label}}</label>' +
+                    '    </div>' +
+                    '    <div class="flex-auto">' +
+                    '      <div class="form-check form-check-inline">' +
+                    '        {{~for(let option of options)}}' +
+                    '        <input class="form-check-input" type="radio" name="{{name}}" ' +
+                    '               id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
+                    '        <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
+                    '        {{~end}}' +
+                    '      </div>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '</div>',
+
+    },
+
+
+    //复选框
+    {
+        "name": "单选框",
+        "tag": "checkbox",
+        "drag": {
+            "title": "单选框",
+            "type": "base",
+            "index": 100,
+            "iconClass": "bi bi-check-square"
+        },
+        withOptions: true,
+        defaultOptions: [
+            {
+                text: "选项1",
+                value: "value1"
+            },
+            {
+                text: "选项2",
+                value: "value2"
+            }
+        ],
+        "template": '<div class="bs-form-item">' +
+                    '  <div class="form-group clearfix">' +
+                    '    <div class="form-label-left">' +
+                    '      <label for="label">{{label}}</label>' +
+                    '    </div>' +
+                    '    <div class="flex-auto">' +
+                    '      <div class="form-check form-check-inline">' +
+                    '        {{~for(let option of options)}}' +
+                    '        <input class="form-check-input" type="checkbox" name="{{name}}" ' +
+                    '               id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
+                    '        <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
+                    '        {{~end}}' +
+                    '      </div>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '</div>',
+
+    },
+
+    //开关
+    {
+        "name": "开关",
+        "tag": "switch",
+        "drag": {
+            "title": "开关",
+            "type": "base",
+            "index": 100,
+            "iconClass": "bi bi-toggle-on"
+        },
+        "template": '<div class="bs-form-item">' +
+                    '  <div class="form-group clearfix">' +
+                    '    <div class="form-label-left">' +
+                    '      <legend class="col-form-label pt-0">{{label}}</legend>' +
+                    '    </div>' +
+                    '    <div class="flex-auto">' +
+                    '      <div class="custom-control custom-switch">' +
+                    '        <input type="checkbox" class="custom-control-input" id="{{id}}" />' +
+                    '        <label class="custom-control-label" for="{{id}}"></label>' +
+                    '      </div>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '</div>',
+
+    },
+
 ]);
 

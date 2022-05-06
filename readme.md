@@ -184,7 +184,7 @@ bsFormBuilder 已经内置了 4 个属性：tag、id、name、label，任何组�
 - if-elseif-else循环：{{~ if( x === "string")}} - {{~elseif(x === "other")} - {{~else}} - {{~end}}
 
 **template 内置变量：**
-- $bsFormBuilder : bsFormBuilder 实例
+- $builder : bsFormBuilder 实例
 - $component：component 实例
 - $data：当前 component 的数据
 - $children：html 数组，若当前是一个容器，那么该容器下的 html 内容。

@@ -333,9 +333,8 @@
                 '                </div>' +
                 '        </div>',
             "onAdd": function (bsFormBuilder, data) {
-                var $row = $('#' + data.elementId).children(".form-group").children();
-                $row.children().each(function (index, item) {
-                    $(this).attr('data-index', index);
+                $("#" + data.elementId).find('.bs-form-container').each(function () {
+                    $(this).attr('data-index', $(this).index());
                     var sortable = $(this).data('bsItemSortable');
                     if (!sortable) {
                         sortable = new Sortable($(this)[0], {
@@ -349,6 +348,14 @@
                             },
                         });
                         $(this).data('bsItemSortable', sortable);
+                    }
+                });
+            },
+            "onDelete": function (bsFormBuilder, data) {
+                $("#" + data.elementId).find('.bs-form-container').each(function () {
+                    var sortable = $(this).data('bsItemSortable');
+                    if (sortable) {
+                        sortable.destroy();
                     }
                 });
             },
@@ -378,6 +385,7 @@
                         if (currentData.children && currentData.children[index]) {
                             delete currentData.children[index];
                         }
+
 
                         $lastCol.remove();
                     }
@@ -412,12 +420,62 @@
                 return true;
             }
         },
+
+        //tab布局
+        {
+            "name": "Tab选项卡",
+            "tag": "tab",
+            "drag": {
+                "title": "Tab选项卡",
+                "type": "container",
+                "index": 100,
+                "iconClass": "bi bi-layout-text-sidebar"
+            },
+            withOptions: true,
+            defaultOptions: [
+                {
+                    text: "选项1",
+                    value: "tab1"
+                },
+                {
+                    text: "选项2",
+                    value: "tab2"
+                }
+            ],
+            "template": '<div class="bs-form-item">' +
+                '  <div class="form-group clearfix">' +
+                '    <div class="pdlr-15">' +
+                '      <ul class="nav nav-tabs" role="tablist">' +
+                '        {{~for (var i = 0;i<options.length;i++)}}' +
+                '        <li class="nav-item">' +
+                '          <a class="nav-link {{~if (i == 0)}}active {{~end}}" id="{{options[i].value}}-tab" data-toggle="tab" href="#{{options[i].value}}"' +
+                '            role="tab" aria-controls="{{options[i].value}}" aria-selected="{{~if(i==0)}}true{{~else}}false{{~end}}" >{{options[i].text}}</a >' +
+                '        </li>' +
+                '        {{~end}}' +
+                '      </ul>' +
+                '      <div class="tab-content">' +
+                '        {{~for (var i = 0;i<options.length;i++)}}' +
+                '        <div class="bs-form-container tab-pane fade {{~if (i == 0)}}active show {{~end}}"' +
+                '          id="{{options[i].value}}" role="tabpanel" aria-labelledby="{{options[i].value}}-tab" >' +
+                '          {{$children[i]}}' +
+                '        </div>' +
+                '        {{~end}}' +
+                '      </div>' +
+                '    </div>' +
+                '  </div>' +
+                '</div>',
+            "onAdd": function (bsFormBuilder, data) {
+
+            },
+            "onPropChange": function (bsFormBuilder, data, propName, value) {
+
+            }
+        },
     ];
 
 
     //BsFormBuilder 类的定义以及初始化
     var BsFormBuilder = function (element, options) {
-
         //bsFormBuilder 配置信息
         this.options = $.extend(defaultOptions, options);
 
@@ -830,8 +888,9 @@
             } else {
                 this.$containerPlaceHolder.hide();
                 for (let data of this.datas) {
-                    var html = this.render(data, false).outerHTML;
-                    this.$container.append(html);
+                    var el = this.render(data, false);
+                    this._invokeComponentOnAddBefore(data, el)
+                    this.$container.append(el.outerHTML);
                     this._invokeComponentOnAdd(data);
                 }
             }
@@ -921,7 +980,7 @@
 
             //添加 item
             this.$propsPanel.on("click", ".option-add", function (event) {
-                var options = bsFormBuilder.currentData.options || [];
+                var options = bsFormBuilder.deepCopy(bsFormBuilder.currentData.options, false) || [];
 
                 var index = bsFormBuilder.optionsCounter++;
                 options.push({text: "选项" + index, value: "值" + index})
@@ -983,8 +1042,6 @@
          * @private
          */
         _onDragAdd: function (evt) {
-            console.log(">>>> onDragAdd: ", evt, this)
-
             var data = null;
 
             var $item = $(evt.item);
@@ -996,8 +1053,11 @@
                 data = this.createComponentData(this.components[tag]);
 
                 //渲染 component template
-                var template = this.render(data, false);
-                $(evt.item).replaceWith(template);
+                var el = this.render(data, false);
+
+                this._invokeComponentOnAddBefore(data, el);
+                $(evt.item).replaceWith(el);
+                this._invokeComponentOnAdd(data);
             }
 
             //从一个容器移动到另一个容器
@@ -1038,13 +1098,22 @@
             }
 
 
-            // component 定义了自己的 onAdd 方法
-            this._invokeComponentOnAdd(data);
-
-
             //让当前的组件处于选中状态
             this.makeFormItemActive(data.elementId);
             this.refreshDataIndex($to);
+        },
+
+
+        /**
+         * 执行 component 的  onAddBefore 方法
+         * @param data
+         * @param el
+         * @private
+         */
+        _invokeComponentOnAddBefore: function (data, el) {
+            if (data.component && typeof data.component.onAddBefore === "function") {
+                data.component.onAddBefore(this, data, el);
+            }
         },
 
 
@@ -1055,6 +1124,18 @@
         _invokeComponentOnAdd: function (data) {
             if (data.component && typeof data.component.onAdd === "function") {
                 data.component.onAdd(this, data);
+            }
+        },
+
+
+        /**
+         * 执行 component 的 onDelete 方法
+         * @param data
+         * @private
+         */
+        _invokeComponentOnDelete: function (data) {
+            if (data.component && typeof data.component.onDelete === "function") {
+                data.component.onDelete(this, data);
             }
         },
 
@@ -1373,13 +1454,23 @@
          * @param id
          */
         deleteFormItem: function (elementId) {
+
             if (this.currentData && this.currentData.elementId === elementId) {
                 this.currentData = null;
                 this.refreshPropsPanel();
             }
 
+            var data = this.getDataByElementId(elementId);
+            if (!data) {
+                return;
+            }
+
+            this._invokeComponentOnDelete(data);
+            delete data;
+
             this.removeDataByElementId(elementId);
             $("#" + elementId).remove();
+
         },
 
 
@@ -1397,13 +1488,13 @@
             var newData = this.deepCopy(orignalData, true);
 
             //通过 data 来渲染 html
-            var html = this.render(newData, false);
+            var el = this.render(newData, false);
 
             //复制的 element
             var $orignalElement = $("#" + elementId);
-            $orignalElement.after(html);
 
-            //追加 html 后，回调 component 的 onAdd 方法
+            this._invokeComponentOnAddBefore(newData, el)
+            $orignalElement.after(el);
             this._invokeComponentOnAdd(newData);
 
 
@@ -1752,8 +1843,11 @@
          * @param data
          */
         refreshDataElement: function (data) {
-            var newHtml = this.render(data, true);
-            $("#" + data.elementId).replaceWith(newHtml);
+            var el = this.render(data, true);
+
+            this._invokeComponentOnAddBefore(data, el);
+            $("#" + data.elementId).replaceWith(el);
+            this._invokeComponentOnAdd(data);
         },
 
         /**

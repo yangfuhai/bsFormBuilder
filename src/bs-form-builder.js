@@ -326,8 +326,8 @@
             "template": '<div class="bs-form-item">' +
                 '               <div class="form-group clearfix">' +
                 '                     <div class="row pdlr-15">' +
-                '                           {{~for (var i=0;i<$data.grid;i++)}}' +
-                '                           <div class="col-{{12/$data.grid}} bs-form-container">{{$children[i]}}</div>' +
+                '                           {{~for (var i=0;i<grid;i++)}}' +
+                '                           <div class="col-{{12/grid}} bs-form-container">{{$children[i]}}</div>' +
                 '                           {{~end}}' +
                 '                      </div>' +
                 '                </div>' +
@@ -1211,12 +1211,12 @@
          * @private
          */
         genRandomId: function () {
-            var idArray = [];
+            var id = [];
             var hexDigits = "0123456789abcdef";
             for (var i = 0; i < 10; i++) {
-                idArray[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+                id[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
             }
-            return idArray.join("");
+            return id.join("");
         },
 
 

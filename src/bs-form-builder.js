@@ -221,7 +221,7 @@
                 '    <i class="bi bi-arrows-move pointer pr-2 option-handle"></i>' +
                 '    <input type="text" value="{{option.text}}" class="form-control mr-2 option-input text" />' +
                 '    <input type="text" value="{{option.value}}" class="form-control mr-2 option-input value" />' +
-                '    <i class="bi bi-dash-square pointer option-delete"></i>' +
+                '    <i class="bi bi-dash-square red pointer option-delete"></i>' +
                 '  </div>' +
                 '  {{~end}}' +
                 '  <div class="text-center option-filtered">' +

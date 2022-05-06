@@ -1,16 +1,16 @@
-# bs-form-builder
+# bsFormBuilder
 
-一个基于 JQuery + Bootstrap (v4.x) 的表单构建工具。
+一个基于 Bootstrap (v4.x) + JQuery 的、拖拽的表单构建工具。
 
 ![bsFormBuilder](./assets/images/bsformbuilder.png)
 
 
 ## 特点
 
-- 1、基于 JQuery + Bootstrap (v4.x)，简单易用
+- 1、基于 Bootstrap (v4.x) + JQuery，简单易用
 - 2、拖动的 html 组件，支持通过 Json 自定义扩展
 - 3、组件的属性面板，支持通过 Json 自定义扩展
-- 4、支持导出 json，然后自己通过 json 来构建自己的 UI 页面
+- 4、支持导出 html 和 json，然后自己通过 json 来构建 UI 页面
 - 5、支持导入 json 到 bsFormBuilder，用来进行二次编辑
 - 6、丰富的 API，方便二次开发和扩展
 - 7、支持 “模板” 功能，可以选择已有模板进行二次开发

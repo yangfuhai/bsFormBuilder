@@ -332,32 +332,6 @@
                 '                      </div>' +
                 '                </div>' +
                 '        </div>',
-            "onAdd": function (bsFormBuilder, data) {
-                $("#" + data.elementId).find('.bs-form-container').each(function () {
-                    var sortable = $(this).data('bsItemSortable');
-                    if (!sortable) {
-                        sortable = new Sortable($(this)[0], {
-                            group: 'shared',
-                            animation: 150,
-                            onAdd: function (evt) {
-                                bsFormBuilder._onDragAdd(evt);
-                            },
-                            onEnd: function (evt) {
-                                bsFormBuilder._onDragEnd(evt);
-                            },
-                        });
-                        $(this).data('bsItemSortable', sortable);
-                    }
-                });
-            },
-            "onDelete": function (bsFormBuilder, data) {
-                $("#" + data.elementId).find('.bs-form-container').each(function () {
-                    var sortable = $(this).data('bsItemSortable');
-                    if (sortable) {
-                        sortable.destroy();
-                    }
-                });
-            },
             "onPropChange": function (bsFormBuilder, data, propName, value) {
                 if (propName !== "grid") {
                     return false;
@@ -392,8 +366,6 @@
                                 sortable.destroy();
                             }
                         });
-
-
                         $lastCol.remove();
                     }
                 }
@@ -471,11 +443,13 @@
                 '  </div>' +
                 '</div>',
             "onAdd": function (bsFormBuilder, data) {
-
+                var el = $("#" + data.elementId);
+                el.find(".nav-link").on("click", function (event) {
+                    event.stopPropagation();
+                    $(this).tab('show');
+                    return false;
+                });
             },
-            "onPropChange": function (bsFormBuilder, data, propName, value) {
-
-            }
         },
     ];
 
@@ -1128,6 +1102,27 @@
          * @private
          */
         _invokeComponentOnAdd: function (data) {
+
+            let bsFormBuilder = this;
+
+            //初始化 element 的 container 容器
+            $("#" + data.elementId).find('.bs-form-container').each(function () {
+                var sortable = $(this).data('bsItemSortable');
+                if (!sortable) {
+                    sortable = new Sortable($(this)[0], {
+                        group: 'shared',
+                        animation: 150,
+                        onAdd: function (evt) {
+                            bsFormBuilder._onDragAdd(evt);
+                        },
+                        onEnd: function (evt) {
+                            bsFormBuilder._onDragEnd(evt);
+                        },
+                    });
+                    $(this).data('bsItemSortable', sortable);
+                }
+            });
+
             if (data.component && typeof data.component.onAdd === "function") {
                 data.component.onAdd(this, data);
             }
@@ -1140,6 +1135,7 @@
          * @private
          */
         _invokeComponentOnDelete: function (data) {
+
             if (data.component && typeof data.component.onDelete === "function") {
                 data.component.onDelete(this, data);
             }
@@ -1470,6 +1466,14 @@
             if (!data) {
                 return;
             }
+
+            //销毁 component 的 sortable
+            $("#" + data.elementId).find('.bs-form-container').each(function () {
+                var sortable = $(this).data('bsItemSortable');
+                if (sortable) {
+                    sortable.destroy();
+                }
+            });
 
             this._invokeComponentOnDelete(data);
             delete data;

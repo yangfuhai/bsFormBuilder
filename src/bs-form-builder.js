@@ -334,7 +334,6 @@
                 '        </div>',
             "onAdd": function (bsFormBuilder, data) {
                 $("#" + data.elementId).find('.bs-form-container').each(function () {
-                    $(this).attr('data-index', $(this).index());
                     var sortable = $(this).data('bsItemSortable');
                     if (!sortable) {
                         sortable = new Sortable($(this)[0], {
@@ -379,12 +378,20 @@
                             bsItemSortable.destroy();
                         }
 
-                        var index = $lastCol.attr("data-index");
+                        var index = $lastCol.index();
 
                         //移除 data 里的 children 数据
                         if (currentData.children && currentData.children[index]) {
                             delete currentData.children[index];
                         }
+
+                        //销毁子 sortable
+                        $lastCol.find('.bs-form-container').each(function () {
+                            var sortable = $(this).data('bsItemSortable');
+                            if (sortable) {
+                                sortable.destroy();
+                            }
+                        });
 
 
                         $lastCol.remove();
@@ -399,7 +406,6 @@
                 }
 
                 $row.children().each(function (index, item) {
-                    $(this).attr('data-index', index);
                     var sortable = $(this).data('bsItemSortable');
                     if (!sortable) {
                         sortable = new Sortable($(this)[0], {
@@ -1080,7 +1086,7 @@
             //拖动到子容器
             else {
                 var newParentId = $to.closest(".bs-form-item").attr("id");
-                var dataIndex = $to.closest(".bs-form-container").attr("data-index");
+                var dataIndex = $to.closest(".bs-form-container").index();
 
                 var newParent = this.getDataByElementId(newParentId);
 

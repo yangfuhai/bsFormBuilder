@@ -299,7 +299,7 @@
                 "title": "栅格布局",
                 "type": "container",
                 "index": 100,
-                "iconClass": "bi bi-textarea-resize"
+                "iconClass": "bi bi-grid-1x2"
             },
             "props": [
                 {
@@ -458,6 +458,9 @@
 
         //组件序号记录器，用于在添加组件的时候，生成组件的 name
         this.componentCounter = 1;
+
+        //属性面板 options 添加值是的 index 记录器
+        this.optionsCounter = 1;
 
         //初始化
         if (this.options.mode === "view") {
@@ -918,7 +921,9 @@
             //添加 item
             this.$propsPanel.on("click", ".option-add", function (event) {
                 var options = bsFormBuilder.currentData.options || [];
-                options.push({text: "选项", value: "值"})
+
+                var index = bsFormBuilder.optionsCounter++;
+                options.push({text: "选项" + index, value: "值" + index})
 
                 bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, "options", options);
                 bsFormBuilder.refreshPropsPanel();

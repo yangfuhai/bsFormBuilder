@@ -1,0 +1,7 @@
+# v1.0.1 2022-05-07
+- 新增：tab 容器 和 radio、checkbox、switch 三个组件
+- 修复：父级容器有子级容器时，此时复制父级容器时会出现子级容器无法使用的问题
+- 优化：栅格布局的 icon 和 新增 options value 的优化
+- 优化：移除 formItem 的 data-index 属性，没有必要维护此属性了
+- 优化：在 html 元素被移除时，销毁必要的 sortable 对象
+- 优化：完善代码注释

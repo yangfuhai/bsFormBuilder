@@ -410,16 +410,21 @@
                 "iconClass": "bi bi-layout-text-sidebar"
             },
             withOptions: true,
-            defaultOptions: [
-                {
-                    text: "选项1",
-                    value: "tab1"
-                },
-                {
-                    text: "选项2",
-                    value: "tab2"
-                }
-            ],
+            counter: 1,
+            defaultOptions: function (bsFormBuilder, data) {
+                let counter1 = this.counter++;
+                let counter2 = this.counter++;
+                return [
+                    {
+                        text: "选项" + counter1,
+                        value: "tab" + counter1
+                    },
+                    {
+                        text: "选项" + counter2,
+                        value: "tab" + counter2
+                    }
+                ]
+            },
             "template": '<div class="bs-form-item">' +
                 '  <div class="form-group clearfix">' +
                 '    <div class="pdlr-15">' +
@@ -450,6 +455,23 @@
                     return false;
                 });
             },
+            "onPropChange": function (bsFormBuilder, data, propName, value) {
+                if (propName !== "options") {
+                    return false;
+                }
+
+                var idDataMapping = {};
+                let oldOptions = data.options;
+                for (let i = 0; i < oldOptions.length; i++) {
+                    let oldOption = oldOptions[i];
+                    idDataMapping[oldOption.value] = data.children[i];
+                }
+
+                for (let i = 0; i < value.length; i++) {
+                    let newOption = value[i];
+                    data.children[i] = idDataMapping[newOption.value];
+                }
+            }
         },
     ];
 
@@ -1476,7 +1498,6 @@
             }
 
 
-
             this._invokeComponentOnDelete(data);
             delete data;
 
@@ -1883,8 +1904,6 @@
             if (value === "true") value = true;
             else if (value === "false") value = false;
 
-            //更新组件的 data 数据
-            data[attr] = value;
 
             //当前组件定义了 onPropChange 监听方法，并且该方法执行成功了
             //那么，可以理解为该方法会去更新 html 内容，而不通过系统继续渲染了
@@ -1892,6 +1911,9 @@
                 && data.component.onPropChange(this, data, attr, value)) {
                 return;
             }
+
+            //更新组件的 data 数据
+            data[attr] = value;
 
             this.refreshDataElement(data);
         },

@@ -115,11 +115,11 @@ bsComponentsDef.push(...[
                     '    </div>' +
                     '    <div class="flex-auto">' +
                     '        {{~for(let option of options)}}' +
-                        '      <div class="form-check form-check-inline">' +
-                        '        <input class="form-check-input" type="radio" name="{{name}}" ' +
-                        '               id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
-                        '        <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
-                        '      </div>' +
+                    '      <div class="form-check form-check-inline">' +
+                    '        <input class="form-check-input" type="radio" name="{{name}}" ' +
+                    '               id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
+                    '        <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
+                    '      </div>' +
                     '        {{~end}}' +
                     '    </div>' +
                     '  </div>' +
@@ -156,11 +156,11 @@ bsComponentsDef.push(...[
                     '    </div>' +
                     '    <div class="flex-auto">' +
                     '        {{~for(let option of options)}}' +
-                        '      <div class="form-check form-check-inline">' +
-                        '        <input class="form-check-input" type="checkbox" name="{{name}}" ' +
-                        '               id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
-                        '        <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
-                        '      </div>' +
+                    '      <div class="form-check form-check-inline">' +
+                    '        <input class="form-check-input" type="checkbox" name="{{name}}" ' +
+                    '               id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
+                    '        <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
+                    '      </div>' +
                     '        {{~end}}' +
                     '    </div>' +
                     '  </div>' +

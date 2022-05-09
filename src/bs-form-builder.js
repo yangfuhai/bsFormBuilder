@@ -456,7 +456,7 @@
                 });
             },
             "onPropChange": function (bsFormBuilder, data, propName, value) {
-                if (propName !== "options") {
+                if (propName !== "options" || !data.children) {
                     return false;
                 }
 

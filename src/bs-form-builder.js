@@ -513,10 +513,10 @@
         //渲染的数据
         this.datas = [];
 
-        //当前获得焦点的组件
+        //当前获得焦点的组件数据
         this.currentData = null;
 
-        //组件序号记录器，用于在添加组件的时候，生成组件的 name
+        //组件序号记录器，用于在添加组件的时候，生成组件的 name + (componentCounter++)
         this.componentCounter = 1;
 
         //属性面板 options 添加值是的 index 记录器
@@ -572,7 +572,7 @@
             this._initComponents();
 
             //初始化操作按钮
-            this._initFormActionButtons();
+            this._initActionButtons();
 
             //初始化拖动的组件
             this._initDragComponents();
@@ -607,6 +607,8 @@
 
         /**
          * 初始化 options.datas 的 mode 的数据
+         * @param array datas 数据
+         * @param pushToRoot 是否要添加到根节点
          * @private
          */
         _initData: function (array, pushToRoot) {
@@ -628,7 +630,7 @@
                 }
 
 
-                //为 data 设置默认数据，默认数据来源于 component 的 defaultValue 属性
+                //为 data 设置默认数据，默认数据来源于data 对应的 component 的 defaultValue 属性
                 if (component.props) {
                     for (const prop of component.props) {
                         if (prop.defaultValue && !data[prop.name]) {
@@ -643,8 +645,8 @@
                 data.elementId = this.genRandomId();
 
                 if (data.children) {
-                    for (let arr of Object.values(data.children)) {
-                        this._initData(arr, false)
+                    for (let childArray of Object.values(data.children)) {
+                        this._initData(childArray, false)
                     }
                 }
 
@@ -658,6 +660,8 @@
 
         /**
          * 渲染 view 的数据
+         * 1、初始化的时候刷新
+         * 2、用户通过 api 添加 data 的时候刷新
          * @private
          */
         _refreshViewContainer: function () {
@@ -682,76 +686,66 @@
          * @private
          */
         _initBuilderStructure: function () {
-            this.$rootEl.append(' <div class="row bsFormBuilderRoot">' +
-                '            <!--左侧拖拽区域-->' +
-                '            <div class="col-md-3 col-sm-4 ">' +
-                '                <div class="bs-drag-panel pd10 border-right">' +
-                '                    <ul class="nav nav-tabs mb-2" id="formTab" role="tablist">' +
-                '                        <li class="nav-item w-50">' +
-                '                            <a class="nav-link active" id="component-tab" data-toggle="tab" href="#component" role="tab"' +
-                '                               aria-controls="component" aria-selected="true">表单组件</a>' +
-                '                        </li>' +
-                '                        <li class="nav-item w-50">' +
-                '                            <a class="nav-link" id="module-tab" data-toggle="tab" href="#template" role="tab"' +
-                '                               aria-controls="module" aria-selected="false">表单模板</a>' +
-                '                        </li>' +
-                '                    </ul>' +
-                '                    <div class="tab-content">' +
-                '                        <div class="tab-pane fade show active" id="component" role="tabpanel"' +
-                '                             aria-labelledby="component-tab">' +
-                '                            <div class="component-title">' +
-                '                                表单组件' +
-                '                            </div>' +
-                '                            <div class="component-group d-flex align-items-center base-drags">' +
-                '                            </div>' +
-                '                            <div class="component-title">' +
-                '                                辅助组件' +
-                '                            </div>' +
-                '                            <div class="component-group d-flex align-items-center assist-drags">' +
-                '                            </div>' +
-                '                            <div class="component-title">' +
-                '                                布局组件' +
-                '                            </div>' +
-                '                            <div class="component-group d-flex align-items-center container-drags">' +
-                '                            </div>' +
-                '                        </div>' +
-                '                        <div class="tab-pane fade" id="template" role="tabpanel" aria-labelledby="module-tab">' +
-                '                            <div id="bs-template-item-list" class="bs-template-item-list">' +
-                '                            </div>' +
-                '                        </div>' +
-                '                    </div>' +
-                '                </div>' +
-                '            </div>' +
-                '            <!-- 中间内容 -->' +
-                '            <div class="bs-container-panel col-md-6  col-sm-4">' +
-                '                <div class="w-100 pd10 border-bottom text-right pt-1 pb-1 bsFormActions">' +
-                '                </div>' +
-                '                <div style="width: 100%;" class="bsFormContainer">' +
-                '                    <div class="placeholder-box">从左侧拖入组件进行表单设计</div>' +
-                '                </div>' +
-                '            </div>' +
-                '            <!-- 属性内容 -->' +
-                '            <div class="col-md-3  col-sm-4">' +
-                '                <div class="bs-props-panel pd10 border-left">' +
-                '                    <ul class="nav nav-tabs mb-2" id="formAttrTab" role="tablist">' +
-                '                        <li class="nav-item w-50">' +
-                '                            <a class="nav-link active" id="component-props-tab" data-toggle="tab"' +
-                '                               href="#component-props-content"' +
-                '                               role="tab" aria-controls="component" aria-selected="true">组件属性</a>' +
-                '                        </li>' +
-                '                    </ul>' +
-                '                    <div class="tab-content pt-3">' +
-                '                        <div class="tab-pane fade show active" id="component-props-content" role="tabpanel"' +
-                '                             aria-labelledby="component-props-tab">' +
-                '                        </div>' +
-                '                    </div>' +
-                '                </div>' +
-                '            </div>' +
-                '        </div>')
+            this.$rootEl.append('<div class="row bsFormBuilderRoot">' +
+                '  <!--左侧拖拽区域-->' +
+                '  <div class="col-md-3 col-sm-4">' +
+                '    <div class="bs-drag-panel pd10 border-right">' +
+                '      <ul class="nav nav-tabs mb-2" id="formTab" role="tablist">' +
+                '        <li class="nav-item w-50">' +
+                '          <a class="nav-link active" id="component-tab" data-toggle="tab" href="#component"' +
+                '            role="tab" aria-controls="component" aria-selected="true">表单组件</a>' +
+                '        </li>' +
+                '        <li class="nav-item w-50">' +
+                '          <a class="nav-link" id="module-tab"  data-toggle="tab" href="#template"' +
+                '            role="tab" aria-controls="module" aria-selected="false">表单模板</a>' +
+                '        </li>' +
+                '      </ul>' +
+                '      <div class="tab-content">' +
+                '        <div class="tab-pane fade show active" id="component" role="tabpanel" aria-labelledby="component-tab" >' +
+                '          <div class="component-title">表单组件</div>' +
+                '          <div class="component-group d-flex align-items-center base-drags"></div>' +
+                '          <div class="component-title">辅助组件</div>' +
+                '          <div class="component-group d-flex align-items-center assist-drags"></div>' +
+                '          <div class="component-title">布局组件</div>' +
+                '          <div class="component-group d-flex align-items-center container-drags"></div>' +
+                '        </div>' +
+                '        <div class="tab-pane fade" id="template"  role="tabpanel" aria-labelledby="module-tab">' +
+                '          <div id="bs-template-item-list" class="bs-template-item-list"></div>' +
+                '        </div>' +
+                '      </div>' +
+                '    </div>' +
+                '  </div>' +
+                '  <!-- 中间内容 -->' +
+                '  <div class="bs-container-panel col-md-6 col-sm-4">' +
+                '    <div class="w-100 pd10 border-bottom text-right pt-1 pb-1 bsFormActions"></div>' +
+                '    <div style="width: 100%;" class="bsFormContainer">' +
+                '      <div class="placeholder-box">从左侧拖入组件进行表单设计</div>' +
+                '    </div>' +
+                '  </div>' +
+                '  <!-- 属性内容 -->' +
+                '  <div class="col-md-3 col-sm-4">' +
+                '    <div class="bs-props-panel pd10 border-left">' +
+                '      <ul class="nav nav-tabs mb-2" id="formAttrTab" role="tablist">' +
+                '        <li class="nav-item w-50">' +
+                '          <a  class="nav-link active" id="component-props-tab" data-toggle="tab" href="#component-props-content"' +
+                '            role="tab" aria-controls="component" aria-selected="true">组件属性</a>' +
+                '        </li>' +
+                '      </ul>' +
+                '      <div class="tab-content pt-3">' +
+                '        <div class="tab-pane fade show active" id="component-props-content" role="tabpanel" aria-labelledby="component-props-tab">' +
+                '        </div>' +
+                '      </div>' +
+                '    </div>' +
+                '  </div>' +
+                '</div>')
         },
 
 
-        _initFormActionButtons: function () {
+        /**
+         * 初始化 操作按钮
+         * @private
+         */
+        _initActionButtons: function () {
             let template = this.options.actionButtonTemplate;
             if (!template || template === "") {
                 return;
@@ -831,13 +825,7 @@
             }
 
             //基础组件
-            var baseDrags = [];
-
-            //辅助组件
-            var assistDrags = [];
-
-            //容器组件
-            var containerDrags = [];
+            var baseDrags = [], assistDrags = [], containerDrags = [];
 
             for (let component of Object.values(this.components)) {
                 if (component && component.drag && component.drag.type) {
@@ -863,19 +851,20 @@
 
             var $baseDragsDiv = $('.base-drags');
             for (let drag of baseDrags) {
-                $baseDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="' + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
+                $baseDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="'
+                    + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
             }
-
 
             var $assistDragsDiv = $('.assist-drags');
             for (let drag of assistDrags) {
-                $assistDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="' + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
+                $assistDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="'
+                    + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
             }
-
 
             var $containerDragsDiv = $('.container-drags');
             for (let drag of containerDrags) {
-                $containerDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="' + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
+                $containerDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="'
+                    + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
             }
         },
 
@@ -1970,7 +1959,7 @@
             if (typeof option === 'string') {
                 var method = component[option];
                 if (!method) {
-                    console.error("BsFormBuilder has not the method: " + option);
+                    console.error("bsFormBuilder has not the method: " + option);
                     return;
                 }
                 if (arg.length > 1) {

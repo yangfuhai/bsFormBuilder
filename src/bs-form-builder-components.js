@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-let bsComponentsDef = window.bsComponentsDef || [];
-window.bsComponentsDef = bsComponentsDef;
-
-bsComponentsDef.push(...[
+let componentsDef = [];
+componentsDef.push(...[
     //提示
     {
         "name": "提示",
@@ -109,21 +107,21 @@ bsComponentsDef.push(...[
             }
         ],
         "template": '<div class="bs-form-item">' +
-                    '  <div class="form-group clearfix">' +
-                    '    <div class="form-label-left">' +
-                    '      <label for="label">{{label}}</label>' +
-                    '    </div>' +
-                    '    <div class="flex-auto">' +
-                    '        {{~for(let option of options)}}' +
-                    '      <div class="form-check form-check-inline">' +
-                    '        <input class="form-check-input" type="radio" name="{{name}}" ' +
-                    '               id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
-                    '        <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
-                    '      </div>' +
-                    '        {{~end}}' +
-                    '    </div>' +
-                    '  </div>' +
-                    '</div>',
+            '  <div class="form-group clearfix">' +
+            '    <div class="form-label-left">' +
+            '      <label for="label">{{label}}</label>' +
+            '    </div>' +
+            '    <div class="flex-auto">' +
+            '        {{~for(let option of options)}}' +
+            '      <div class="form-check form-check-inline">' +
+            '        <input class="form-check-input" type="radio" name="{{name}}" ' +
+            '               id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
+            '        <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
+            '      </div>' +
+            '        {{~end}}' +
+            '    </div>' +
+            '  </div>' +
+            '</div>',
 
     },
 
@@ -150,21 +148,21 @@ bsComponentsDef.push(...[
             }
         ],
         "template": '<div class="bs-form-item">' +
-                    '  <div class="form-group clearfix">' +
-                    '    <div class="form-label-left">' +
-                    '      <label for="label">{{label}}</label>' +
-                    '    </div>' +
-                    '    <div class="flex-auto">' +
-                    '        {{~for(let option of options)}}' +
-                    '      <div class="form-check form-check-inline">' +
-                    '        <input class="form-check-input" type="checkbox" name="{{name}}" ' +
-                    '               id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
-                    '        <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
-                    '      </div>' +
-                    '        {{~end}}' +
-                    '    </div>' +
-                    '  </div>' +
-                    '</div>',
+            '  <div class="form-group clearfix">' +
+            '    <div class="form-label-left">' +
+            '      <label for="label">{{label}}</label>' +
+            '    </div>' +
+            '    <div class="flex-auto">' +
+            '        {{~for(let option of options)}}' +
+            '      <div class="form-check form-check-inline">' +
+            '        <input class="form-check-input" type="checkbox" name="{{name}}" ' +
+            '               id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
+            '        <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
+            '      </div>' +
+            '        {{~end}}' +
+            '    </div>' +
+            '  </div>' +
+            '</div>',
 
     },
 
@@ -179,20 +177,26 @@ bsComponentsDef.push(...[
             "iconClass": "bi bi-toggle-on"
         },
         "template": '<div class="bs-form-item">' +
-                    '  <div class="form-group clearfix">' +
-                    '    <div class="form-label-left">' +
-                    '      <legend class="col-form-label pt-0">{{label}}</legend>' +
-                    '    </div>' +
-                    '    <div class="flex-auto">' +
-                    '      <div class="custom-control custom-switch">' +
-                    '        <input type="checkbox" class="custom-control-input" id="{{id}}" />' +
-                    '        <label class="custom-control-label" for="{{id}}"></label>' +
-                    '      </div>' +
-                    '    </div>' +
-                    '  </div>' +
-                    '</div>',
+            '  <div class="form-group clearfix">' +
+            '    <div class="form-label-left">' +
+            '      <legend class="col-form-label pt-0">{{label}}</legend>' +
+            '    </div>' +
+            '    <div class="flex-auto">' +
+            '      <div class="custom-control custom-switch">' +
+            '        <input type="checkbox" class="custom-control-input" id="{{id}}" />' +
+            '        <label class="custom-control-label" for="{{id}}"></label>' +
+            '      </div>' +
+            '    </div>' +
+            '  </div>' +
+            '</div>',
 
     },
 
 ]);
+
+if (window.bsComponentsDef) {
+    window.bsComponentsDef.push(...componentsDef);
+} else {
+    window.bsComponentsDef = componentsDef;
+}
 

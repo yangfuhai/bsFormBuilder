@@ -137,7 +137,7 @@
                 '              <label for="{{id}}">{{label}}</label>' +
                 '        </div>' +
                 '        <div class="flex-auto">' +
-                '             <input id="{{id}}" type="text" data-attr="{{name}}" class="onkeyup form-control" value="{{value}}">' +
+                '             <input id="{{id}}" {{~if (disabled)}}disabled{{~end}} type="text" data-attr="{{name}}" class="onkeyup form-control" value="{{value}}">' +
                 '        </div>' +
                 '    </div>';
         },

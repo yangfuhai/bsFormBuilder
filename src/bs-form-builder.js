@@ -913,7 +913,7 @@
                 var $bsFormItem = $(this).closest('.bs-form-item');
                 bsFormBuilder.deleteFormItem($bsFormItem.attr("id"));
 
-                if (!this.datas || this.datas.length === 0) {
+                if (!bsFormBuilder.datas || bsFormBuilder.datas.length === 0) {
                     bsFormBuilder.$containerPlaceHolder.show();
                 }
             })

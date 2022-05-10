@@ -966,7 +966,7 @@
                 bsFormBuilder._syncCurrentDataOptionsFromPropSetting();
             });
 
-            //删除 item
+            //删除属性面板里的 options 的 item
             this.$propsPanel.on("click", ".option-delete", function (event) {
                 $(this).closest(".option-item").remove();
                 bsFormBuilder._syncCurrentDataOptionsFromPropSetting();
@@ -977,7 +977,7 @@
                 var options = bsFormBuilder.deepCopy(bsFormBuilder.currentData.options, false) || [];
 
                 var index = bsFormBuilder.optionsCounter++;
-                options.push({text: "选项" + index, value: "值" + index})
+                options.push({text: "选项" + index, value: "value_" + index})
 
                 bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, "options", options);
                 bsFormBuilder.refreshPropsPanel();

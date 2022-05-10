@@ -1651,18 +1651,20 @@
          * 刷新右侧的属性面板
          */
         refreshPropsPanel: function () {
-            if (!this.currentData) {
-                return;
-            }
-
-            let component = this.currentData.component;
-
             //销毁旧的 sortable
             var oldSortable = this.$propsPanel.children(".options").data("sortable");
             if (oldSortable) oldSortable.destroy();
 
 
+            //清空属性面板里的 html 内容
             this.$propsPanel.html('');
+
+
+            if (!this.currentData) {
+                return;
+            }
+
+            let component = this.currentData.component;
 
             //组件定义的 "私有" 属性
             var componentProps = typeof component.props === "object" ?

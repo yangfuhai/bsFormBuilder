@@ -416,12 +416,12 @@
                 let counter2 = this.counter++;
                 return [
                     {
-                        text: "选项" + counter1,
-                        value: "tab" + counter1
+                        text: "标签" + counter1,
+                        value: "tab_id_" + counter1
                     },
                     {
-                        text: "选项" + counter2,
-                        value: "tab" + counter2
+                        text: "标签" + counter2,
+                        value: "tab_id_" + counter2
                     }
                 ]
             },
@@ -895,7 +895,6 @@
             var bsFormBuilder = this;
             //container 下的每个 item 的点击事件
             this.$container.on("click", ".bs-form-item", function (event) {
-                console.log("bs-form-item click >>>>>>", event)
                 event.stopPropagation();
                 bsFormBuilder.makeFormItemActive($(this).attr('id'));
             })

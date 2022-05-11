@@ -147,7 +147,7 @@
                 '            <legend class="col-form-label pt-0">{{label}}</legend>' +
                 '        </div>' +
                 '        <div class="flex-auto">' +
-                '            <select class="custom-select onchange" data-attr="{{name}}">' +
+                '            <select class="custom-select onchange" {{~if (disabled)}}disabled{{~end}} data-attr="{{name}}">' +
                 '                   {{~for (let option of options)}}' +
                 '                   <option value="{{option.value}}" {{~if(option.value == value)}}selected=""{{~end}}>{{option.text}}</option>' +
                 '                   {{~end}}' +
@@ -161,7 +161,7 @@
                 '    <label for="{{id}}">{{label}}</label>' +
                 '  </div>' +
                 '  <div class="flex-auto">' +
-                '    <input type="number" data-attr="{{name}}" class="form-control onchange onkeyup" value="{{value}}" />' +
+                '    <input type="number" {{~if (disabled)}}disabled{{~end}} data-attr="{{name}}" class="form-control onchange onkeyup" value="{{value}}" />' +
                 '  </div>' +
                 '</div>';
         },
@@ -172,7 +172,7 @@
                 '  </div>' +
                 '  <div class="flex-auto">' +
                 '    <div class="custom-control custom-switch">' +
-                '      <input type="checkbox" value="true" {{~if(value)}} checked {{~end}} data-attr="{{name}}" ' +
+                '      <input type="checkbox" {{~if (disabled)}}disabled{{~end}} value="true" {{~if(value)}} checked {{~end}} data-attr="{{name}}" ' +
                 '           class="custom-control-input onchange" id="{{id}}" />' +
                 '      <label class="custom-control-label" for="{{id}}"></label>' +
                 '    </div>' +
@@ -187,7 +187,7 @@
                 '  <div class="flex-auto">' +
                 '    {{~ for(let option of options)}}' +
                 '    <div class="form-check form-check-inline">' +
-                '      <input class="form-check-input onchange" {{~ if(value.indexOf(option.value) >=0 )}} checked {{~end}} ' +
+                '      <input class="form-check-input onchange" {{~if (disabled)}}disabled{{~end}} {{~ if(value.indexOf(option.value) >=0 )}} checked {{~end}} ' +
                 '           type="checkbox" data-attr="{{name}}" data-type="array"' +
                 '           id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
                 '      <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
@@ -205,6 +205,7 @@
                 '    {{~ for(let option of options)}}' +
                 '    <div class="form-check form-check-inline">' +
                 '      <input class="form-check-input onchange" name="{{id}}" type="radio" ' +
+                '           {{~if (disabled)}}disabled{{~end}} ' +
                 '           {{~ if(value == option.value )}} checked {{~end}} ' +
                 '           data-attr="{{name}}" id="{{option.value}}-{{id}}" value="{{option.value}}" />' +
                 '      <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>' +
@@ -278,16 +279,16 @@
                 }
             ],
             "template": '<div class="bs-form-item">' +
-                '                   <div class="form-group clearfix">' +
-                '                       <div class="form-label-left">' +
-                '                           <label for="{{id}}">{{label}}</label>' +
-                '                       </div>' +
-                '                       <div class="flex-auto">' +
-                '                           <textarea name="{{name}}" class="form-control" id="{{id}}" rows="{{rows}}"' +
-                '                                     placeholder="{{placeholder}}">{{value}}</textarea>' +
-                '                       </div>' +
-                '                   </div>' +
-                '               </div>',
+                '  <div class="form-group clearfix">' +
+                '    <div class="form-label-left">' +
+                '      <label for="{{id}}">{{label}}</label>' +
+                '    </div>' +
+                '    <div class="flex-auto">' +
+                '      <textarea name="{{name}}" class="form-control" id="{{id}}" rows="{{rows}}"' +
+                '        placeholder="{{placeholder}}" >{{value}}</textarea>' +
+                '    </div>' +
+                '  </div>' +
+                '</div>',
         },
 
 
@@ -323,15 +324,15 @@
                     ],
                 }
             ],
-            "template": '<div class="bs-form-item">' +
-                '               <div class="form-group clearfix">' +
-                '                     <div class="row pdlr-15">' +
-                '                           {{~for (var i=0;i<grid;i++)}}' +
-                '                           <div class="col-{{12/grid}} bs-form-container">{{$children[i]}}</div>' +
-                '                           {{~end}}' +
-                '                      </div>' +
-                '                </div>' +
-                '        </div>',
+            "template":'<div class="bs-form-item">' +
+                '  <div class="form-group clearfix">' +
+                '    <div class="row pdlr-15">' +
+                '      {{~for (var i=0;i<grid;i++)}}' +
+                '      <div class="col-{{12/grid}} bs-form-container">{{$children[i]}}</div>' +
+                '      {{~end}}' +
+                '    </div>' +
+                '  </div>' +
+                '</div>',
             "onPropChange": function (bsFormBuilder, data, propName, value) {
                 if (propName !== "grid") {
                     return false;
@@ -520,7 +521,8 @@
         this.componentCounter = 1;
 
         //属性面板 options 添加值是的 index 记录器
-        this.optionsCounter = 1;
+        //默认值是 3 的原因是，一般带有 options 的组件，都会默认有两个 options 了
+        this.optionsCounter = 3;
 
         //初始化
         if (this.options.mode === "view") {
@@ -751,7 +753,6 @@
                 return;
             }
 
-            let body = this._getRenderMethodBody(template);
             let bsFormBuilder = this;
 
             let actionButtons = this.options.actionButtons || [];
@@ -763,7 +764,7 @@
 
                 let id = this.genRandomId();
 
-                let html = this._invokeRenderBody(body, paras, values);
+                let html = this._renderTemplate(template, paras, values);
                 let $html = $(html).attr("id", id);
                 $html.appendTo(".bsFormActions");
 
@@ -977,7 +978,7 @@
                 var options = bsFormBuilder.deepCopy(bsFormBuilder.currentData.options, false) || [];
 
                 var index = bsFormBuilder.optionsCounter++;
-                options.push({text: "选项" + index, value: "value_" + index})
+                options.push({text: "选项" + index, value: "value" + index})
 
                 bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, "options", options);
                 bsFormBuilder.refreshPropsPanel();
@@ -1207,15 +1208,16 @@
 
 
         /**
-         * 执行 body 方法，返回 string 结果
-         * @param body
+         * 渲染 template， 生成 string 类型的 html 返回
+         * @param template
          * @param paras
          * @param values
          * @returns {string|*}
          * @private
          */
-        _invokeRenderBody: function (body, paras, values) {
+        _renderTemplate: function (template, paras, values) {
             try {
+                let body = this._getRenderMethodBody(template);
                 return new Function(...paras, body)(...values)
                     .replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
             } catch (err) {
@@ -1354,8 +1356,6 @@
             })
 
 
-            let body = this._getRenderMethodBody(data.component.template);
-
             // 若 data 中不存在 options 数据，
             // 那么查看下组件是否有 defaultOptions 配置
             this._initDataOptionsIfNecessary(data);
@@ -1375,7 +1375,7 @@
             values[2] = data;
             values[3] = childrenProxy;
 
-            return this._invokeRenderBody(body, paras, values);
+            return this._renderTemplate(data.component.template, paras, values);
         },
 
 
@@ -1740,15 +1740,13 @@
          */
         renderPropTemplate: function (prop, data, template) {
 
-            var body = this._getRenderMethodBody(template);
-
             var paras = ["$prop", "$data"].concat(Object.keys(prop));
 
             var values = paras.map(k => prop[k] || "");
             values[0] = prop;
             values[1] = data;
 
-            return this._invokeRenderBody(body, paras, values);
+            return this._renderTemplate(template, paras, values);
         },
 
 

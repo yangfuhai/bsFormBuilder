@@ -17,7 +17,7 @@
 
     //默认配置
     var defaultOptions = {
-        mode: "builder", // 模式 builder,view
+        mode: "builder", // 模式 builder 工具模式,  view 预览模式
         useComponents: [], //使用的组件 use components
         actionButtons: [
             {
@@ -324,7 +324,7 @@
                     ],
                 }
             ],
-            "template":'<div class="bs-form-item">' +
+            "template": '<div class="bs-form-item">' +
                 '  <div class="form-group clearfix">' +
                 '    <div class="row pdlr-15">' +
                 '      {{~for (var i=0;i<grid;i++)}}' +
@@ -762,10 +762,10 @@
                 let values = paras.map(k => button[k] || "");
                 values[0] = button;
 
-                let id = this.genRandomId();
 
                 let html = this._renderTemplate(template, paras, values);
-                let $html = $(html).attr("id", id);
+
+                let $html = $(html).attr("id", this.genRandomId());
                 $html.appendTo(".bsFormActions");
 
                 if (typeof button.onclick === "function") {
@@ -818,14 +818,14 @@
 
 
         /**
-         * 渲染拖动的组件库
+         * 初始化左侧拖动的组件库
          */
         _initDragComponents: function () {
             if (!this.components || this.components.length === 0) {
                 return;
             }
 
-            //基础组件
+            //基础组件， 辅助组件，容器组件
             var baseDrags = [], assistDrags = [], containerDrags = [];
 
             for (let component of Object.values(this.components)) {

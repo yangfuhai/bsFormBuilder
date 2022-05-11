@@ -26,7 +26,7 @@ componentsDef.push(...[
             "index": 100,
             "iconClass": "bi bi-info-circle"
         },
-        "propsfilter": ["id"],
+        "propsfilter": ["tag","id"],
         props: [
             {
                 name: "title",

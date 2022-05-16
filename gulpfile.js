@@ -37,7 +37,7 @@ gulp.task('js-minify-components', function () {
 
 gulp.task('js-concat', function () {
     return gulp.src([
-        'bower_components/Sortable/sortable.min.js',
+        'build/sortable/sortable.min.js',
         'dist/bs-form-builder-components.min.js',
         'dist/bs-form-builder.min.js',
     ])

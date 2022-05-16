@@ -192,6 +192,87 @@ componentsDef.push(...[
 
     },
 
+
+    //时间
+    {
+        "name": "时间",
+        "tag": "time",
+        "drag": {
+            "title": "时间",
+            "type": "base",
+            "index": 100,
+            "iconClass": "bi bi-clock"
+        },
+        "template": '<div class="bs-form-item">' +
+            '  <div class="form-group clearfix">' +
+            '    <div class="form-label-left">' +
+            '      <label for="label">{{label}}</label>' +
+            '    </div>' +
+            '    <div class="flex-auto">' +
+            '      <input type="time" class="form-control" id="{{id}}"' +
+            '        placeholder="{{placeholder}}" value="{{value}}" />' +
+            '    </div>' +
+            '  </div>' +
+            '</div>',
+    },
+
+
+
+    //时间
+    {
+        "name": "日期",
+        "tag": "date",
+        "drag": {
+            "title": "日期",
+            "type": "base",
+            "index": 100,
+            "iconClass": "bi bi-calendar2-date"
+        },
+        "template": '<div class="bs-form-item">' +
+            '  <div class="form-group clearfix">' +
+            '    <div class="form-label-left">' +
+            '      <label for="label">{{label}}</label>' +
+            '    </div>' +
+            '    <div class="flex-auto">' +
+            '      <input type="date" class="form-control" id="{{id}}" value="{{value}}" />' +
+            '    </div>' +
+            '  </div>' +
+            '</div>',
+    },
+
+    //文件上传
+    {
+        "name": "文件上传",
+        "tag": "file-upload",
+        "drag": {
+            "title": "文件上传",
+            "type": "base",
+            "index": 100,
+            "iconClass": "bi bi-cloud-upload"
+        },
+        props: [
+            {
+                name: "placeholder",
+                type: "input",
+                label: "占位内容",
+                defaultValue:"请选择文件",
+                disabled: false,
+                required: true,
+            }
+        ],
+        "template": '<div class="bs-form-item">' +
+            '  <div class="form-group clearfix">' +
+            '    <div class="form-label-left">' +
+            '      <label for="label">{{label}}</label>' +
+            '    </div>' +
+            '    <div class="flex-auto">' +
+            '      <input type="file" class="custom-file-input" id="{{id}}" />' +
+            '      <label class="custom-file-label" for="{{id}}">{{placeholder}}</label>' +
+            '    </div>' +
+            '  </div>' +
+            '</div>',
+    },
+
 ]);
 
 if (window.bsComponentsDef) {

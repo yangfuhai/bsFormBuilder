@@ -4,6 +4,11 @@
 
 ![bsFormBuilder](./assets/images/bsformbuilder.png)
 
+## 演示
+
+- 演示站点：[http://bsformbuilder.jpress.cn](http://bsformbuilder.jpress.cn)
+- 推荐一个代码格式化工具：[http://www.codeformat.cn](http://www.codeformat.cn)
+
 
 ## 特点
 

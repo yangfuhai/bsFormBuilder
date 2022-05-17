@@ -632,7 +632,7 @@
                 }
 
 
-                //为 data 设置默认数据，默认数据来源于data 对应的 component 的 defaultValue 属性
+                //为 data 设置默认数据，默认数据来源于 data 对应的 component 的 defaultValue 属性
                 if (component.props) {
                     for (const prop of component.props) {
                         if (prop.defaultValue && !data[prop.name]) {
@@ -1221,8 +1221,10 @@
                 return new Function(...paras, body)(...values)
                     .replace(/\&#39;/g, '\'').replace(/\&quot;/g, '"');
             } catch (err) {
-                console.error("template error >>>", err);
-                console.error("template >>>", template);
+                console.error("template error  >>>", err);
+                console.error("template paras  >>>", paras);
+                console.error("template values >>>", values);
+                console.error("template        >>>", template);
                 return "";
             }
         },
@@ -1740,7 +1742,12 @@
          */
         renderPropTemplate: function (prop, data, template) {
 
-            var paras = ["$prop", "$data"].concat(Object.keys(prop));
+            //保证所有的 prop 必须包含着几个属性
+            var propData = $.extend({
+                disabled: false, required: false, id: "", label: "", name: "", placeholder: "", type: "", value: "",
+            }, prop);
+
+            var paras = ["$prop", "$data"].concat(Object.keys(propData));
 
             var values = paras.map(k => prop[k] || "");
             values[0] = prop;

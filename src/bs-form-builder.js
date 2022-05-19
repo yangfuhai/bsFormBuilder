@@ -1437,8 +1437,8 @@
 
             if (withActive) {
                 $template.append('<div class="bs-item-tools">' +
-                    '               <i class="bi bi-card-image bs-item-copy" title="复制"></i>' +
-                    '               <i class="bi bi-trash bs-item-del" title="删除"></i>' +
+                    '               <i class="bi bi-stickies-fill bs-item-copy" title="复制"></i>' +
+                    '               <i class="bi bi-trash-fill bs-item-del" title="删除"></i>' +
                     '           </div>')
                     .addClass('active')
             }
@@ -1466,8 +1466,8 @@
 
 
             $("#" + elementId).append('<div class="bs-item-tools">' +
-                '               <i class="bi bi-card-image bs-item-copy" title="复制"></i>' +
-                '               <i class="bi bi-trash bs-item-del" title="删除"></i>' +
+                '               <i class="bi bi-stickies-fill bs-item-copy" title="复制"></i>' +
+                '               <i class="bi bi-trash-fill bs-item-del" title="删除"></i>' +
                 '           </div>')
                 .addClass('active');
 

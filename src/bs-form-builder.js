@@ -63,12 +63,11 @@
                 }
             },
             {
-                text: '删除',
+                text: '清空',
                 mainClass: 'btn-danger',
                 iconClass: 'bi bi-trash pr-1',
-                onclick: function () {
-                    alert('请自定义 [删除] 按钮的功能，这里的所有按钮和功能都是可以自定义的')
-
+                onclick: function (event, builder) {
+                    builder.clear();
                 }
             },
         ],
@@ -874,7 +873,11 @@
          * 渲染初始化的数据
          */
         _refreshBuilderContainer: function () {
-            $(".bsFormContainer").children(".bs-form-item").remove();
+            this.$container.find('.bs-form-container').each(function () {
+                let sortable = $(this).data('bsItemSortable');
+                if (sortable) sortable.destroy();
+            });
+            this.$container.children(".bs-form-item").remove();
             if (!this.datas || this.datas.length === 0) {
                 this.$containerPlaceHolder.show();
             } else {
@@ -1714,7 +1717,6 @@
                 this.$propsPanel.append(html);
 
                 this._initOptionsSortable();
-
             }
         },
 
@@ -1930,6 +1932,18 @@
          */
         isBuilderMode: function () {
             return this.options.mode === "builder";
+        },
+
+
+        /**
+         * 清空组件
+         */
+        clear: function () {
+            this.datas = [];
+            this._refreshBuilderContainer();
+
+            this.currentData = null;
+            this.refreshPropsPanel();
         },
 
 

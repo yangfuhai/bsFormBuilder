@@ -110,6 +110,7 @@
 - refreshDataElement(data)：刷新 data 数据到 html
 - isViewMode()：是否是视图模式
 - isBuilderMode()：是否是构建模式（构建工具）
+- clear()：清空设计的所有内容，然后可以重新设计
 - destroy()：销毁整个组件
 
 ### 3、组件扩展
@@ -310,7 +311,7 @@ npm install
 
 > PS：在安装依赖的过程中，可能会出现网络错误，请配置好网络环境，或者多安装几次...
 
-3、构建编译
+3、构建编译生成 dist 文件
 
 ```shell
 npm run build

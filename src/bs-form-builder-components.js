@@ -26,7 +26,7 @@ componentsDef.push(...[
             "index": 100,
             "iconClass": "bi bi-info-circle"
         },
-        "propsfilter": ["tag","id"],
+        "propsfilter": ["tag", "id"],
         props: [
             {
                 name: "title",
@@ -37,7 +37,7 @@ componentsDef.push(...[
                 required: true,
             }
         ],
-        "template": '<div class="bs-form-item" id="tips">' +
+        "template": '<div class="bs-form-item">' +
             '  <div class="form-group clearfix">' +
             '    <i class="d-inline-block bi bi-exclamation-circle"' +
             '      data-toggle="tooltip"' +
@@ -58,20 +58,48 @@ componentsDef.push(...[
             "index": 100,
             "iconClass": "bi bi-fullscreen"
         },
-        "propsfilter": ["tag","id"],
+        "propsfilter": ["tag", "id"],
         props: [
             {
                 name: "height",
                 type: "number",
                 label: "高度",
-                placeholder: "提示内容...",
                 disabled: false,
                 required: true,
                 defaultValue: 20
             }
         ],
-        "template": '<div class="bs-form-item" id="tips">' +
+        "template": '<div class="bs-form-item">' +
             '  <div class="form-group clearfix" style="height: {{height}}px">' +
+            '  </div>' +
+            '</div>',
+    },
+
+    //引用
+    {
+        "name": "引用",
+        "tag": "blockquote",
+        "drag": {
+            "title": "引用",
+            "type": "assist",
+            "index": 100,
+            "iconClass": "bi bi-quote"
+        },
+        "propsfilter": ["tag", "id"],
+        props: [
+            {
+                name: "content",
+                type: "textarea",
+                label: "标签内容",
+                placeholder: "请输入标签内容...",
+                disabled: false,
+                required: true,
+                defaultValue: "这里是引用的内容..."
+            }
+        ],
+        "template": '<div class="bs-form-item">' +
+            '  <div class="form-group clearfix">' +
+            '  <blockquote>{{content}}</blockquote>' +
             '  </div>' +
             '</div>',
     },
@@ -246,7 +274,6 @@ componentsDef.push(...[
     },
 
 
-
     //时间
     {
         "name": "日期",
@@ -284,7 +311,7 @@ componentsDef.push(...[
                 name: "placeholder",
                 type: "input",
                 label: "占位内容",
-                defaultValue:"请选择文件",
+                defaultValue: "请选择文件",
                 disabled: false,
                 required: true,
             }

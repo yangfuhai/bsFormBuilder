@@ -140,6 +140,19 @@
                 '        </div>' +
                 '    </div>';
         },
+        textarea: function () {
+            return '<div class="form-group clearfix">' +
+                '       <div class="form-label-left">' +
+                '             {{~ if(required)}}' +
+                '             <span class="red required">*</span>' +
+                '             {{~end}}' +
+                '              <label for="{{id}}">{{label}}</label>' +
+                '        </div>' +
+                '        <div class="flex-auto">' +
+                '             <textarea id="{{id}}" {{~if (disabled)}}disabled{{~end}} rows="3" data-attr="{{name}}" class="onkeyup form-control">{{value}}</textarea>' +
+                '        </div>' +
+                '    </div>';
+        },
         select: function () {
             return '<div class="form-group clearfix">' +
                 '       <div class="form-label-left">' +
@@ -1351,6 +1364,11 @@
             if (typeof template === "function") {
                 template = template();
             }
+
+            if (!template){
+                throw new Error("Not support prop type: "+type)
+            }
+
             return template;
         },
 

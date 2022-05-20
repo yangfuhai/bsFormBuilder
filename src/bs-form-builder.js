@@ -215,9 +215,9 @@
         },
         options: function () {
             return '<div class="option-box options">' +
-                '  <div class="divider-title option-filtered">选项</div>' +
+                '  <div class="divider-title option-filtered">{{title}}</div>' +
                 '  {{~for (let option of options)}}' +
-                '  <div class="form-group form-check-inline clearfix option-item">' +
+                '  <div class="form-group form-check-inline clearfix option-item" id="{{option.elementId}}">' +
                 '    <i class="bi bi-arrows-move pointer pr-2 option-handle"></i>' +
                 '    <input type="text" value="{{option.text}}" class="form-control mr-2 option-input text" />' +
                 '    <input type="text" value="{{option.value}}" class="form-control mr-2 option-input value" />' +
@@ -291,12 +291,12 @@
         },
 
 
-        //栅格布局
+        //等分栅格
         {
-            "name": "栅格布局",
+            "name": "等分栅格",
             "tag": "grid",
             "drag": {
-                "title": "栅格布局",
+                "title": "等分栅格",
                 "type": "container",
                 "index": 100,
                 "iconClass": "bi bi-grid-1x2"
@@ -399,6 +399,62 @@
             }
         },
 
+
+        //灵活栅格
+        {
+            "name": "灵活栅格",
+            "tag": "sgrid",
+            "drag": {
+                "title": "灵活栅格",
+                "type": "container",
+                "index": 100,
+                "iconClass": "bi bi-grid-1x2"
+            },
+            withOptions: true,
+            optionsTitle: '栅格配置',
+            defaultOptions: [
+                {
+                    text: "栅格1",
+                    value: 6
+                },
+                {
+                    text: "栅格2",
+                    value: 6
+                }
+            ],
+            "template": '<div class="bs-form-item">' +
+                '  <div class="form-group clearfix">' +
+                '    <div class="row pdlr-15">' +
+                '      {{~for (var i = 0;i<options.length;i++)}}' +
+                '      <div class="col-{{options[i].value}} bs-form-container">{{$children[i]}}</div>' +
+                '      {{~end}}' +
+                '    </div>' +
+                '  </div>' +
+                '</div>',
+            "onPropChange": function (bsFormBuilder, data, propName, value) {
+
+                if (propName !== "options" || !data.children) {
+                    return false;
+                }
+
+                //修改顺序的时候，保证顺序下的 data 跟着修改
+                var idDataMapping = {};
+
+                let oldOptions = data.options;
+                let newOptions = value;
+
+                for (let i = 0; i < oldOptions.length; i++) {
+                    let oldOption = oldOptions[i];
+                    idDataMapping[oldOption.elementId] = data.children[i];
+                }
+
+                for (let i = 0; i < newOptions.length; i++) {
+                    let newOption = newOptions[i];
+                    data.children[i] = idDataMapping[newOption.elementId];
+                }
+            }
+        },
+
         //tab布局
         {
             "name": "Tab选项卡",
@@ -460,16 +516,20 @@
                     return false;
                 }
 
+                //修改顺序的时候，保证顺序下的 data 跟着修改
                 var idDataMapping = {};
+
                 let oldOptions = data.options;
+                let newOptions = value;
+
                 for (let i = 0; i < oldOptions.length; i++) {
                     let oldOption = oldOptions[i];
-                    idDataMapping[oldOption.value] = data.children[i];
+                    idDataMapping[oldOption.elementId] = data.children[i];
                 }
 
-                for (let i = 0; i < value.length; i++) {
-                    let newOption = value[i];
-                    data.children[i] = idDataMapping[newOption.value];
+                for (let i = 0; i < newOptions.length; i++) {
+                    let newOption = newOptions[i];
+                    data.children[i] = idDataMapping[newOption.elementId];
                 }
             }
         },
@@ -1245,6 +1305,13 @@
                     defaultOptions = data.component.defaultOptions(this, data);
                 }
                 data.options = defaultOptions || [];
+
+                //为每个 options 配置一个 id
+                data.options.forEach(item => {
+                    item.elementId = this.genRandomId()
+                })
+
+                data.optionsTitle = data.component.optionsTitle || "选项";
             }
         },
 
@@ -1273,7 +1340,8 @@
             optionItems.each(function (index, item) {
                 var text = $(item).children(".option-input.text").val();
                 var value = $(item).children(".option-input.value").val();
-                options.push({text, value});
+                var elementId = $(item).attr("id");
+                options.push({text, value, elementId});
             });
             this.updateDataAttr(this.currentData, "options", options);
         },
@@ -1710,6 +1778,7 @@
                 let prop = {
                     id: this.genRandomId(),
                     options: this.currentData.options || [],
+                    title: this.currentData.optionsTitle || "选项",
                 }
 
                 let template = this._getPropTemplateByType("options");
@@ -1850,7 +1919,6 @@
          * @param array
          */
         addDatasToContainer: function (array, containerElementId, index) {
-
             this._initData(array, false);
 
             var parentData = this.getDataByElementId(containerElementId);
@@ -1879,8 +1947,14 @@
         refreshDataElement: function (data) {
             var el = this.render(data, true);
 
+            var $oldEl =  $("#" + data.elementId);
+            $oldEl.find('.bs-form-container').each(function () {
+                let sortable = $(this).data('bsItemSortable');
+                if (sortable) sortable.destroy();
+            });
+
             this._invokeComponentOnAddBefore(data, el);
-            $("#" + data.elementId).replaceWith(el);
+            $oldEl.replaceWith(el);
             this._invokeComponentOnAdd(data);
         },
 

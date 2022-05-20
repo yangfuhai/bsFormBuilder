@@ -48,6 +48,35 @@ componentsDef.push(...[
             '</div>',
     },
 
+    //空DIV
+    {
+        "name": "空DIV",
+        "tag": "empty-div",
+        "drag": {
+            "title": "空DIV",
+            "type": "assist",
+            "index": 100,
+            "iconClass": "bi bi-fullscreen"
+        },
+        "propsfilter": ["tag","id"],
+        props: [
+            {
+                name: "height",
+                type: "number",
+                label: "高度",
+                placeholder: "提示内容...",
+                disabled: false,
+                required: true,
+                defaultValue: 20
+            }
+        ],
+        "template": '<div class="bs-form-item" id="tips">' +
+            '  <div class="form-group clearfix" style="height: {{height}}px">' +
+            '  </div>' +
+            '</div>',
+    },
+
+
     //下拉菜单
     {
         "name": "下拉菜单",

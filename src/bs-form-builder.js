@@ -299,7 +299,7 @@
                 "title": "等分栅格",
                 "type": "container",
                 "index": 100,
-                "iconClass": "bi bi-grid-1x2"
+                "iconClass": "bi bi-grid"
             },
             "props": [
                 {
@@ -410,8 +410,15 @@
                 "index": 100,
                 "iconClass": "bi bi-grid-1x2"
             },
+            optionsCounter: 2,
             withOptions: true,
             optionsTitle: '栅格配置',
+            opiontsAdd: function () {
+                return {
+                    text: "栅格" + (++this.optionsCounter),
+                    value: 12
+                }
+            },
             defaultOptions: [
                 {
                     text: "栅格1",
@@ -463,7 +470,7 @@
                 "title": "Tab选项卡",
                 "type": "container",
                 "index": 100,
-                "iconClass": "bi bi-layout-text-sidebar"
+                "iconClass": "bi bi-menu-button"
             },
             withOptions: true,
             counter: 1,
@@ -1041,7 +1048,25 @@
                 var options = bsFormBuilder.deepCopy(bsFormBuilder.currentData.options, false) || [];
 
                 var index = bsFormBuilder.optionsCounter++;
-                options.push({text: "选项" + index, value: "value" + index})
+
+                var newOption = null;
+                if (bsFormBuilder.currentData.component.opiontsAdd) {
+                    if (typeof bsFormBuilder.currentData.component.opiontsAdd === "function") {
+                        newOption = bsFormBuilder.currentData.component.opiontsAdd(bsFormBuilder)
+                    } else {
+                        newOption = bsFormBuilder.currentData.component.opiontsAdd;
+                    }
+                }
+
+                if (!newOption) {
+                    newOption = {text: "选项" + index, value: "value" + index}
+                }
+
+                if (!newOption.elementId) {
+                    newOption.elementId = bsFormBuilder.genRandomId();
+                }
+
+                options.push(newOption)
 
                 bsFormBuilder.updateDataAttr(bsFormBuilder.currentData, "options", options);
                 bsFormBuilder.refreshPropsPanel();
@@ -1947,7 +1972,7 @@
         refreshDataElement: function (data) {
             var el = this.render(data, true);
 
-            var $oldEl =  $("#" + data.elementId);
+            var $oldEl = $("#" + data.elementId);
             $oldEl.find('.bs-form-container').each(function () {
                 let sortable = $(this).data('bsItemSortable');
                 if (sortable) sortable.destroy();

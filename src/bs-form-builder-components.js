@@ -90,8 +90,8 @@ componentsDef.push(...[
             {
                 name: "content",
                 type: "textarea",
-                label: "标签内容",
-                placeholder: "请输入标签内容...",
+                label: "内容",
+                placeholder: "请输入引用内容...",
                 disabled: false,
                 required: true,
                 defaultValue: "这里是引用的内容..."

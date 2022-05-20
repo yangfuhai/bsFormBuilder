@@ -136,7 +136,7 @@
                 '              <label for="{{id}}">{{label}}</label>' +
                 '        </div>' +
                 '        <div class="flex-auto">' +
-                '             <input id="{{id}}" {{~if (disabled)}}disabled{{~end}} type="text" data-attr="{{name}}" class="onkeyup form-control" value="{{value}}">' +
+                '             <input id="{{id}}" {{~if (disabled)}}disabled{{~end}} type="text" data-attr="{{name}}" placeholder="{{placeholder}}" class="onkeyup form-control" value="{{value}}">' +
                 '        </div>' +
                 '    </div>';
         },
@@ -149,7 +149,7 @@
                 '              <label for="{{id}}">{{label}}</label>' +
                 '        </div>' +
                 '        <div class="flex-auto">' +
-                '             <textarea id="{{id}}" {{~if (disabled)}}disabled{{~end}} rows="3" data-attr="{{name}}" class="onkeyup form-control">{{value}}</textarea>' +
+                '             <textarea id="{{id}}" {{~if (disabled)}}disabled{{~end}} rows="3" data-attr="{{name}}" placeholder="{{placeholder}}" class="onkeyup form-control">{{value}}</textarea>' +
                 '        </div>' +
                 '    </div>';
         },

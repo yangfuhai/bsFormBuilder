@@ -350,6 +350,7 @@
                 if (propName !== "grid") {
                     return false;
                 }
+
                 var currentData = bsFormBuilder.currentData;
                 var intValue = Number.parseInt(value);
                 var $row = $('#' + currentData.elementId).children(".form-group").children();
@@ -1906,6 +1907,7 @@
                 return;
             }
 
+
             //根据 index 对 dataArray 进行升序排序
             //越小越靠前
             array.sort((a, b) => a.index - b.index);
@@ -1913,6 +1915,12 @@
             for (let data of array) {
                 delete data.component;
                 delete data.elementId;
+
+                //remove data.options elementId
+                if (data.options && Array.isArray(data.options)){
+                    this._arrangeExportData(data.options);
+                }
+
                 if (data.children) {
                     for (let arr of Object.values(data.children)) {
                         this._arrangeExportData(arr);

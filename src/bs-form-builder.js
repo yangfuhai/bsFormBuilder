@@ -55,11 +55,12 @@
                 }
             },
             {
-                text: '预览',
+                text: '获取源码',
                 mainClass: 'btn-primary',
                 iconClass: 'bi bi-eye pr-1',
                 onclick: function () {
-                    alert('请自定义 [预览] 按钮的功能，这里的所有按钮和功能都是可以自定义的')
+                    alert('这里的所有按钮，按钮功能都是可以自定义的~~~')
+                    window.open("https://gitee.com/fuhai/bsFormBuilder")
                 }
             },
             {
@@ -835,21 +836,20 @@
             let bsFormBuilder = this;
 
             let actionButtons = this.options.actionButtons || [];
-            for (let button of actionButtons) {
+            for (let btnObj of actionButtons) {
                 let paras = ["$button", "text", "mainClass", "iconClass"];
 
-                let values = paras.map(k => button[k] || "");
-                values[0] = button;
-
+                let values = paras.map(k => btnObj[k] || "");
+                values[0] = btnObj;
 
                 let html = this._renderTemplate(template, paras, values);
 
-                let $html = $(html).attr("id", this.genRandomId());
-                $html.appendTo(".bsFormActions");
+                let $btnEl = $(html).attr("id", this.genRandomId());
+                $btnEl.appendTo(".bsFormActions");
 
-                if (typeof button.onclick === "function") {
-                    $html.on("click", function (event) {
-                        button.onclick(event, bsFormBuilder);
+                if (typeof btnObj.onclick === "function") {
+                    $btnEl.on("click", function (event) {
+                        btnObj.onclick(event, bsFormBuilder);
                     });
                 }
             }

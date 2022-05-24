@@ -1,3 +1,16 @@
+# v1.0.4 2022-05-24
+新增：新增自定义栅格大小的 "灵活栅格" 组件
+新增：辅助组件 "空DIV" 的功能，自定定义其高度
+新增：bsFormBuilder 新增 clear 方法，并完善 "清空" 按钮
+新增：辅助组件 "引用"
+新增：props 属性可以选择 textarea 作为属性输入框
+优化：复制和删除按钮的样式，使其表现的功能更加明确
+修复：tab 容器在 value 值相等的情况下，移动 tab 顺序其内容不跟随移动的问题
+修复：refreshDataElement 未销毁旧的 sortable 的问题
+修复：_refreshBuilderContainer 未销毁旧的 sortable 的问题
+修复：组件为 props 属性输入框配置的 placeholder 无法显示的问题
+
+
 # v1.0.3 2022-05-17
 新增：时间、日期、上传文件 3 个新的组件
 新增：新增演示站点 http://bsformbuilder.jpress.cn

@@ -15,6 +15,25 @@
  */
 (function ($) {
 
+    var modal = '<div class="modal">' +
+        '  <div class="modal-dialog modal-lg">' +
+        '    <div class="modal-content shadow-lg">' +
+        '      <div class="modal-header">' +
+        '        <h5 class="modal-title">{{title}}</h5>' +
+        '        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >' +
+        '          <span aria-hidden="true">&times;</span>' +
+        '        </button>' +
+        '      </div>' +
+        '      <div class="modal-body" style="word-break: break-all">' +
+        '        <p>{{content}}</p>' +
+        '      </div>' +
+        '      <div class="modal-footer">' +
+        '        <button type="button" class="btn btn-secondary" data-dismiss="modal"> 关闭 </button>' +
+        '      </div>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+
     //默认配置
     var defaultOptions = {
         mode: "builder", // 模式 builder 工具模式,  view 预览模式
@@ -25,20 +44,18 @@
                 mainClass: 'btn-primary',
                 iconClass: 'bi bi-arrow-up pr-1',
                 onclick: function (event, builder) {
-                    var text = builder.exportToJson();
+                    var json = builder.exportToJson();
+                    var html = builder._renderTemplate(modal,["title","content"],["json内容",json]);
 
-                    var anchor = document.createElement('a');
-                    anchor.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-                    anchor.setAttribute('download', "bsFormBuilder.json");
-                    anchor.style.display = 'none';
-
-                    document.body.appendChild(anchor);
-                    anchor.click();
-                    document.body.removeChild(anchor);
+                    var $el = $(html);
+                    $el.appendTo($('body')).show();
+                    $el.find('.close,.btn').on('click',function (){
+                        $el.remove();
+                    })
                 }
             },
             {
-                text: '导出 HTML',
+                text: '下载 HTML',
                 mainClass: 'btn-primary',
                 iconClass: 'bi bi-arrow-up pr-1',
                 onclick: function (event, builder) {

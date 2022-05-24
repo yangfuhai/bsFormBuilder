@@ -1366,8 +1366,8 @@
                 template = template();
             }
 
-            if (!template){
-                throw new Error("Not support prop type: "+type)
+            if (!template) {
+                throw new Error("Not support prop type: " + type)
             }
 
             return template;
@@ -1917,7 +1917,7 @@
                 delete data.elementId;
 
                 //remove data.options elementId
-                if (data.options && Array.isArray(data.options)){
+                if (data.options && Array.isArray(data.options)) {
                     this._arrangeExportData(data.options);
                 }
 
@@ -2035,13 +2035,11 @@
             //那么，可以理解为该方法会去更新 html 内容，而不通过系统继续渲染了
             if (data.component && typeof data.component.onPropChange === "function"
                 && data.component.onPropChange(this, data, attr, value)) {
-                return;
+                data[attr] = value;
+            } else {
+                data[attr] = value;
+                this.refreshDataElement(data);
             }
-
-            //更新组件的 data 数据
-            data[attr] = value;
-
-            this.refreshDataElement(data);
         },
 
         /**

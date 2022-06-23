@@ -54,6 +54,11 @@
 {
   //模式: "view" 预览模式, "builder" 构建工具模式
   mode: "view",
+  bsFormContainerSelector: ".bsFormContainer", // 设计容器
+  bsFormContainerFilterSelector: ".bsFormFilter", // 设计容器里，不允许拖动的组件 class
+  bsFormContainerPlaceHolderSelector: ".bsFormContainer-placeholder", // 设计容器里的提示内容
+  bsFormPropsPanelSelector: ".bsFormPropsPanel", // 属性面板
+  customBuilderStructure: false, // 是否自定义容器 UI 
   //使用哪些组件
   useComponents:[],    
   //初始化数据
@@ -128,7 +133,7 @@
             "index": 100,
             "iconClass": "bi bi-terminal"
          },
-    "template": '<div class="bs-form-item">' +
+    "template": '<div class="bsFormItem">' +
                 '  <div class="form-group clearfix">' +
                 '    <div class="form-label-left">' +
                 '      <label for="label">{{label}}</label>' +

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bsFormBuilde 演示</title>
+
+    <script src="build/jquery/jquery.min.js"></script>
+    <script src="build/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="build/sortable/sortable.min.js"></script>
+
+    <link href="build/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="build/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+    <!--    <script src="/dist/bs-form-builder.min.all.js"></script>-->
+
+    <script src="src/bs-form-builder-components.js"></script>
+    <script src="src/bs-form-builder.js"></script>
+    <link href="src/bs-form-builder.css" rel="stylesheet">
+
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?9e124357e485b4730b5a46283c52ccf1";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="bs-form-builder-header">表单设计</div>
+    <div id="builder">
+        <div class="row bsFormBuilderRoot">  <!--左侧拖拽区域-->
+            <div class="col-md-3 col-sm-4">
+                <div class="bs-drag-panel pd10 border-right">
+                    <ul class="nav nav-tabs mb-2" id="formTab" role="tablist">
+                        <li class="nav-item w-50"><a class="nav-link active" id="component-tab" data-toggle="tab"
+                                                     href="#component" role="tab" aria-controls="component"
+                                                     aria-selected="true">表单组件</a></li>
+                        <li class="nav-item w-50"><a class="nav-link" id="module-tab" data-toggle="tab" href="#template"
+                                                     role="tab" aria-controls="module" aria-selected="false">表单模板</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active bsFormDrags" id="component" role="tabpanel"
+                             aria-labelledby="component-tab">
+                            <div class="component-title">表单组件1</div>
+                            <div class="component-group d-flex align-items-center base-drags">
+                            </div>
+                            <div class="component-title">辅助组件</div>
+                            <div class="component-group d-flex align-items-center assist-drags">
+                            </div>
+                            <div class="component-title">布局组件</div>
+                            <div class="component-group d-flex align-items-center container-drags">
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="template" role="tabpanel" aria-labelledby="module-tab">
+                            <div id="bs-template-item-list" class="bs-template-item-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>  <!-- 中间内容 -->
+            <div class="bs-container-panel col-md-6 col-sm-4">
+                <div class="w-100 pd10 border-bottom text-right pt-1 pb-1 bsFormActions">
+                </div>
+                <div style="width: 100%;" class="bsFormContainer">
+                    <div class="bsFormContainer-placeholder">从左侧拖入组件进行表单设计</div>
+                </div>
+            </div>  <!-- 属性内容 -->
+            <div class="col-md-3 col-sm-4">
+                <div class="bs-props-panel pd10 border-left">
+                    <ul class="nav nav-tabs mb-2" id="formAttrTab" role="tablist">
+                        <li class="nav-item w-50"><a class="nav-link active" id="component-props-tab" data-toggle="tab"
+                                                     href="#bsFormPropsPanel" role="tab" aria-controls="component"
+                                                     aria-selected="true">组件属性</a></li>
+                    </ul>
+                    <div class="tab-content pt-3">
+                        <div class="tab-pane fade show active bsFormPropsPanel" id="bsFormPropsPanel" role="tabpanel"
+                             aria-labelledby="component-props-tab"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // var datas = [{"id":"62cbdbad88","tag":"grid","label":"栅格布局","name":"grid_1","grid":2,"index":1,"children":{"0":[{"id":"7c164d0e18","tag":"input","label":"输入框","name":"input_3","parentDataId":"8296f944ef","parentDataIndex":"0","index":0}],"1":[{"id":"8d595619a8","tag":"grid","label":"栅格布局","name":"grid_4","grid":2,"parentDataId":"8296f944ef","parentDataIndex":"1","index":0,"children":{"0":[{"id":"11d9e667d9","tag":"input","label":"输入框","name":"input_5","parentDataId":"c469c1bf28","parentDataIndex":"0","index":0},{"id":"44cb995b02","tag":"input","label":"输入框","name":"input_5","parentDataId":"c469c1bf28","parentDataIndex":"0","index":1}],"1":[{"id":"3f6772809c","tag":"textarea","label":"多行输入框","name":"textarea_6","rows":5,"parentDataId":"c469c1bf28","parentDataIndex":"1","index":0}]}}]}},{"id":"657634a8df","tag":"textarea","label":"多行输入框","name":"textarea_2","rows":5,"index":0}]
+    // $('#builder').bsFormBuilder({datas});
+
+    // var datas = [{"id":"62cbdbad88","tag":"grid","label":"栅格布局","name":"grid_1","grid":2,"index":1,"children":{"0":[{"id":"7c164d0e18","tag":"input","label":"输入框","name":"input_3","parentDataId":"8296f944ef","parentDataIndex":"0","index":0}],"1":[{"id":"8d595619a8","tag":"grid","label":"栅格布局","name":"grid_4","grid":2,"parentDataId":"8296f944ef","parentDataIndex":"1","index":0,"children":{"0":[{"id":"11d9e667d9","tag":"input","label":"输入框","name":"input_5","parentDataId":"c469c1bf28","parentDataIndex":"0","index":0},{"id":"44cb995b02","tag":"input","label":"输入框","name":"input_5","parentDataId":"c469c1bf28","parentDataIndex":"0","index":1}],"1":[{"id":"3f6772809c","tag":"textarea","label":"多行输入框","name":"textarea_6","rows":5,"parentDataId":"c469c1bf28","parentDataIndex":"1","index":0}]}}]}},{"id":"657634a8df","tag":"textarea","label":"多行输入框","name":"textarea_2","rows":5,"index":0}]
+    // $('#builder').bsFormBuilder({
+    //     mode:"view",
+    //     datas
+    // });
+
+    $('#builder').bsFormBuilder({
+        customBuilderStructure: true
+    });
+</script>
+</body>
+
+</html>

@@ -37,7 +37,7 @@ componentsDef.push(...[
                 required: true,
             }
         ],
-        "template": '<div class="bs-form-item">' +
+        "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
             '    <i class="d-inline-block bi bi-exclamation-circle"' +
             '      data-toggle="tooltip"' +
@@ -69,7 +69,7 @@ componentsDef.push(...[
                 defaultValue: 20
             }
         ],
-        "template": '<div class="bs-form-item">' +
+        "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix" style="height: {{height}}px">' +
             '  </div>' +
             '</div>',
@@ -97,7 +97,7 @@ componentsDef.push(...[
                 defaultValue: "这里是引用的内容..."
             }
         ],
-        "template": '<div class="bs-form-item">' +
+        "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
             '  <blockquote>{{content}}</blockquote>' +
             '  </div>' +
@@ -126,7 +126,7 @@ componentsDef.push(...[
                 value: "value2"
             }
         ],
-        "template": '<div class="bs-form-item">' +
+        "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
             '    <div class="form-label-left">' +
             '      <legend class="col-form-label pt-0">{{label}}</legend>' +
@@ -163,7 +163,7 @@ componentsDef.push(...[
                 value: "value2"
             }
         ],
-        "template": '<div class="bs-form-item">' +
+        "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
             '    <div class="form-label-left">' +
             '      <label for="label">{{label}}</label>' +
@@ -204,7 +204,7 @@ componentsDef.push(...[
                 value: "value2"
             }
         ],
-        "template": '<div class="bs-form-item">' +
+        "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
             '    <div class="form-label-left">' +
             '      <label for="label">{{label}}</label>' +
@@ -233,7 +233,7 @@ componentsDef.push(...[
             "index": 100,
             "iconClass": "bi bi-toggle-on"
         },
-        "template": '<div class="bs-form-item">' +
+        "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
             '    <div class="form-label-left">' +
             '      <legend class="col-form-label pt-0">{{label}}</legend>' +
@@ -260,7 +260,7 @@ componentsDef.push(...[
             "index": 100,
             "iconClass": "bi bi-clock"
         },
-        "template": '<div class="bs-form-item">' +
+        "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
             '    <div class="form-label-left">' +
             '      <label for="label">{{label}}</label>' +
@@ -284,7 +284,7 @@ componentsDef.push(...[
             "index": 100,
             "iconClass": "bi bi-calendar2-date"
         },
-        "template": '<div class="bs-form-item">' +
+        "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
             '    <div class="form-label-left">' +
             '      <label for="label">{{label}}</label>' +
@@ -316,7 +316,7 @@ componentsDef.push(...[
                 required: true,
             }
         ],
-        "template": '<div class="bs-form-item">' +
+        "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
             '    <div class="form-label-left">' +
             '      <label for="label">{{label}}</label>' +

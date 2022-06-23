@@ -37,6 +37,11 @@
     //默认配置
     var defaultOptions = {
         mode: "builder", // 模式 builder 工具模式,  view 预览模式
+        bsFormContainerSelector: ".bsFormContainer", // 设计容器
+        bsFormContainerFilterSelector: ".bsFormFilter", // 设计容器里，不允许拖动的组件 class
+        bsFormContainerPlaceHolderSelector: ".bsFormContainer-placeholder", // 设计容器里的提示内容
+        bsFormPropsPanelSelector: ".bsFormPropsPanel", // 面板内容
+        customBuilderStructure: false, // 自定义容器面板
         useComponents: [], //使用的组件 use components
         actionButtons: [
             {
@@ -45,11 +50,11 @@
                 iconClass: 'bi bi-arrow-up pr-1',
                 onclick: function (event, builder) {
                     var json = builder.exportToJson();
-                    var html = builder._renderTemplate(modal,["title","content"],["json内容",json]);
+                    var html = builder._renderTemplate(modal, ["title", "content"], ["json内容", json]);
 
                     var $el = $(html);
                     $el.appendTo($('body')).show();
-                    $el.find('.close,.btn').on('click',function (){
+                    $el.find('.close,.btn').on('click', function () {
                         $el.remove();
                     })
                 }
@@ -274,7 +279,7 @@
                 "index": 100,
                 "iconClass": "bi bi-terminal"
             },
-            "template": '<div class="bs-form-item">' +
+            "template": '<div class="bsFormItem">' +
                 '  <div class="form-group clearfix">' +
                 '    <div class="form-label-left">' +
                 '      <label for="label">{{label}}</label>' +
@@ -308,7 +313,7 @@
                     required: true,
                 }
             ],
-            "template": '<div class="bs-form-item">' +
+            "template": '<div class="bsFormItem">' +
                 '  <div class="form-group clearfix">' +
                 '    <div class="form-label-left">' +
                 '      <label for="{{id}}">{{label}}</label>' +
@@ -354,11 +359,11 @@
                     ],
                 }
             ],
-            "template": '<div class="bs-form-item">' +
+            "template": '<div class="bsFormItem">' +
                 '  <div class="form-group clearfix">' +
                 '    <div class="row pdlr-15">' +
                 '      {{~for (var i=0;i<grid;i++)}}' +
-                '      <div class="col-{{12/grid}} bs-form-container">{{$children[i]}}</div>' +
+                '      <div class="col-{{12/grid}} bsItemContainer">{{$children[i]}}</div>' +
                 '      {{~end}}' +
                 '    </div>' +
                 '  </div>' +
@@ -392,7 +397,7 @@
                         }
 
                         //销毁子 sortable
-                        $lastCol.find('.bs-form-container').each(function () {
+                        $lastCol.find('.bsItemContainer').each(function () {
                             var sortable = $(this).data('bsItemSortable');
                             if (sortable) {
                                 sortable.destroy();
@@ -405,7 +410,7 @@
                 // 设置的 grid 数量大于当前存在的 grid 数量，需要在最后面添加 div
                 if (intValue > gridCount) {
                     for (let i = 0; i < intValue - gridCount; i++) {
-                        $row.append('<div class="bs-form-container"></div>')
+                        $row.append('<div class="bsItemContainer"></div>')
                     }
                 }
 
@@ -426,7 +431,7 @@
                     }
                 });
 
-                $row.children().attr("class", "bs-form-container col-" + 12 / Number.parseInt(value));
+                $row.children().attr("class", "bsItemContainer col-" + 12 / Number.parseInt(value));
                 return true;
             }
         },
@@ -461,11 +466,11 @@
                     value: 6
                 }
             ],
-            "template": '<div class="bs-form-item">' +
+            "template": '<div class="bsFormItem">' +
                 '  <div class="form-group clearfix">' +
                 '    <div class="row pdlr-15">' +
                 '      {{~for (var i = 0;i<options.length;i++)}}' +
-                '      <div class="col-{{options[i].value}} bs-form-container">{{$children[i]}}</div>' +
+                '      <div class="col-{{options[i].value}} bsItemContainer">{{$children[i]}}</div>' +
                 '      {{~end}}' +
                 '    </div>' +
                 '  </div>' +
@@ -520,7 +525,7 @@
                     }
                 ]
             },
-            "template": '<div class="bs-form-item">' +
+            "template": '<div class="bsFormItem">' +
                 '  <div class="form-group clearfix">' +
                 '    <div class="pdlr-15">' +
                 '      <ul class="nav nav-tabs" role="tablist">' +
@@ -533,7 +538,7 @@
                 '      </ul>' +
                 '      <div class="tab-content">' +
                 '        {{~for (var i = 0;i<options.length;i++)}}' +
-                '        <div class="bs-form-container tab-pane fade {{~if (i == 0)}}active show {{~end}}"' +
+                '        <div class="bsItemContainer tab-pane fade {{~if (i == 0)}}active show {{~end}}"' +
                 '          id="{{options[i].value}}" role="tabpanel" aria-labelledby="{{options[i].value}}-tab" >' +
                 '          {{$children[i]}}' +
                 '        </div>' +
@@ -642,7 +647,7 @@
             //初始化 view 的 html 结构
             this._initViewStructure();
 
-            this.$container = this.$rootEl.find('.bsFormContainer');
+            this.$container = this.$rootEl.find(this.options.bsFormContainerSelector);
 
             //初始化默认的组件库
             this._initComponents();
@@ -661,12 +666,17 @@
          * 初始化 Builder
          */
         _initBuilderMode: function () {
-            //初始化 html 基础结构
-            this._initBuilderStructure();
 
-            this.$container = this.$rootEl.find('.bsFormContainer');
-            this.$containerPlaceHolder = this.$rootEl.find('.placeholder-box');
-            this.$propsPanel = this.$rootEl.find("#component-props-content");
+            //若用户自定义结构，则无需初始化自己的结构
+            if (!(this.options.customBuilderStructure === true)) {
+
+                //初始化整个 html 结构
+                this._initBuilderStructure();
+            }
+
+            this.$container = this.$rootEl.find(this.options.bsFormContainerSelector);
+            this.$containerPlaceHolder = this.$rootEl.find(this.options.bsFormContainerPlaceHolderSelector);
+            this.$propsPanel = this.$rootEl.find(this.options.bsFormPropsPanelSelector);
 
             //初始化默认的组件库
             this._initComponents();
@@ -765,7 +775,7 @@
          * @private
          */
         _refreshViewContainer: function () {
-            $(".bsFormContainer").children(".bs-form-item").remove();
+            this.$container.children(".bsFormItem").remove();
             for (let data of this.datas) {
                 var html = this.render(data, false).outerHTML;
                 this.$container.append(html)
@@ -801,7 +811,7 @@
                 '        </li>' +
                 '      </ul>' +
                 '      <div class="tab-content">' +
-                '        <div class="tab-pane fade show active" id="component" role="tabpanel" aria-labelledby="component-tab" >' +
+                '        <div class="tab-pane fade show active bsFormDrags" id="component" role="tabpanel" aria-labelledby="component-tab" >' +
                 '          <div class="component-title">表单组件</div>' +
                 '          <div class="component-group d-flex align-items-center base-drags"></div>' +
                 '          <div class="component-title">辅助组件</div>' +
@@ -819,7 +829,7 @@
                 '  <div class="bs-container-panel col-md-6 col-sm-4">' +
                 '    <div class="w-100 pd10 border-bottom text-right pt-1 pb-1 bsFormActions"></div>' +
                 '    <div style="width: 100%;" class="bsFormContainer">' +
-                '      <div class="placeholder-box">从左侧拖入组件进行表单设计</div>' +
+                '      <div class="bsFormContainer-placeholder">从左侧拖入组件进行表单设计</div>' +
                 '    </div>' +
                 '  </div>' +
                 '  <!-- 属性内容 -->' +
@@ -827,12 +837,12 @@
                 '    <div class="bs-props-panel pd10 border-left">' +
                 '      <ul class="nav nav-tabs mb-2" id="formAttrTab" role="tablist">' +
                 '        <li class="nav-item w-50">' +
-                '          <a  class="nav-link active" id="component-props-tab" data-toggle="tab" href="#component-props-content"' +
+                '          <a  class="nav-link active" id="component-props-tab" data-toggle="tab" href="#bsFormPropsPanel"' +
                 '            role="tab" aria-controls="component" aria-selected="true">组件属性</a>' +
                 '        </li>' +
                 '      </ul>' +
                 '      <div class="tab-content pt-3">' +
-                '        <div class="tab-pane fade show active" id="component-props-content" role="tabpanel" aria-labelledby="component-props-tab">' +
+                '        <div class="tab-pane fade show active bsFormPropsPanel" id="bsFormPropsPanel" role="tabpanel" aria-labelledby="component-props-tab">' +
                 '        </div>' +
                 '      </div>' +
                 '    </div>' +
@@ -918,6 +928,7 @@
          * 初始化左侧拖动的组件库
          */
         _initDragComponents: function () {
+
             if (!this.components || this.components.length === 0) {
                 return;
             }
@@ -971,11 +982,11 @@
          * 渲染初始化的数据
          */
         _refreshBuilderContainer: function () {
-            this.$container.find('.bs-form-container').each(function () {
+            this.$container.find('.bsItemContainer').each(function () {
                 let sortable = $(this).data('bsItemSortable');
                 if (sortable) sortable.destroy();
             });
-            this.$container.children(".bs-form-item").remove();
+            this.$container.children(".bsFormItem").remove();
             if (!this.datas || this.datas.length === 0) {
                 this.$containerPlaceHolder.show();
             } else {
@@ -996,7 +1007,7 @@
         _initEvents: function () {
             var bsFormBuilder = this;
             //container 下的每个 item 的点击事件
-            this.$container.on("click", ".bs-form-item", function (event) {
+            this.$container.on("click", ".bsFormItem", function (event) {
                 event.stopPropagation();
                 bsFormBuilder.makeFormItemActive($(this).attr('id'));
             })
@@ -1005,14 +1016,14 @@
             //container 下的每个 item 的 复制按钮 的点击事件
             this.$container.on("click", ".bs-item-copy", function (event) {
                 event.stopPropagation();
-                var currentId = $(this).closest('.bs-form-item').attr('id');
+                var currentId = $(this).closest('.bsFormItem').attr('id');
                 bsFormBuilder.copyFormItem(currentId);
             })
 
             //container 下的每个 item 的 复制按钮 的删除事件
             this.$container.on("click", ".bs-item-del", function (event) {
                 event.stopPropagation();
-                var $bsFormItem = $(this).closest('.bs-form-item');
+                var $bsFormItem = $(this).closest('.bsFormItem');
                 bsFormBuilder.deleteFormItem($bsFormItem.attr("id"));
 
                 if (!bsFormBuilder.datas || bsFormBuilder.datas.length === 0) {
@@ -1115,38 +1126,45 @@
             var bsFormBuilder = this;
             var drags = ['.base-drags', '.assist-drags', '.container-drags'];
             for (let drag of drags) {
-                var element = document.querySelector(drag);
-                new Sortable(element, {
-                    group: {
-                        name: 'shared',
-                        pull: 'clone',
-                        put: false
-                    },
-                    animation: 150,
-                    sort: false,
-                    onStart: function (evt) {
-                        if (bsFormBuilder.$containerPlaceHolder) {
-                            bsFormBuilder.$containerPlaceHolder.hide();
+                var $element = $(drag);
+                if (!$element.data('sortable')){
+                    var sortable = new Sortable($element[0], {
+                        group: {
+                            name: 'shared',
+                            pull: 'clone',
+                            put: false
+                        },
+                        animation: 150,
+                        sort: false,
+                        onStart: function (evt) {
+                            if (bsFormBuilder.$containerPlaceHolder) {
+                                bsFormBuilder.$containerPlaceHolder.hide();
+                            }
+                        },
+                        onEnd: function (evt) {
+                            if (bsFormBuilder.datas.length === 0) {
+                                bsFormBuilder.$containerPlaceHolder.show();
+                            }
                         }
-                    },
-                    onEnd: function (evt) {
-                        if (bsFormBuilder.datas.length === 0) {
-                            bsFormBuilder.$containerPlaceHolder.show();
-                        }
-                    }
-                });
+                    });
+                    $element.data('sortable',sortable);
+                }
             }
 
-            new Sortable(document.querySelector('.bsFormContainer'), {
-                group: 'shared',
-                animation: 150,
-                onAdd: function (evt) {
-                    bsFormBuilder._onDragAdd(evt);
-                },
-                onEnd: function (evt) {
-                    bsFormBuilder._onDragEnd(evt);
-                },
-            });
+            if (!this.$container.data("sortable")){
+                var sortable = new Sortable(this.$container[0], {
+                    group: 'shared',
+                    filter: this.options.bsFormContainerFilterSelector,
+                    animation: 150,
+                    onAdd: function (evt) {
+                        bsFormBuilder._onDragAdd(evt);
+                    },
+                    onEnd: function (evt) {
+                        bsFormBuilder._onDragEnd(evt);
+                    },
+                });
+                this.$container.data('sortable',sortable);
+            }
         },
 
 
@@ -1184,8 +1202,8 @@
 
             var $to = $(evt.to);
 
-            //拖动到 root 容器
-            if ($to.is(".bsFormContainer")) {
+            //拖动到 root 容器，则删除其父级数据
+            if ($to.is(this.options.bsFormContainerSelector)) {
                 delete data.parentDataId;
                 delete data.parentDataIndex;
                 this.datas.push(data);
@@ -1193,8 +1211,8 @@
 
             //拖动到子容器
             else {
-                var newParentId = $to.closest(".bs-form-item").attr("id");
-                var dataIndex = $to.closest(".bs-form-container").index();
+                var newParentId = $to.closest(".bsFormItem").attr("id");
+                var dataIndex = $to.closest(".bsItemContainer").index();
 
                 var newParent = this.getDataByElementId(newParentId);
 
@@ -1240,7 +1258,7 @@
             let bsFormBuilder = this;
 
             //初始化 element 的 container 容器
-            $("#" + data.elementId).find('.bs-form-container').each(function () {
+            $("#" + data.elementId).find('.bsItemContainer').each(function () {
                 var sortable = $(this).data('bsItemSortable');
                 if (!sortable) {
                     sortable = new Sortable($(this)[0], {
@@ -1271,7 +1289,7 @@
         _invokeComponentOnDelete: function (data) {
 
             //销毁 component 的 sortable
-            $("#" + data.elementId).find('.bs-form-container').each(function () {
+            $("#" + data.elementId).find('.bsItemContainer').each(function () {
                 var sortable = $(this).data('bsItemSortable');
                 if (sortable) {
                     sortable.destroy();
@@ -1593,7 +1611,7 @@
 
             this.currentData = this.getDataByElementId(elementId);
 
-            this.$container.find(".bs-form-item.active").removeClass("active");
+            this.$container.find(".bsFormItem.active").removeClass("active");
             this.$container.find(".bs-item-tools").remove();
 
 
@@ -1773,7 +1791,7 @@
          */
         refreshDataIndex: function ($parentEl) {
             var bsFormBuilder = this;
-            $parentEl.children(".bs-form-item").each(function (index, item) {
+            $parentEl.children(".bsFormItem").each(function (index, item) {
                 var id = $(item).attr("id");
                 var data = bsFormBuilder.getDataByElementId(id);
                 data['index'] = index;
@@ -2016,7 +2034,7 @@
             var el = this.render(data, true);
 
             var $oldEl = $("#" + data.elementId);
-            $oldEl.find('.bs-form-container').each(function () {
+            $oldEl.find('.bsItemContainer').each(function () {
                 let sortable = $(this).data('bsItemSortable');
                 if (sortable) sortable.destroy();
             });
@@ -2115,19 +2133,19 @@
 
         return this.each(function () {
             var $this = $(this),
-                component = $this.data('bsFormBuilder');
+                bsFormBuilder = $this.data('bsFormBuilder');
 
-            if (!component) {
-                $this.data('bsFormBuilder', (component = new BsFormBuilder(this, options)));
+            if (!bsFormBuilder) {
+                $this.data('bsFormBuilder', (bsFormBuilder = new BsFormBuilder(this, options)));
             }
             if (typeof option === 'string') {
-                var method = component[option];
+                var method = bsFormBuilder[option];
                 if (!method) {
                     console.error("bsFormBuilder has not the method: " + option);
                     return;
                 }
                 if (arg.length > 1) {
-                    method.apply(component, Array.prototype.slice.call(arg, 1));
+                    method.apply(bsFormBuilder, Array.prototype.slice.call(arg, 1));
                 } else {
                     method();
                 }

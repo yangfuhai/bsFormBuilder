@@ -203,7 +203,7 @@ select {
     min-height: 100%;
 }
 
-.placeholder-box {
+.bsFormContainer-placeholder {
     margin: 25% auto;
     text-align: center;
     font-size: 18px;
@@ -212,7 +212,7 @@ select {
 
 
 
-.bs-form-item {
+.bsFormItem {
     position: relative;
     border: 1px dashed #d1d1d1;
     margin-bottom: 5px;
@@ -221,13 +221,13 @@ select {
     padding: 10px;
 }
 
-.bs-form-item:hover,
-.bs-form-item.active {
+.bsFormItem:hover,
+.bsFormItem.active {
     border: 1px solid #007bff;
     background-color: #e9f4fd !important;
 }
 
-.bs-form-item .form-group {
+.bsFormItem .form-group {
     margin-bottom: 0;
 }
 
@@ -247,7 +247,7 @@ select {
     display: none;
 }
 
-.bs-form-item.active .bs-item-tools {
+.bsFormItem.active .bs-item-tools {
     display: block;
 }
 
@@ -261,7 +261,7 @@ select {
     background-color: #ddd;
 }
 
-.bs-form-container {
+.bsItemContainer {
     min-height: 50px;
     border: 1px dashed #ccc;
     background: #f1f1f1;

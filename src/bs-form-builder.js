@@ -813,11 +813,11 @@
                 '      <div class="tab-content">' +
                 '        <div class="tab-pane fade show active bsFormDrags" id="component" role="tabpanel" aria-labelledby="component-tab" >' +
                 '          <div class="component-title">表单组件</div>' +
-                '          <div class="component-group d-flex align-items-center base-drags"></div>' +
+                '          <div class="component-group d-flex align-items-center" data-type="base"></div>' +
                 '          <div class="component-title">辅助组件</div>' +
-                '          <div class="component-group d-flex align-items-center assist-drags"></div>' +
+                '          <div class="component-group d-flex align-items-center" data-type="assist"></div>' +
                 '          <div class="component-title">布局组件</div>' +
-                '          <div class="component-group d-flex align-items-center container-drags"></div>' +
+                '          <div class="component-group d-flex align-items-center" data-type="container"></div>' +
                 '        </div>' +
                 '        <div class="tab-pane fade" id="template"  role="tabpanel" aria-labelledby="module-tab">' +
                 '          <div id="bs-template-item-list" class="bs-template-item-list"></div>' +
@@ -928,53 +928,45 @@
          * 初始化左侧拖动的组件库
          */
         _initDragComponents: function () {
-
             if (!this.components || this.components.length === 0) {
                 return;
             }
 
-            //基础组件， 辅助组件，容器组件
-            var baseDrags = [], assistDrags = [], containerDrags = [];
+            //key --> type , value --> component array
+            var allDrags = {};
 
             for (let component of Object.values(this.components)) {
                 if (component && component.drag && component.drag.type) {
                     //copy component.tag to drag.tag
                     component.drag['tag'] = component.tag;
-                    if (component.drag.type === 'base') {
-                        baseDrags.push(component.drag);
-                    } else if (component.drag.type === 'assist') {
-                        assistDrags.push(component.drag)
-                    } else if (component.drag.type === 'container') {
-                        containerDrags.push(component.drag);
+
+                    var drags = allDrags[component.drag.type];
+                    if (!drags){
+                        drags = [];
+                        allDrags[component.drag.type] = drags;
                     }
+                    drags.push(component.drag);
                 } else {
                     console.error("Component define error! it must need drag.type. component content:", component);
                 }
             }
 
             //根据 index 进行排序
-            baseDrags.sort((a, b) => a.index = b.index);
-            assistDrags.sort((a, b) => a.index = b.index);
-            containerDrags.sort((a, b) => a.index = b.index);
-
-
-            var $baseDragsDiv = $('.base-drags');
-            for (let drag of baseDrags) {
-                $baseDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="'
-                    + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
+            for (let dragArray of Object.values(allDrags)) {
+                dragArray.sort((a, b) => a.index = b.index);
             }
 
-            var $assistDragsDiv = $('.assist-drags');
-            for (let drag of assistDrags) {
-                $assistDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="'
-                    + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
-            }
-
-            var $containerDragsDiv = $('.container-drags');
-            for (let drag of containerDrags) {
-                $containerDragsDiv.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="'
-                    + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
-            }
+            $('.component-group').each(function (index, element){
+                var $group = $(element);
+                var type = $group.data('type');
+                var dragArray = allDrags[type];
+                if (dragArray){
+                    for (let drag of dragArray) {
+                        $group.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="'
+                            + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
+                    }
+                }
+            })
         },
 
 
@@ -1124,9 +1116,8 @@
          */
         _initSortables: function () {
             var bsFormBuilder = this;
-            var drags = ['.base-drags', '.assist-drags', '.container-drags'];
-            for (let drag of drags) {
-                var $element = $(drag);
+            $('.component-group').each(function (index, element){
+                var $element = $(element);
                 if (!$element.data('sortable')){
                     var sortable = new Sortable($element[0], {
                         group: {
@@ -1149,7 +1140,7 @@
                     });
                     $element.data('sortable',sortable);
                 }
-            }
+            })
 
             if (!this.$container.data("sortable")){
                 var sortable = new Sortable(this.$container[0], {

@@ -812,11 +812,11 @@
                 '      </ul>' +
                 '      <div class="tab-content">' +
                 '        <div class="tab-pane fade show active bsFormDrags" id="component" role="tabpanel" aria-labelledby="component-tab" >' +
-                '          <div class="component-title">表单组件</div>' +
+                '          <div class="bsFormDrags-title">表单组件</div>' +
                 '          <div class="bsFormDrags d-flex align-items-center" data-type="base"></div>' +
-                '          <div class="component-title">辅助组件</div>' +
+                '          <div class="bsFormDrags-title">辅助组件</div>' +
                 '          <div class="bsFormDrags d-flex align-items-center" data-type="assist"></div>' +
-                '          <div class="component-title">布局组件</div>' +
+                '          <div class="bsFormDrags-title">布局组件</div>' +
                 '          <div class="bsFormDrags d-flex align-items-center" data-type="container"></div>' +
                 '        </div>' +
                 '        <div class="tab-pane fade" id="template"  role="tabpanel" aria-labelledby="module-tab">' +
@@ -962,8 +962,8 @@
                 var dragArray = allDrags[type];
                 if (dragArray){
                     for (let drag of dragArray) {
-                        $group.append('<ol data-tag="' + drag.tag + '"><div class="component-icon"><i class="'
-                            + drag.iconClass + '"></i></div><div class="form-name">' + drag.title + '</div></ol>');
+                        $group.append('<ol data-tag="' + drag.tag + '"><div class="item-icon"><i class="'
+                            + drag.iconClass + '"></i></div><div class="item-title">' + drag.title + '</div></ol>');
                     }
                 }
             })

@@ -174,12 +174,12 @@ select {
     border-color: #fff;
 }
 
-.component-icon {
+.item-icon {
     font-size: 18px;
     padding-top: 12px;
 }
 
-.component-title {
+.bsFormDrags-title {
     font-size: 14px;
     padding: 10px 0;
     font-weight: bold;

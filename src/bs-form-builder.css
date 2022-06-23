@@ -147,12 +147,12 @@ select {
     margin-left: 95px;
 }
 
-.component-group {
+.bsFormDrags {
     flex-wrap: wrap;
     font-size: 12px;
 }
 
-.component-group ol {
+.bsFormDrags ol {
     display: flex;
     display: -webkit-flex;
     flex-direction: column;
@@ -167,7 +167,7 @@ select {
     cursor: pointer;
 }
 
-.component-group ol:hover {
+.bsFormDrags ol:hover {
     background: #007bff;
     border-radius: 5px;
     color: #fff;
@@ -197,9 +197,7 @@ select {
     border: 1px solid #007bff;
 }
 
-.bs-drag-panel,
-.bs-container-panel,
-.bs-props-panel {
+.bsFormPanel {
     min-height: 100%;
 }
 

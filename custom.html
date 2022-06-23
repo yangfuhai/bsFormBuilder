@@ -39,7 +39,7 @@
     <div id="builder">
         <div class="row bsFormBuilderRoot">  <!--左侧拖拽区域-->
             <div class="col-md-3 col-sm-4">
-                <div class="bs-drag-panel pd10 border-right">
+                <div class="bsFormPanel pd10 border-right">
                     <ul class="nav nav-tabs mb-2" id="formTab" role="tablist">
                         <li class="nav-item w-50"><a class="nav-link active" id="component-tab" data-toggle="tab"
                                                      href="#component" role="tab" aria-controls="component"
@@ -52,13 +52,13 @@
                         <div class="tab-pane fade show active bsFormDrags" id="component" role="tabpanel"
                              aria-labelledby="component-tab">
                             <div class="component-title">表单组件1</div>
-                            <div class="component-group d-flex align-items-center" data-type="base">
+                            <div class="bsFormDrags d-flex align-items-center" data-type="base">
                             </div>
                             <div class="component-title">辅助组件</div>
-                            <div class="component-group d-flex align-items-center" data-type="assist">
+                            <div class="bsFormDrags d-flex align-items-center" data-type="assist">
                             </div>
                             <div class="component-title">布局组件</div>
-                            <div class="component-group d-flex align-items-center" data-type="container">
+                            <div class="bsFormDrags d-flex align-items-center" data-type="container">
                             </div>
                         </div>
                         <div class="tab-pane fade" id="template" role="tabpanel" aria-labelledby="module-tab">
@@ -67,7 +67,7 @@
                     </div>
                 </div>
             </div>  <!-- 中间内容 -->
-            <div class="bs-container-panel col-md-6 col-sm-4">
+            <div class="bsFormPanel col-md-6 col-sm-4">
                 <div class="w-100 pd10 border-bottom text-right pt-1 pb-1 bsFormActions">
                 </div>
                 <div style="width: 100%;" class="bsFormContainer">
@@ -75,14 +75,14 @@
                 </div>
             </div>  <!-- 属性内容 -->
             <div class="col-md-3 col-sm-4">
-                <div class="bs-props-panel pd10 border-left">
+                <div class="bsFormPanel pd10 border-left">
                     <ul class="nav nav-tabs mb-2" id="formAttrTab" role="tablist">
                         <li class="nav-item w-50"><a class="nav-link active" id="component-props-tab" data-toggle="tab"
-                                                     href="#bsFormPropsPanel" role="tab" aria-controls="component"
+                                                     href="#bsFormProps" role="tab" aria-controls="component"
                                                      aria-selected="true">组件属性</a></li>
                     </ul>
                     <div class="tab-content pt-3">
-                        <div class="tab-pane fade show active bsFormPropsPanel" id="bsFormPropsPanel" role="tabpanel"
+                        <div class="tab-pane fade show active bsFormProps" id="bsFormProps" role="tabpanel"
                              aria-labelledby="component-props-tab"></div>
                     </div>
                 </div>

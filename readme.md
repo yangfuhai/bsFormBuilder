@@ -57,7 +57,7 @@
   bsFormContainerSelector: ".bsFormContainer", // 设计容器
   bsFormContainerFilterSelector: ".bsFormFilter", // 设计容器里，不允许拖动的组件 class
   bsFormContainerPlaceHolderSelector: ".bsFormContainer-placeholder", // 设计容器里的提示内容
-  bsFormPropsPanelSelector: ".bsFormPropsPanel", // 属性面板
+  bsFormPropsSelector: ".bsFormProps", // 属性面板
   customBuilderStructure: false, // 是否自定义容器 UI 
   //使用哪些组件
   useComponents:[],    

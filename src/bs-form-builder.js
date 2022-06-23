@@ -40,7 +40,7 @@
         bsFormContainerSelector: ".bsFormContainer", // 设计容器
         bsFormContainerFilterSelector: ".bsFormFilter", // 设计容器里，不允许拖动的组件 class
         bsFormContainerPlaceHolderSelector: ".bsFormContainer-placeholder", // 设计容器里的提示内容
-        bsFormPropsPanelSelector: ".bsFormPropsPanel", // 面板内容
+        bsFormPropsSelector: ".bsFormProps", // 面板内容
         customBuilderStructure: false, // 自定义容器面板
         useComponents: [], //使用的组件 use components
         actionButtons: [
@@ -676,7 +676,7 @@
 
             this.$container = this.$rootEl.find(this.options.bsFormContainerSelector);
             this.$containerPlaceHolder = this.$rootEl.find(this.options.bsFormContainerPlaceHolderSelector);
-            this.$propsPanel = this.$rootEl.find(this.options.bsFormPropsPanelSelector);
+            this.$propsPanel = this.$rootEl.find(this.options.bsFormPropsSelector);
 
             //初始化默认的组件库
             this._initComponents();
@@ -799,7 +799,7 @@
             this.$rootEl.append('<div class="row bsFormBuilderRoot">' +
                 '  <!--左侧拖拽区域-->' +
                 '  <div class="col-md-3 col-sm-4">' +
-                '    <div class="bs-drag-panel pd10 border-right">' +
+                '    <div class="bsFormPanel pd10 border-right">' +
                 '      <ul class="nav nav-tabs mb-2" id="formTab" role="tablist">' +
                 '        <li class="nav-item w-50">' +
                 '          <a class="nav-link active" id="component-tab" data-toggle="tab" href="#component"' +
@@ -813,11 +813,11 @@
                 '      <div class="tab-content">' +
                 '        <div class="tab-pane fade show active bsFormDrags" id="component" role="tabpanel" aria-labelledby="component-tab" >' +
                 '          <div class="component-title">表单组件</div>' +
-                '          <div class="component-group d-flex align-items-center" data-type="base"></div>' +
+                '          <div class="bsFormDrags d-flex align-items-center" data-type="base"></div>' +
                 '          <div class="component-title">辅助组件</div>' +
-                '          <div class="component-group d-flex align-items-center" data-type="assist"></div>' +
+                '          <div class="bsFormDrags d-flex align-items-center" data-type="assist"></div>' +
                 '          <div class="component-title">布局组件</div>' +
-                '          <div class="component-group d-flex align-items-center" data-type="container"></div>' +
+                '          <div class="bsFormDrags d-flex align-items-center" data-type="container"></div>' +
                 '        </div>' +
                 '        <div class="tab-pane fade" id="template"  role="tabpanel" aria-labelledby="module-tab">' +
                 '          <div id="bs-template-item-list" class="bs-template-item-list"></div>' +
@@ -826,7 +826,7 @@
                 '    </div>' +
                 '  </div>' +
                 '  <!-- 中间内容 -->' +
-                '  <div class="bs-container-panel col-md-6 col-sm-4">' +
+                '  <div class="bsFormPanel col-md-6 col-sm-4">' +
                 '    <div class="w-100 pd10 border-bottom text-right pt-1 pb-1 bsFormActions"></div>' +
                 '    <div style="width: 100%;" class="bsFormContainer">' +
                 '      <div class="bsFormContainer-placeholder">从左侧拖入组件进行表单设计</div>' +
@@ -834,15 +834,15 @@
                 '  </div>' +
                 '  <!-- 属性内容 -->' +
                 '  <div class="col-md-3 col-sm-4">' +
-                '    <div class="bs-props-panel pd10 border-left">' +
+                '    <div class="bsFormPanel pd10 border-left">' +
                 '      <ul class="nav nav-tabs mb-2" id="formAttrTab" role="tablist">' +
                 '        <li class="nav-item w-50">' +
-                '          <a  class="nav-link active" id="component-props-tab" data-toggle="tab" href="#bsFormPropsPanel"' +
+                '          <a  class="nav-link active" id="component-props-tab" data-toggle="tab" href="#bsFormProps"' +
                 '            role="tab" aria-controls="component" aria-selected="true">组件属性</a>' +
                 '        </li>' +
                 '      </ul>' +
                 '      <div class="tab-content pt-3">' +
-                '        <div class="tab-pane fade show active bsFormPropsPanel" id="bsFormPropsPanel" role="tabpanel" aria-labelledby="component-props-tab">' +
+                '        <div class="tab-pane fade show active bsFormProps" id="bsFormProps" role="tabpanel" aria-labelledby="component-props-tab">' +
                 '        </div>' +
                 '      </div>' +
                 '    </div>' +
@@ -956,7 +956,7 @@
                 dragArray.sort((a, b) => a.index = b.index);
             }
 
-            $('.component-group').each(function (index, element){
+            $('.bsFormDrags').each(function (index, element){
                 var $group = $(element);
                 var type = $group.data('type');
                 var dragArray = allDrags[type];
@@ -1116,7 +1116,7 @@
          */
         _initSortables: function () {
             var bsFormBuilder = this;
-            $('.component-group').each(function (index, element){
+            $('.bsFormDrags').each(function (index, element){
                 var $element = $(element);
                 if (!$element.data('sortable')){
                     var sortable = new Sortable($element[0], {

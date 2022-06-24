@@ -1245,9 +1245,7 @@
          * @private
          */
         _invokeComponentOnAdd: function (data) {
-
             let bsFormBuilder = this;
-
             //初始化 element 的 container 容器
             $("#" + data.elementId).find('.bsItemContainer').each(function () {
                 var sortable = $(this).data('bsItemSortable');
@@ -2022,7 +2020,7 @@
          * @param data
          */
         refreshDataElement: function (data) {
-            var el = this.render(data, true);
+            var newEl = this.render(data, true);
 
             var $oldEl = $("#" + data.elementId);
             $oldEl.find('.bsItemContainer').each(function () {
@@ -2030,8 +2028,8 @@
                 if (sortable) sortable.destroy();
             });
 
-            this._invokeComponentOnAddBefore(data, el);
-            $oldEl.replaceWith(el);
+            this._invokeComponentOnAddBefore(data, newEl);
+            $oldEl.replaceWith(newEl);
             this._invokeComponentOnAdd(data);
         },
 

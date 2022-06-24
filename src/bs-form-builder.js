@@ -42,6 +42,7 @@
         bsFormContainerPlaceHolderSelector: ".bsFormContainer-placeholder", // 设计容器里的提示内容
         bsFormPropsSelector: ".bsFormProps", // 面板内容
         customBuilderStructure: false, // 自定义容器面板
+        onDataUpdated: null, //数据更新的监听器
         useComponents: [], //使用的组件 use components
         actionButtons: [
             {
@@ -941,7 +942,7 @@
                     component.drag['tag'] = component.tag;
 
                     var drags = allDrags[component.drag.type];
-                    if (!drags){
+                    if (!drags) {
                         drags = [];
                         allDrags[component.drag.type] = drags;
                     }
@@ -956,11 +957,11 @@
                 dragArray.sort((a, b) => a.index = b.index);
             }
 
-            $('.bsFormDrags').each(function (index, element){
+            $('.bsFormDrags').each(function (index, element) {
                 var $group = $(element);
                 var type = $group.data('type');
                 var dragArray = allDrags[type];
-                if (dragArray){
+                if (dragArray) {
                     for (let drag of dragArray) {
                         $group.append('<ol data-tag="' + drag.tag + '"><div class="item-icon"><i class="'
                             + drag.iconClass + '"></i></div><div class="item-title">' + drag.title + '</div></ol>');
@@ -1116,9 +1117,9 @@
          */
         _initSortables: function () {
             var bsFormBuilder = this;
-            $('.bsFormDrags').each(function (index, element){
+            $('.bsFormDrags').each(function (index, element) {
                 var $element = $(element);
-                if (!$element.data('sortable')){
+                if (!$element.data('sortable')) {
                     var sortable = new Sortable($element[0], {
                         group: {
                             name: 'shared',
@@ -1138,11 +1139,11 @@
                             }
                         }
                     });
-                    $element.data('sortable',sortable);
+                    $element.data('sortable', sortable);
                 }
             })
 
-            if (!this.$container.data("sortable")){
+            if (!this.$container.data("sortable")) {
                 var sortable = new Sortable(this.$container[0], {
                     group: 'shared',
                     filter: this.options.bsFormContainerFilterSelector,
@@ -1154,7 +1155,7 @@
                         bsFormBuilder._onDragEnd(evt);
                     },
                 });
-                this.$container.data('sortable',sortable);
+                this.$container.data('sortable', sortable);
             }
         },
 
@@ -1563,8 +1564,8 @@
             if (typeof component.template === "function") {
                 template = component.template(component, data);
             } else {
-                //若模板未定义 renderDefault 函数，或者定义的 renderDefault 并不是一个函数
-                //则使用 bsFormBuilder 自己的 renderDefault 函数
+                //若组件定义了自己的 render 方法，则使用组件自己的渲染方法
+                //否则使用 bsFormBuilder 自己的 renderDefault 函数渲染
                 if (component.render && typeof component.render === "function") {
                     template = component.render(this, component, data);
                 } else {
@@ -2055,6 +2056,8 @@
             else if (value === "false") value = false;
 
 
+            var oldValue = data[attr];
+
             //当前组件定义了 onPropChange 监听方法，并且该方法执行成功了
             //那么，可以理解为该方法会去更新 html 内容，而不通过系统继续渲染了
             if (data.component && typeof data.component.onPropChange === "function"
@@ -2063,6 +2066,10 @@
             } else {
                 data[attr] = value;
                 this.refreshDataElement(data);
+            }
+
+            if (typeof this.options.onDataUpdated === "function") {
+                this.options.onDataUpdated(data, attr, value, oldValue);
             }
         },
 

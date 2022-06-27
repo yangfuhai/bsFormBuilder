@@ -596,7 +596,7 @@
 
             this.$container = this.$rootEl.find(this.options.bsFormContainerSelector);
 
-            if (this.$container.length === 0){
+            if (this.$container.length === 0) {
                 throw new Error("Can not file container by: " + this.options.bsFormContainerFilterSelector);
             }
 
@@ -627,7 +627,7 @@
 
             this.$container = this.$rootEl.find(this.options.bsFormContainerSelector);
 
-            if (this.$container.length === 0){
+            if (this.$container.length === 0) {
                 throw new Error("Can not file container by: " + this.options.bsFormContainerSelector);
             }
 
@@ -1161,7 +1161,12 @@
             //拖动到子容器
             else {
                 var newParentId = $to.closest(".bsFormItem").attr("id");
-                var dataIndex = $to.closest(".bsItemContainer").index();
+                var dataIndex = 0;
+                $to.parent().children(".bsItemContainer").each(function (index, el) {
+                    if (el === evt.to) {
+                        dataIndex = index;
+                    }
+                });
 
                 var newParent = this.getDataByElementId(newParentId);
 
@@ -1612,13 +1617,13 @@
             var newData = this.deepCopy(orignalData, true);
 
             //通过 data 来渲染 html
-            var el = this.render(newData, false);
+            var newEL = this.render(newData, false);
 
             //复制的 element
             var $orignalElement = $("#" + elementId);
 
-            this._invokeComponentOnAddBefore(newData, el)
-            $orignalElement.after(el);
+            this._invokeComponentOnAddBefore(newData, newEL)
+            $orignalElement.after(newEL);
             this._invokeComponentOnAdd(newData);
 
 
@@ -1820,7 +1825,7 @@
          */
         _initOptionsSortable: function () {
             var $optionsEl = this.$propsPanel.children(".options");
-            if ($optionsEl.length > 0){
+            if ($optionsEl.length > 0) {
                 var sortable = new Sortable($optionsEl[0], {
                     handle: '.option-handle', // handle's class
                     filter: '.filtered', // 'filtered' class is not draggable

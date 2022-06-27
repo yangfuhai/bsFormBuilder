@@ -1807,13 +1807,15 @@
          */
         _initOptionsSortable: function () {
             var $optionsEl = this.$propsPanel.children(".options");
-            var sortable = new Sortable($optionsEl[0], {
-                handle: '.option-handle', // handle's class
-                filter: '.filtered', // 'filtered' class is not draggable
-                animation: 150,
-                onEnd: () => this._syncCurrentDataOptionsFromPropSetting(),
-            });
-            $optionsEl.data("sortable", sortable);
+            if ($optionsEl.length > 0){
+                var sortable = new Sortable($optionsEl[0], {
+                    handle: '.option-handle', // handle's class
+                    filter: '.filtered', // 'filtered' class is not draggable
+                    animation: 150,
+                    onEnd: () => this._syncCurrentDataOptionsFromPropSetting(),
+                });
+                $optionsEl.data("sortable", sortable);
+            }
         },
 
 

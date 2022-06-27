@@ -306,6 +306,7 @@
                     ],
                 }
             ],
+            // disableTools: true,
             "template": '<div class="bsFormItem">' +
                 '  <div class="form-group clearfix">' +
                 '    <div class="row pdlr-15">' +
@@ -336,7 +337,7 @@
                             bsItemSortable.destroy();
                         }
 
-                        var index = $lastCol.index();
+                        var index = bsFormBuilder._getItemContainerIndex($lastCol);
 
                         //移除 data 里的 children 数据
                         if (currentData.children && currentData.children[index]) {
@@ -1161,12 +1162,7 @@
             //拖动到子容器
             else {
                 var newParentId = $to.closest(".bsFormItem").attr("id");
-                var dataIndex = 0;
-                $to.parent().children(".bsItemContainer").each(function (index, el) {
-                    if (el === evt.to) {
-                        dataIndex = index;
-                    }
-                });
+                var dataIndex = this._getItemContainerIndex($to);
 
                 var newParent = this.getDataByElementId(newParentId);
 
@@ -1187,6 +1183,23 @@
             //让当前的组件处于选中状态
             this.makeFormItemActive(data.elementId);
             this.refreshDataIndex($to);
+        },
+
+
+        /**
+         * 获取 bsItemContainer 的 index 位置
+         * @param $el
+         * @returns {number}
+         * @private
+         */
+        _getItemContainerIndex: function ($el) {
+            var dataIndex = 0;
+            $el.parent().children(".bsItemContainer").each(function (index, el) {
+                if (el === $el[0]) {
+                    dataIndex = index;
+                }
+            });
+            return dataIndex;
         },
 
 
@@ -1538,11 +1551,15 @@
             var $template = $(template).attr("id", data.elementId);
 
             if (withActive) {
-                $template.append('<div class="bs-item-tools">' +
-                    '               <i class="bi bi-stickies-fill bs-item-copy" title="复制"></i>' +
-                    '               <i class="bi bi-trash-fill bs-item-del" title="删除"></i>' +
-                    '           </div>')
-                    .addClass('active')
+                if (this.currentData.component.disableTools !== true) {
+                    $template.append('<div class="bs-item-tools">' +
+                        '               <i class="bi bi-stickies-fill bs-item-copy" title="复制"></i>' +
+                        '               <i class="bi bi-trash-fill bs-item-del" title="删除"></i>' +
+                        '           </div>')
+                        .addClass('active')
+                } else {
+                    $template.addClass('active')
+                }
             }
 
             //为 template 配置 id 属性，让 id 的值和 component 的 id 值一致
@@ -1563,16 +1580,21 @@
 
             this.currentData = this.getDataByElementId(elementId);
 
+            //个别组件禁止选中
+
             this.$container.find(".bsFormItem.active").removeClass("active");
             this.$container.find(".bs-item-tools").remove();
 
 
-            $("#" + elementId).append('<div class="bs-item-tools">' +
-                '               <i class="bi bi-stickies-fill bs-item-copy" title="复制"></i>' +
-                '               <i class="bi bi-trash-fill bs-item-del" title="删除"></i>' +
-                '           </div>')
-                .addClass('active');
-
+            if (this.currentData.component.disableTools !== true) {
+                $("#" + elementId).append('<div class="bs-item-tools">' +
+                    '               <i class="bi bi-stickies-fill bs-item-copy" title="复制"></i>' +
+                    '               <i class="bi bi-trash-fill bs-item-del" title="删除"></i>' +
+                    '           </div>')
+                    .addClass('active');
+            } else {
+                $("#" + elementId).addClass('active');
+            }
 
             this.refreshPropsPanel();
         },

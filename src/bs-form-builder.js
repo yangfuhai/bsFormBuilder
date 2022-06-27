@@ -39,6 +39,7 @@
         mode: "builder", // 模式 builder 工具模式,  view 预览模式
         bsFormContainerSelector: ".bsFormContainer", // 设计容器
         bsFormContainerFilterSelector: ".bsFormFilter", // 设计容器里，不允许拖动的组件 class
+        bsFormContainerSortableGroup: "shared", // 配置主容器里的 group 名称
         bsFormContainerPlaceHolderSelector: ".bsFormContainer-placeholder", // 设计容器里的提示内容
         bsFormPropsSelector: ".bsFormProps", // 面板内容
         customBuilderStructure: false, // 自定义容器面板
@@ -1064,9 +1065,11 @@
             $('.bsFormDrags').each(function (index, element) {
                 var $element = $(element);
                 if (!$element.data('sortable')) {
+                    var group = $element.data('group');
+                    if (!group) group = 'shared';
                     var sortable = new Sortable($element[0], {
                         group: {
-                            name: 'shared',
+                            name: group,
                             pull: 'clone',
                             put: false
                         },
@@ -1089,7 +1092,7 @@
 
             if (!this.$container.data("sortable")) {
                 var sortable = new Sortable(this.$container[0], {
-                    group: 'shared',
+                    group: this.options.bsFormContainerSortableGroup,
                     filter: this.options.bsFormContainerFilterSelector,
                     animation: 150,
                     onAdd: function (evt) {

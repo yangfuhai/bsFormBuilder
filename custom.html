@@ -58,7 +58,7 @@
                             <div class="bsFormDrags d-flex align-items-center" data-type="assist">
                             </div>
                             <div class="bsFormDrags-title">自定义类型3</div>
-                            <div class="bsFormDrags d-flex align-items-center" data-type="container">
+                            <div class="bsFormDrags d-flex align-items-center" data-type="container" data-group="main">
                             </div>
                         </div>
                         <div class="tab-pane fade" id="template" role="tabpanel" aria-labelledby="module-tab">
@@ -94,7 +94,8 @@
 <script>
 
     $('#builder').bsFormBuilder({
-        customBuilderStructure: true
+        customBuilderStructure: true,
+        bsFormContainerSortableGroup: 'main'
     });
 </script>
 </body>

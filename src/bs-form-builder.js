@@ -270,62 +270,6 @@
 
     //bsFormBuilder 内置组件
     var defaultComponents = [
-        //单行输入框定义
-        {
-            "name": "输入框",
-            "tag": "input",
-            "drag": {
-                "title": "输入框",
-                "type": "base",
-                "index": 100,
-                "iconClass": "bi bi-terminal"
-            },
-            "template": '<div class="bsFormItem">' +
-                '  <div class="form-group clearfix">' +
-                '    <div class="form-label-left">' +
-                '      <label for="label">{{label}}</label>' +
-                '    </div>' +
-                '    <div class="flex-auto">' +
-                '      <input type="text" class="form-control" id="{{id}}"' +
-                '        placeholder="{{placeholder}}" value="{{value}}" />' +
-                '    </div>' +
-                '  </div>' +
-                '</div>',
-        },
-
-        //多行输入框
-        {
-            "name": "多行输入框",
-            "tag": "textarea",
-            "drag": {
-                "title": "多行输入框",
-                "type": "base",
-                "index": 100,
-                "iconClass": "bi bi-textarea-resize"
-            },
-            "props": [
-                {
-                    name: "rows",
-                    type: "number",
-                    label: "行数",
-                    placeholder: "请输入行数...",
-                    defaultValue: 3,
-                    disabled: false,
-                    required: true,
-                }
-            ],
-            "template": '<div class="bsFormItem">' +
-                '  <div class="form-group clearfix">' +
-                '    <div class="form-label-left">' +
-                '      <label for="{{id}}">{{label}}</label>' +
-                '    </div>' +
-                '    <div class="flex-auto">' +
-                '      <textarea name="{{name}}" class="form-control" id="{{id}}" rows="{{rows}}"' +
-                '        placeholder="{{placeholder}}" >{{value}}</textarea>' +
-                '    </div>' +
-                '  </div>' +
-                '</div>',
-        },
 
 
         //等分栅格

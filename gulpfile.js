@@ -41,7 +41,7 @@ gulp.task('js-concat', function () {
         'dist/bs-form-builder-components.min.js',
         'dist/bs-form-builder.min.js',
     ])
-        .pipe(concat('bs-form-builder.min.all.js'))
+        .pipe(concat('bs-form-builder.all.min.js'))
         .pipe(gulp.dest('./dist'));
 });
 

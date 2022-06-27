@@ -44,6 +44,7 @@
         bsFormPropsSelector: ".bsFormProps", // 面板内容
         customBuilderStructure: false, // 自定义容器面板
         onDataUpdated: null, //数据更新的监听器
+        components: [], //初始化时自定义的组件
         useComponents: [], //使用的组件 use components
         actionButtons: [
             {
@@ -595,6 +596,10 @@
 
             this.$container = this.$rootEl.find(this.options.bsFormContainerSelector);
 
+            if (this.$container.length === 0){
+                throw new Error("Can not file container by: " + this.options.bsFormContainerFilterSelector);
+            }
+
             //初始化默认的组件库
             this._initComponents();
 
@@ -621,6 +626,11 @@
             }
 
             this.$container = this.$rootEl.find(this.options.bsFormContainerSelector);
+
+            if (this.$container.length === 0){
+                throw new Error("Can not file container by: " + this.options.bsFormContainerSelector);
+            }
+
             this.$containerPlaceHolder = this.$rootEl.find(this.options.bsFormContainerPlaceHolderSelector);
             this.$propsPanel = this.$rootEl.find(this.options.bsFormPropsSelector);
 

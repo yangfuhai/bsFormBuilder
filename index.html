@@ -49,42 +49,43 @@
     //     datas
     // });
 
-    // $('#builder').bsFormBuilder();
+
+    // var datas = [{"id":"657634a8df","tag":"block","label":"多行输入框","name":"textarea_2","rows":5,"index":0}];
+    //
+    // $('#builder').bsFormBuilder({
+    //     bsFormContainerSortableGroup:'main',
+    //     components:[
+    //         //自定义组件 block
+    //         {
+    //             "name": "板块",
+    //             "tag": "block",
+    //             "drag": {
+    //                 "title": "板块",
+    //                 "type": "container",
+    //                 "index": 100,
+    //                 "iconClass": "bi bi-grid-1x2"
+    //             },
+    //             propsfilter: ["tag", "id"],
+    //             "template": '<div class="m-3 pt-2 bsFormItem bsFormFilter">' +
+    //                         '  <div class="card collapsed-card">' +
+    //                         '    <div class="card-header">' +
+    //                         '      <h3 class="card-title">主编栏2</h3>' +
+    //                         '      <div class="card-tools">' +
+    //                         '        <button type="button" class="btn btn-tool" data-card-widget="collapse">' +
+    //                         '          <i class="fas fa-plus"></i>' +
+    //                         '        </button>' +
+    //                         '      </div>' +
+    //                         '    </div>' +
+    //                         '    <div class="card-body bsItemContainer">{{$children[0]}}</div>' +
+    //                         '  </div>' +
+    //                         '</div>',
+    //         },
+    //     ],
+    //     datas:datas
+    // });
 
 
-    var datas = [{"id":"657634a8df","tag":"block","label":"多行输入框","name":"textarea_2","rows":5,"index":0}];
-
-    $('#builder').bsFormBuilder({
-        bsFormContainerSortableGroup:'main',
-        components:[
-            //自定义组件 card
-            {
-                "name": "板块",
-                "tag": "block",
-                "drag": {
-                    "title": "板块",
-                    "type": "container",
-                    "index": 100,
-                    "iconClass": "bi bi-grid-1x2"
-                },
-                propsfilter: ["tag", "id"],
-                "template": '<div class="m-3 pt-2 bsFormItem bsFormFilter">' +
-                            '  <div class="card collapsed-card">' +
-                            '    <div class="card-header">' +
-                            '      <h3 class="card-title">主编栏2</h3>' +
-                            '      <div class="card-tools">' +
-                            '        <button type="button" class="btn btn-tool" data-card-widget="collapse">' +
-                            '          <i class="fas fa-plus"></i>' +
-                            '        </button>' +
-                            '      </div>' +
-                            '    </div>' +
-                            '    <div class="card-body bsItemContainer">{{$children[0]}}</div>' +
-                            '  </div>' +
-                            '</div>',
-            },
-        ],
-        datas:datas
-    });
+    $('#builder').bsFormBuilder();
 </script>
 </body>
 

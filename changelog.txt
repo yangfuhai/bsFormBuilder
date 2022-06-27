@@ -4,8 +4,10 @@
 新增：options 初始化配置新增 onDataUpdated 的监听，用于监听每个组件的数据变化
 新增：自定义拖动组件分类分组的支持
 新增：自定义 container 的 sortable group 名称配置
+新增：component 新增 disableTools 配置的支持，用于禁止删除和复制
 优化：删除导出的 json 内容的 elementId
 优化：重构 bsFormBuilder 布局组件的 class 名称
+修复：自定义组件时，在某些极端情况下，父级的 dataIndex 获取不正确的问题
 
 
 

@@ -921,7 +921,11 @@
                 var $group = $(element);
                 var type = $group.data('type');
                 var dragArray = allDrags[type];
-                if (dragArray) {
+                if (dragArray && dragArray.length > 0) {
+
+                    //移除容器里的 placeholder div
+                    $group.find(".placeholder").remove();
+
                     for (let drag of dragArray) {
                         //icon is html
                         if (drag.icon.trim().charAt(0) === '<') {
@@ -933,8 +937,9 @@
                             $group.append('<ol data-tag="' + drag.tag + '"><div class="item-icon"><i class="'
                                 + drag.icon + '"></i></div><div class="item-title">' + drag.title + '</div></ol>');
                         }
-
                     }
+
+
                 }
             })
         },

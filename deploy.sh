@@ -3,9 +3,6 @@
 # abort on errors
 set -e
 
-# build
-npm run build
-
 ossutil rm oss://bsformbuilder/ -rf
 ossutil cp -rf ./index.html  oss://bsformbuilder/index.html
 ossutil cp -rf ./custom.html  oss://bsformbuilder/custom.html

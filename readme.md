@@ -131,7 +131,7 @@
             "title": "输入框",
             "type": "base",
             "index": 100,
-            "iconClass": "bi bi-terminal"
+            "icon": "bi bi-terminal"
          },
     "template": '<div class="bsFormItem">' +
                 '  <div class="form-group clearfix">' +

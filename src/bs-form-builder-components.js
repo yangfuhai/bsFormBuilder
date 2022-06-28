@@ -25,7 +25,7 @@ componentsDef.push(...[
             "title": "输入框",
             "type": "base",
             "index": 100,
-            "iconClass": "bi bi-terminal"
+            "icon": "bi bi-terminal"
         },
         "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
@@ -48,7 +48,7 @@ componentsDef.push(...[
             "title": "多行输入框",
             "type": "base",
             "index": 100,
-            "iconClass": "bi bi-textarea-resize"
+            "icon": "bi bi-textarea-resize"
         },
         "props": [
             {
@@ -82,7 +82,7 @@ componentsDef.push(...[
             "title": "提示",
             "type": "assist",
             "index": 100,
-            "iconClass": "bi bi-info-circle"
+            "icon": "bi bi-info-circle"
         },
         "propsfilter": ["tag", "id"],
         props: [
@@ -114,7 +114,7 @@ componentsDef.push(...[
             "title": "空DIV",
             "type": "assist",
             "index": 100,
-            "iconClass": "bi bi-fullscreen"
+            "icon": "bi bi-fullscreen"
         },
         "propsfilter": ["tag", "id"],
         props: [
@@ -141,7 +141,7 @@ componentsDef.push(...[
             "title": "引用",
             "type": "assist",
             "index": 100,
-            "iconClass": "bi bi-quote"
+            "icon": "bi bi-quote"
         },
         "propsfilter": ["tag", "id"],
         props: [
@@ -171,7 +171,7 @@ componentsDef.push(...[
             "title": "下拉菜单",
             "type": "base",
             "index": 100,
-            "iconClass": "bi bi-card-checklist"
+            "icon": "bi bi-card-checklist"
         },
         withOptions: true,
         defaultOptions: [
@@ -208,7 +208,7 @@ componentsDef.push(...[
             "title": "单选框",
             "type": "base",
             "index": 100,
-            "iconClass": "bi bi-record2"
+            "icon": "bi bi-record2"
         },
         withOptions: true,
         defaultOptions: [
@@ -249,7 +249,7 @@ componentsDef.push(...[
             "title": "复选框",
             "type": "base",
             "index": 100,
-            "iconClass": "bi bi-check-square"
+            "icon": "bi bi-check-square"
         },
         withOptions: true,
         defaultOptions: [
@@ -289,7 +289,7 @@ componentsDef.push(...[
             "title": "开关",
             "type": "base",
             "index": 100,
-            "iconClass": "bi bi-toggle-on"
+            "icon": "bi bi-toggle-on"
         },
         "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
@@ -316,7 +316,7 @@ componentsDef.push(...[
             "title": "时间",
             "type": "base",
             "index": 100,
-            "iconClass": "bi bi-clock"
+            "icon": "bi bi-clock"
         },
         "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
@@ -340,7 +340,7 @@ componentsDef.push(...[
             "title": "日期",
             "type": "base",
             "index": 100,
-            "iconClass": "bi bi-calendar2-date"
+            "icon": "bi bi-calendar2-date"
         },
         "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
@@ -362,7 +362,7 @@ componentsDef.push(...[
             "title": "文件上传",
             "type": "base",
             "index": 100,
-            "iconClass": "bi bi-cloud-upload"
+            "icon": "bi bi-cloud-upload"
         },
         props: [
             {

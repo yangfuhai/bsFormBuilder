@@ -50,7 +50,7 @@
             {
                 text: '导出 JSON',
                 mainClass: 'btn-primary',
-                iconClass: 'bi bi-arrow-up pr-1',
+                icon: 'bi bi-arrow-up pr-1',
                 onclick: function (event, builder) {
                     var json = builder.exportToJson();
                     var html = builder._renderTemplate(modal, ["title", "content"], ["json内容", json]);
@@ -65,7 +65,7 @@
             {
                 text: '下载 HTML',
                 mainClass: 'btn-primary',
-                iconClass: 'bi bi-arrow-up pr-1',
+                icon: 'bi bi-arrow-up pr-1',
                 onclick: function (event, builder) {
                     var text = builder.exportToHtml();
 
@@ -82,7 +82,7 @@
             {
                 text: '获取源码',
                 mainClass: 'btn-primary',
-                iconClass: 'bi bi-eye pr-1',
+                icon: 'bi bi-eye pr-1',
                 onclick: function () {
                     alert('这里的所有按钮，按钮功能都是可以自定义的~~~')
                     window.open("https://gitee.com/fuhai/bsFormBuilder")
@@ -91,14 +91,14 @@
             {
                 text: '清空',
                 mainClass: 'btn-danger',
-                iconClass: 'bi bi-trash pr-1',
+                icon: 'bi bi-trash pr-1',
                 onclick: function (event, builder) {
                     builder.clear();
                 }
             },
         ],
         actionButtonTemplate: '<button type="button" class="btn btn-sm {{mainClass}}" >' +
-            '  <i class="{{iconClass}}"></i>{{text}}' +
+            '  <i class="{{icon}}"></i>{{text}}' +
             '</button>',
         templateLoadUrl: '',
         templateItemTemplate: '<div class="bs-template-item" id="{{id}}">' +
@@ -282,7 +282,7 @@
                 "title": "等分栅格",
                 "type": "container",
                 "index": 100,
-                "iconClass": "bi bi-grid"
+                "icon": "bi bi-grid"
             },
             "props": [
                 {
@@ -393,7 +393,7 @@
                 "title": "灵活栅格",
                 "type": "container",
                 "index": 100,
-                "iconClass": "bi bi-grid-1x2"
+                "icon": "bi bi-grid-1x2"
             },
             optionsCounter: 2,
             withOptions: true,
@@ -455,7 +455,7 @@
                 "title": "Tab选项卡",
                 "type": "container",
                 "index": 100,
-                "iconClass": "bi bi-menu-button"
+                "icon": "bi bi-menu-button"
             },
             withOptions: true,
             counter: 1,
@@ -822,7 +822,7 @@
 
             let actionButtons = this.options.actionButtons || [];
             for (let btnObj of actionButtons) {
-                let paras = ["$button", "text", "mainClass", "iconClass"];
+                let paras = ["$button", "text", "mainClass", "icon"];
 
                 let values = paras.map(k => btnObj[k] || "");
                 values[0] = btnObj;
@@ -919,8 +919,17 @@
                 var dragArray = allDrags[type];
                 if (dragArray) {
                     for (let drag of dragArray) {
-                        $group.append('<ol data-tag="' + drag.tag + '"><div class="item-icon"><i class="'
-                            + drag.iconClass + '"></i></div><div class="item-title">' + drag.title + '</div></ol>');
+                        //icon is html
+                        if (drag.icon.trim().charAt(0) === '<') {
+                            $group.append('<ol data-tag="' + drag.tag + '"><div class="item-icon">'
+                                + drag.icon + '"</div><div class="item-title">' + drag.title + '</div></ol>');
+                        }
+                        //icon is class
+                        else {
+                            $group.append('<ol data-tag="' + drag.tag + '"><div class="item-icon"><i class="'
+                                + drag.icon + '"></i></div><div class="item-title">' + drag.title + '</div></ol>');
+                        }
+
                     }
                 }
             })

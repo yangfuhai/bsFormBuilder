@@ -1366,10 +1366,9 @@
                 template = template();
             }
 
-            if (!template) {
-                throw new Error("Not support prop type: " + type)
+            if (!template && type !== "none") {
+                throw new Error("Not define prop template for type: " + type);
             }
-
             return template;
         },
 
@@ -1792,6 +1791,13 @@
 
             let component = this.currentData.component;
 
+            //组件自定义了自己的属性渲染方法
+            if (typeof component.onRenderPropsPanel === "function") {
+                var html = component.onRenderPropsPanel(this);
+                this.$propsPanel.append(html);
+                return;
+            }
+
             //组件定义的 "私有" 属性
             var componentProps = typeof component.props === "object" ?
                 component.props : [];
@@ -1803,7 +1809,7 @@
 
 
             // 全部属性
-            var allProps = this.defaultProps.concat(componentProps);
+            var allProps = this._mergeProps(componentProps, this.defaultProps);
 
 
             for (let prop of allProps) {
@@ -1818,12 +1824,16 @@
 
                 var template = this._getPropTemplateByType(prop.type);
 
-                var newProp = this.deepCopy(prop, false);
-                newProp["id"] = this.genRandomId();
-                newProp["value"] = this.currentData[prop.name];
+                //支持没有模板的属性，有些属性不允许通过属性面板去配置
+                //此时，可以配置这个 prop 的 type 为 none
+                if (template) {
+                    var newProp = this.deepCopy(prop, false);
+                    newProp["id"] = this.genRandomId();
+                    newProp["value"] = this.currentData[prop.name];
 
-                var html = this.renderPropTemplate(newProp, this.currentData, template);
-                this.$propsPanel.append(html);
+                    var html = this.renderPropTemplate(newProp, this.currentData, template);
+                    this.$propsPanel.append(html);
+                }
             }
 
             // 渲染 options 功能
@@ -1840,6 +1850,33 @@
 
                 this._initOptionsSortable();
             }
+        },
+
+        /**
+         * 合并 componentProps 和 defaultProps
+         * componentProps 优先级大于 defaultProps
+         * @param componentProps
+         * @param defaultProps
+         * @private
+         */
+        _mergeProps: function (componentProps, defaultProps) {
+            var allProps = [].concat(defaultProps);
+
+            for (let componentProp of componentProps) {
+                var isOverride = false;
+                for (let i = 0; i < defaultProps.length; i++) {
+                    var defaultProp = allProps[i];
+                    if (defaultProp.name === componentProp.name) {
+                        allProps[i] = componentProp;
+                        isOverride = true;
+                    }
+                }
+                if (!isOverride) {
+                    allProps.push()
+                }
+            }
+
+            return allProps;
         },
 
         /**

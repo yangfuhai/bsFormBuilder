@@ -644,8 +644,12 @@
             //初始化拖动的组件
             this._initDragComponents();
 
+            //支持通过 options.datas = function()... 来定义数据
+            var optionsDatas = typeof this.options.datas === "function"
+                ? this.options.datas(this) : this.options.datas;
+
             //初始化 data 数据
-            this._initData(this.options.datas, true);
+            this._initData(optionsDatas, true);
 
             //初始化 options 导入的 data 的数据
             this._refreshBuilderContainer();

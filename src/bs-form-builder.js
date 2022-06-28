@@ -696,7 +696,7 @@
                 //若系统没有此 data 定义的组件，忽略此 data 数据
                 let component = this.components[data.tag];
                 if (!component) {
-                    console.warn("Can not find tag: " + data.tag);
+                    console.warn("Can not find component by tag: " + data.tag);
                     continue;
                 }
 
@@ -897,7 +897,14 @@
             var allDrags = {};
 
             for (let component of Object.values(this.components)) {
-                if (component && component.drag && component.drag.type) {
+
+                // 支持未定义 drag 的组件
+                // 这种组件无法被拖住，只能通过初始化 options.datas 的方式来显示
+                if (!component.drag){
+                    continue;
+                }
+
+                if (component.drag.type) {
                     //copy component.tag to drag.tag
                     component.drag['tag'] = component.tag;
 
@@ -908,7 +915,7 @@
                     }
                     drags.push(component.drag);
                 } else {
-                    console.error("Component define error! it must need drag.type. component content:", component);
+                    console.error("Component define error! it must defined drag.type in component. ", component);
                 }
             }
 
@@ -928,7 +935,7 @@
 
                     for (let drag of dragArray) {
                         //icon is html
-                        if (drag.icon.trim().charAt(0) === '<') {
+                        if (drag.icon && drag.icon.trim().charAt(0) === '<') {
                             $group.append('<ol data-tag="' + drag.tag + '"><div class="item-icon">'
                                 + drag.icon + '"</div><div class="item-title">' + drag.title + '</div></ol>');
                         }
@@ -1565,7 +1572,7 @@
                 }
             }
 
-            var $template = $(template).attr("id", data.elementId);
+            var $template = $(template).attr("id", data.elementId).addClass("bsFormItem");
 
             if (withActive) {
                 if (this.currentData.component.disableTools !== true) {

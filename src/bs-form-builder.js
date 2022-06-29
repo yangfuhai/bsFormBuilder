@@ -979,15 +979,11 @@
                 async: false,
                 type : "POST",
                 contentType: "application/json; charset=utf-8",
-                // dataType: "json",
                 data: JSON.stringify(data),
                 success: function (resp) {
                     ret = resp;
                 }
             })
-            // $.post(url,JSON.stringify(data),function (resp){
-            //     ret = resp;
-            // })
             return ret;
         },
 

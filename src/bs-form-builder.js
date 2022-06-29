@@ -46,6 +46,7 @@
         onDataUpdated: null, //数据更新的监听器
         components: [], //初始化时自定义的组件
         useComponents: [], //使用的组件 use components
+        customRender: null, //自定义渲染方法，支持后端 url，同步方法 和 异步方法
         actionButtons: [
             {
                 text: '导出 JSON',
@@ -951,6 +952,20 @@
             })
         },
 
+        _ajaxSyncPost: function (url, data) {
+            var ret;
+            $.ajax({
+                url: url,
+                type: 'get',
+                async: false,
+                data: data,
+                success: function (data) {
+                    ret = data;
+                }
+            })
+            return ret;
+        },
+
 
         /**
          * 初始化左侧拖动的组件库
@@ -1626,17 +1641,19 @@
             var component = data.component;
             var template = null;
 
-            //若组件定义的 template 是一个方法，而非字符串，则只需这个方法来获取模板数据
             if (typeof component.template === "function") {
-                template = component.template(component, data);
-            } else {
-                //若组件定义了自己的 render 方法，则使用组件自己的渲染方法
-                //否则使用 bsFormBuilder 自己的 renderDefault 函数渲染
-                if (component.render && typeof component.render === "function") {
-                    template = component.render(this, component, data);
-                } else {
-                    template = this.renderDefault(data);
+                template = component.template(this, data);
+            } else if (this.options.customRender) {
+                if (typeof this.options.customRender === "function") {
+                    template = this.options.customRender(this, data);
+                } else if (typeof this.options.customRender === "string"
+                    && this._isUrl(this.options.customRender)) {
+                    template = this._ajaxSyncPost(this.options.customRender, data)
                 }
+            }
+
+            if (!template) {
+                template = this.renderDefault(data);
             }
 
             var $template = $(template).attr("id", data.elementId).addClass("bsFormItem");

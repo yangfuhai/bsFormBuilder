@@ -644,24 +644,53 @@
             //初始化拖动的组件
             this._initDragComponents();
 
-            //支持通过 options.datas = function()... 来定义数据
-            var optionsDatas = typeof this.options.datas === "function"
-                ? this.options.datas(this) : this.options.datas;
 
-            //初始化 data 数据
-            this._initData(optionsDatas, true);
+            var bsFormBuilder = this;
 
-            //初始化 options 导入的 data 的数据
-            this._refreshBuilderContainer();
+            var invoker = function (optionsDatas) {
+                //初始化 data 数据
+                bsFormBuilder._initData(optionsDatas, true);
 
-            //初始化表单事件监听
-            this._initEvents();
+                //初始化 options 导入的 data 的数据
+                bsFormBuilder._refreshBuilderContainer();
 
-            //初始化拖动组件
-            this._initSortables();
+                //初始化表单事件监听
+                bsFormBuilder._initEvents();
 
-            //onInit 回调
-            this._invokeOnInitCallback();
+                //初始化拖动组件
+                bsFormBuilder._initSortables();
+
+                //onInit 回调
+                bsFormBuilder._invokeOnInitCallback();
+            }
+
+
+            //用户自定义组件
+            var optionDatas = this.options.datas;
+
+            // url 请求
+            if (typeof optionDatas === "string" && this._isUrl(optionDatas)) {
+                this._ajaxGet(optionDatas, "datas", invoker);
+            }
+
+            //直接配置数组
+            else if (typeof optionDatas === "object" && Array.isArray(optionDatas)) {
+                invoker(optionDatas);
+            }
+
+            //方法
+            else if (typeof optionDatas === "function") {
+
+                //执行该方法，该方法可以是异步加载，加载到数据后执行 initComponents 来初始化数据
+                optionDatas = optionDatas(invoker);
+
+                //若有返回数据，则初始化数据
+                if (typeof optionDatas === "object" && Array.isArray(optionDatas)) {
+                    invoker(optionDatas);
+                }
+            } else {
+                invoker()
+            }
 
         },
 
@@ -867,21 +896,59 @@
                 }
             }
 
+            var bsFromBuilder = this;
+            var initComponents = function (customComponents) {
+                //用户自定义的 component 继承来自已经存在的 component
+                //这样，用户可以不用配置系统已经存在的配置信息
+                for (let component of customComponents) {
+                    component = $.extend(bsFromBuilder.components[component.tag], component);
+                    bsFromBuilder.components[component.tag] = component;
+                }
+            }
 
             //用户自定义组件
             var customComponents = this.options.components;
-            if (typeof customComponents === "function") {
-                customComponents = customComponents();
-            } else {
-                customComponents = customComponents || [];
+
+            // url 请求
+            if (typeof customComponents === "string" && this._isUrl(customComponents)) {
+                this._ajaxGet(customComponents, "components", initComponents);
             }
 
-            //用户自定义的 component 继承来自已经存在的 component
-            //这样，用户可以不用配置系统已经存在的配置信息
-            for (let component of customComponents) {
-                component = $.extend(this.components[component.tag], component);
-                this.components[component.tag] = component;
+            //直接配置数组
+            else if (typeof customComponents === "object" && Array.isArray(customComponents)) {
+                initComponents(customComponents);
             }
+
+            //方法
+            else if (typeof customComponents === "function") {
+
+                //执行该方法，该方法可以是异步加载，加载到数据后执行 initComponents 来初始化数据
+                customComponents = customComponents(initComponents);
+
+                //若有返回数据，则初始化数据
+                if (typeof customComponents === "object" && Array.isArray(customComponents)) {
+                    initComponents(customComponents);
+                }
+            }
+        },
+
+        _isUrl: function (text) {
+            return text && (text.indexOf("/") === 0
+                || text.indexOf("http://") === 0
+                || text.indexOf("https://") === 0)
+        },
+
+        _ajaxGet: function (url, attr, func) {
+            $.ajax({
+                url: url,
+                type: 'get',
+                success: function (data) {
+                    var needData = data[attr];
+                    if (needData) {
+                        func(needData);
+                    }
+                }
+            })
         },
 
 
@@ -900,7 +967,7 @@
 
                 // 支持未定义 drag 的组件
                 // 这种组件无法被拖住，只能通过初始化 options.datas 的方式来显示
-                if (!component.drag){
+                if (!component.drag) {
                     continue;
                 }
 

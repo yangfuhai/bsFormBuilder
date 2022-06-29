@@ -602,17 +602,21 @@
                 throw new Error("Can not file container by: " + this.options.bsFormContainerFilterSelector);
             }
 
+            var bsFormBuilder = this;
+
             //初始化默认的组件库
-            this._initComponents();
+            this._initComponents(function () {
 
-            //初始化 data 数据
-            this._initData(this.options.datas, true);
+                //初始化 data 数据
+                bsFormBuilder._initData(this.options.datas, true);
 
-            //渲染 view 的数据到 html
-            this._refreshViewContainer();
+                //渲染 view 的数据到 html
+                bsFormBuilder._refreshViewContainer();
 
-            //onInit 回调
-            this._invokeOnInitCallback();
+                //onInit 回调
+                bsFormBuilder._invokeOnInitCallback();
+            });
+
         },
 
         /**
@@ -636,62 +640,66 @@
             this.$containerPlaceHolder = this.$rootEl.find(this.options.bsFormContainerPlaceHolderSelector);
             this.$propsPanel = this.$rootEl.find(this.options.bsFormPropsSelector);
 
-            //初始化默认的组件库
-            this._initComponents();
-
-            //初始化操作按钮
-            this._initActionButtons();
-
-            //初始化拖动的组件
-            this._initDragComponents();
-
-
             var bsFormBuilder = this;
 
-            var invoker = function (optionsDatas) {
-                //初始化 data 数据
-                bsFormBuilder._initData(optionsDatas, true);
+            //初始化默认的组件库，必须 components 全部初始化完毕后
+            //才能去初始化其他内容
+            this._initComponents(function () {
 
-                //初始化 options 导入的 data 的数据
-                bsFormBuilder._refreshBuilderContainer();
+                //初始化操作按钮
+                bsFormBuilder._initActionButtons();
 
-                //初始化表单事件监听
-                bsFormBuilder._initEvents();
-
-                //初始化拖动组件
-                bsFormBuilder._initSortables();
-
-                //onInit 回调
-                bsFormBuilder._invokeOnInitCallback();
-            }
+                //初始化拖动的组件
+                bsFormBuilder._initDragComponents();
 
 
-            //用户自定义组件
-            var optionDatas = this.options.datas;
+                var invoker = function (optionsDatas) {
+                    //初始化 data 数据
+                    bsFormBuilder._initData(optionsDatas, true);
 
-            // url 请求
-            if (typeof optionDatas === "string" && this._isUrl(optionDatas)) {
-                this._ajaxGet(optionDatas, "datas", invoker);
-            }
+                    //初始化 options 导入的 data 的数据
+                    bsFormBuilder._refreshBuilderContainer();
 
-            //直接配置数组
-            else if (typeof optionDatas === "object" && Array.isArray(optionDatas)) {
-                invoker(optionDatas);
-            }
+                    //初始化表单事件监听
+                    bsFormBuilder._initEvents();
 
-            //方法
-            else if (typeof optionDatas === "function") {
+                    //初始化拖动组件
+                    bsFormBuilder._initSortables();
 
-                //执行该方法，该方法可以是异步加载，加载到数据后执行 initComponents 来初始化数据
-                optionDatas = optionDatas(invoker);
+                    //onInit 回调
+                    bsFormBuilder._invokeOnInitCallback();
+                }
 
-                //若有返回数据，则初始化数据
-                if (typeof optionDatas === "object" && Array.isArray(optionDatas)) {
+
+                //用户自定义组件
+                var optionDatas = bsFormBuilder.options.datas;
+
+                // url 请求
+                if (typeof optionDatas === "string" && bsFormBuilder._isUrl(optionDatas)) {
+                    bsFormBuilder._ajaxGet(optionDatas, "datas", invoker);
+                }
+
+                //直接配置数组
+                else if (typeof optionDatas === "object" && Array.isArray(optionDatas)) {
                     invoker(optionDatas);
                 }
-            } else {
-                invoker()
-            }
+
+                //方法
+                else if (typeof optionDatas === "function") {
+
+                    //执行该方法，该方法可以是异步加载，加载到数据后执行 initComponents 来初始化数据
+                    optionDatas = optionDatas(invoker);
+
+                    //若有返回数据，则初始化数据
+                    if (typeof optionDatas === "object" && Array.isArray(optionDatas)) {
+                        invoker(optionDatas);
+                    }
+                } else {
+                    invoker()
+                }
+
+            });
+
 
         },
 
@@ -722,6 +730,10 @@
             array.sort((a, b) => a.index - b.index);
 
             for (let data of array) {
+
+                if (!data || !data.tag) {
+                    continue;
+                }
 
                 //若系统没有此 data 定义的组件，忽略此 data 数据
                 let component = this.components[data.tag];
@@ -878,7 +890,7 @@
          * 初始化系统组件
          * @private
          */
-        _initComponents: function () {
+        _initComponents: function (initAfterFunc) {
             var useComponents = this.options.useComponents;
             if (!useComponents) useComponents = [];
 
@@ -899,12 +911,18 @@
 
             var bsFromBuilder = this;
             var initComponents = function (customComponents) {
+
+
                 //用户自定义的 component 继承来自已经存在的 component
                 //这样，用户可以不用配置系统已经存在的配置信息
                 for (let component of customComponents) {
-                    component = $.extend(bsFromBuilder.components[component.tag], component);
-                    bsFromBuilder.components[component.tag] = component;
+                    if (component && component.tag) {
+                        component = $.extend(bsFromBuilder.components[component.tag], component);
+                        bsFromBuilder.components[component.tag] = component;
+                    }
                 }
+
+                initAfterFunc();
             }
 
             //用户自定义组件
@@ -930,6 +948,8 @@
                 if (typeof customComponents === "object" && Array.isArray(customComponents)) {
                     initComponents(customComponents);
                 }
+            } else {
+                initAfterFunc()
             }
         },
 
@@ -953,16 +973,21 @@
         },
 
         _ajaxSyncPost: function (url, data) {
-            var ret;
+            var ret = "";
             $.ajax({
                 url: url,
-                type: 'get',
                 async: false,
-                data: data,
-                success: function (data) {
-                    ret = data;
+                type : "POST",
+                contentType: "application/json; charset=utf-8",
+                // dataType: "json",
+                data: JSON.stringify(data),
+                success: function (resp) {
+                    ret = resp;
                 }
             })
+            // $.post(url,JSON.stringify(data),function (resp){
+            //     ret = resp;
+            // })
             return ret;
         },
 
@@ -1027,8 +1052,6 @@
                                 + drag.icon + '"></i></div><div class="item-title">' + drag.title + '</div></ol>');
                         }
                     }
-
-
                 }
             })
         },

@@ -5,6 +5,7 @@ var uglify = require("gulp-uglify");
 var uglifycss = require("gulp-uglifycss");
 var rename = require('gulp-rename');
 var pkg = require('./package.json');
+var sourcemaps = require('gulp-sourcemaps');
 
 var comment = '/*\n' +
     ' * <%= pkg.name %> <%= pkg.version %>\n' +
@@ -52,9 +53,18 @@ gulp.task('css-minify', function () {
         .pipe(gulp.dest('./dist'));
 });
 
+gulp.task('js-sourcemap', function() {
+    return gulp.src('src/*.js')//准备要压缩的js
+        .pipe(sourcemaps.init())
+        .pipe(uglify())//压缩sj
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('./dist'));
+});
+
 gulp.task('default', gulp.series([
     'js-minify',
     'js-minify-components',
     'js-concat',
+    // 'js-sourcemap',
     'css-minify'
 ]));

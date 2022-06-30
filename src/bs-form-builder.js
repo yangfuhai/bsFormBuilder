@@ -2000,7 +2000,7 @@
                     }
                 }
                 if (!isOverride) {
-                    allProps.push()
+                    allProps.push(componentProp)
                 }
             }
 

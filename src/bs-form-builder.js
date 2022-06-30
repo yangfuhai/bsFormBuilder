@@ -1637,7 +1637,7 @@
                             newObject[key] = this.deepCopy(target[key], withNewElementIdAndId);
                         } else {
                             var value = target[key];
-                            if (key === "elementId" || key === "id") {
+                            if (withNewElementIdAndId && (key === "elementId" || key === "id")) {
                                 value = this.genRandomId();
                             }
                             newObject[key] = value;

@@ -1926,13 +1926,17 @@
             //配置 title 和 icon
             if (this.$propsPanelTitle.length > 0) {
                 this.$propsPanelTitle.find(".text").text(component.name);
-                var icon = "";
-                if (component.drag.icon && component.drag.icon.trim().charAt(0) === '<') {
-                    icon = component.drag.icon;
+                if (component.drag.icon) {
+                    var icon = "";
+                    if (component.drag.icon && component.drag.icon.trim().charAt(0) === '<') {
+                        icon = component.drag.icon;
+                    } else {
+                        icon = '<i class="' + component.drag.icon + '">';
+                    }
+                    this.$propsPanelTitle.find(".icon").html(icon);
                 } else {
-                    icon = '<i class="' + component.drag.icon + '">';
+                    this.$propsPanelTitle.find(".icon").html('');
                 }
-                this.$propsPanelTitle.find(".icon").text(icon);
             }
 
 

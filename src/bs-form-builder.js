@@ -42,6 +42,7 @@
         bsFormContainerSortableGroup: "shared", // 配置主容器里的 group 名称
         bsFormContainerPlaceHolderSelector: ".bsFormContainer-placeholder", // 设计容器里的提示内容
         bsFormPropsSelector: ".bsFormProps", // 面板内容
+        bsFormPropsTitleSelector: ".bsFormPropsTitle", // 面板标题
         customBuilderStructure: false, // 自定义容器面板
         onDataChanged: null, //数据更新的监听器
         components: [], //初始化时自定义的组件
@@ -638,6 +639,9 @@
             }
 
             this.$containerPlaceHolder = this.$rootEl.find(this.options.bsFormContainerPlaceHolderSelector);
+
+            this.$propsPanelTitle = this.$rootEl.find(this.options.bsFormPropsTitleSelector);
+
             this.$propsPanel = this.$rootEl.find(this.options.bsFormPropsSelector);
 
             var bsFormBuilder = this;
@@ -1918,6 +1922,19 @@
             }
 
             let component = this.currentData.component;
+
+            //配置 title 和 icon
+            if (this.$propsPanelTitle.length > 0) {
+                this.$propsPanelTitle.find(".text").text(component.name);
+                var icon = "";
+                if (component.drag.icon && component.drag.icon.trim().charAt(0) === '<') {
+                    icon = component.drag.icon;
+                } else {
+                    icon = '<i class="' + component.drag.icon + '">';
+                }
+                this.$propsPanelTitle.find(".icon").text(icon);
+            }
+
 
             //组件自定义了自己的属性渲染方法
             if (typeof component.onRenderPropsPanel === "function") {

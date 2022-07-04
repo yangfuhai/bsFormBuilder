@@ -535,7 +535,7 @@
         this.options = $.extend(defaultOptions, options);
 
         //每个组件的默认属性
-        this.defaultProps = options.defaultOptions || [];
+        this.defaultProps = options.defaultProps || [];
         for (let defaultProp of defaultProps) {
             if (this.defaultProps.map(item => item.name).indexOf(defaultProp.name) === -1) {
                 this.defaultProps.push(defaultProp);

@@ -43,7 +43,7 @@
         bsFormContainerPlaceHolderSelector: ".bsFormContainer-placeholder", // 设计容器里的提示内容
         bsFormPropsSelector: ".bsFormProps", // 面板内容
         customBuilderStructure: false, // 自定义容器面板
-        onDataUpdated: null, //数据更新的监听器
+        onDataChanged: null, //数据更新的监听器
         components: [], //初始化时自定义的组件
         useComponents: [], //使用的组件 use components
         customRender: null, //自定义渲染方法，支持后端 url，同步方法 和 异步方法
@@ -977,7 +977,7 @@
             $.ajax({
                 url: url,
                 async: false,
-                type : "POST",
+                type: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(data),
                 success: function (resp) {
@@ -2038,11 +2038,12 @@
                 disabled: false, required: false, id: "", label: "", name: "", placeholder: "", type: "", value: "",
             }, prop);
 
-            var paras = ["$prop", "$data"].concat(Object.keys(propData));
+            var paras = ["$builder", "$prop", "$data"].concat(Object.keys(propData));
 
             var values = paras.map(k => prop[k] || "");
-            values[0] = prop;
-            values[1] = data;
+            values[0] = this;
+            values[1] = prop;
+            values[2] = data;
 
             return this._renderTemplate(template, paras, values);
         },
@@ -2214,13 +2215,18 @@
             if (data.component && typeof data.component.onPropChange === "function"
                 && data.component.onPropChange(this, data, attr, value)) {
                 data[attr] = value;
+            }
+            //配置 onDataChange 方法
+            else if (this.options.onDataChange && typeof this.options.onDataChange === "function"
+                && this.options.onDataChange(this, data, attr, value)) {
+                data[attr] = value;
             } else {
                 data[attr] = value;
                 this.refreshDataElement(data);
             }
 
-            if (typeof this.options.onDataUpdated === "function") {
-                this.options.onDataUpdated(data, attr, value, oldValue);
+            if (typeof this.options.onDataChanged === "function") {
+                this.options.onDataChanged(data, attr, value, oldValue);
             }
         },
 

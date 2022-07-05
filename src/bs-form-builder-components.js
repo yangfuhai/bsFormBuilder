@@ -211,16 +211,17 @@ componentsDef.push(...[
             "icon": "bi bi-record2"
         },
         withOptions: true,
-        defaultOptions: [
-            {
-                text: "选项1",
-                value: "value1"
-            },
-            {
-                text: "选项2",
-                value: "value2"
-            }
-        ],
+        optionsDatasourceGroupName: "group1",
+        // defaultOptions: [
+        //     {
+        //         text: "选项1",
+        //         value: "value1"
+        //     },
+        //     {
+        //         text: "选项2",
+        //         value: "value2"
+        //     }
+        // ],
         "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
             '    <div class="form-label-left">' +

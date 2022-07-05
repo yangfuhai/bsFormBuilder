@@ -1,3 +1,8 @@
+# v1.0.6
+新增：options.optionsDatasourceGroups 配置数据源的配置
+新增：component.optionsDatasourceGroupName 的配置数据源配置
+
+
 # v1.0.5 2022-06-28
 新增：添加自定义 "不允许拖动" 组件的配置支持
 新增：自定义 UI 组件的支持，自己来自定义 bsFormBuilder 整体布局
@@ -6,6 +11,8 @@
 新增：自定义拖动组件分类分组支持自定义 placeholder 的配置
 新增：自定义 container 的 sortable group 名称配置
 新增：component 新增 disableTools 配置的支持，用于禁止删除和复制
+
+
 新增：component 支持定义 "不允许在属性面板设置" 的属性 "none"
 新增：component 支持自定义属性私有的面板渲染方法 onRenderPropsPanel()
 新增：component 允许不被从左侧 "拖拽" 到容器来设计的特性，但可以通过 datas 来进行初始化

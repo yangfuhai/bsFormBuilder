@@ -84,29 +84,32 @@
     //     datas:datas
     // });
 
-    var options = {
-        optionsDatasourceGroups: {
-            group1: function () {
-                return [
-                    {
-                        text: "aaa", value: "bbbb", options: [
-                            {text: "aaa1", value: "value"}
-                        ]
-                    },
-                    {
-                        text: "type2", value: 1, options: [
-                            {text: "bbb1", value: "value1"},
-                            {text: "bbb2", value: "value2"}
-                        ]
-                    }]
-            },
+    // var options = {
+    //     optionsDatasourceGroups: {
+    //         group1: function () {
+    //             return [
+    //                 {
+    //                     text: "aaa", value: "bbbb", options: [
+    //                         {text: "aaa1", value: "value"}
+    //                     ]
+    //                 },
+    //                 {
+    //                     text: "type2", value: 1, options: [
+    //                         {text: "bbb1", value: "value1"},
+    //                         {text: "bbb2", value: "value2"}
+    //                     ]
+    //                 }]
+    //         },
+    //
+    //         type2: [{key3: "value3"}, {key4: "value4"}],
+    //
+    //     }
+    // }
+    //
+    // $('#builder').bsFormBuilder(options);
 
-            type2: [{key3: "value3"}, {key4: "value4"}],
 
-        }
-    }
-
-    $('#builder').bsFormBuilder(options);
+    $('#builder').bsFormBuilder();
 </script>
 </body>
 

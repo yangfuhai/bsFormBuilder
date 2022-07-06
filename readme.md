@@ -52,15 +52,21 @@
 
 ```javascript
 {
-  //模式: "view" 预览模式, "builder" 构建工具模式
-  mode: "view",
+  //模式: "view" 预览模式, "builder" 构建工具模式，默认值为 builder
+  mode: "builder",
   bsFormContainerSelector: ".bsFormContainer", // 设计容器
   bsFormContainerFilterSelector: ".bsFormFilter", // 设计容器里，不允许拖动的组件 class
+  bsFormContainerSortableGroup: "shared", // 配置主容器里的 group 名称
   bsFormContainerPlaceHolderSelector: ".bsFormContainer-placeholder", // 设计容器里的提示内容
-  bsFormPropsSelector: ".bsFormProps", // 属性面板
-  customBuilderStructure: false, // 是否自定义容器 UI 
+  bsFormPropsSelector: ".bsFormProps", // 面板内容
+  bsFormPropsTitleSelector: ".bsFormPropsTitle", // 面板标题
+  customBuilderStructure: false, // 自定义容器面板
+  onDataChange:null, //监听数据更新（更新之前）
+  onDataChanged:null, //监听数据更新（更新之后）
   //使用哪些组件
-  useComponents:[],    
+  useComponents:[],
+  customRender:null, //支持自定义渲染方法，或者服务端渲染   
+  optionsDatasourceGroups: null, // 自定义组件里，options 的数据源 {group:array}      
   //初始化数据
   datas:[],
   //操作按钮列表      
@@ -77,6 +83,8 @@
   onInit: function(bsFormBuilder){},
 }
 ```
+
+
 
 ### 2、方法调用
 
@@ -155,12 +163,12 @@
 - propsfilter：系统属性过滤配置，若为配置则显示系统存在的 props 定义
 - withOptions：该属性是否带有 options 配置
 - defaultOptions：options 的默认配置值
+- optionsDatasourceGroupName：options 的数据源分组名称，必须是初始化 bsFormBuilder 时配置的 optionsDatasourceGroups 中的一个
 - template：模板，可以是一个 string 字符串，也可以是一个返回一个 string 的 function(component, data)。
 - onAdd：当组件被添加到 html 的时候回调，或者被拖动的时候，注意：当组件从一个子容器被拖动到另一个子容器，也会调用此方法。
 - onPropChange：当属性被修改的时候，回调。
-- render：组件自定义的模板渲染方法，默认情况下无需定义。
 
-> **注意**：默认情况下，无需配置 onAdd、onPropChange、render 方法。除非您已经了解的其作用。
+> **注意**：默认情况下，无需配置 onAdd、onPropChange 方法。除非您已经了解的其作用。
 
 **props 属性描述**
 
@@ -226,7 +234,7 @@ textarea 定义了名称为 rows 的属性，template 必须通过 `{{rows}}` �
 **prop 属性描述**
 
 - name: 属性名称
-- type: 属性渲染类型，支持有：input/select/number/switch/checkbox/radio，可以扩展其他属性类型，或者复写这些属性的默认行为。
+- type: 属性渲染类型，支持有：input/select/number/switch/checkbox/radio/none，可以扩展其他属性类型，或者复写这些属性的默认行为。
 - label: 属性在面板里的label
 - placeholder: 属性里 placeholder 内容
 - defaultValue: 属性的默认值

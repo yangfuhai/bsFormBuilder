@@ -44,11 +44,12 @@
         bsFormPropsSelector: ".bsFormProps", // 面板内容
         bsFormPropsTitleSelector: ".bsFormPropsTitle", // 面板标题
         customBuilderStructure: false, // 自定义容器面板
+        onDataChange: null, //数据更新的监听器
         onDataChanged: null, //数据更新的监听器
         components: [], //初始化时自定义的组件
         useComponents: [], //使用的组件 use components
         customRender: null, //自定义渲染方法，支持后端 url，同步方法 和 异步方法
-        optionDatasources: null, // {group:array}
+        optionsDatasourceGroups: null, // {group:array}
         actionButtons: [
             {
                 text: '导出 JSON',

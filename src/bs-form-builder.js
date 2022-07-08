@@ -2004,7 +2004,13 @@
                 if (template) {
                     var newProp = this.deepCopy(prop, false);
                     newProp["id"] = this.genRandomId();
-                    newProp["value"] = this.currentData[prop.name] || prop.defaultValue;
+
+                    var value = this.currentData[prop.name];
+                    if (typeof value === "undefined"){
+                        value = prop.defaultValue;
+                    }
+                    newProp["value"] = value;
+
 
                     var html = this.renderPropTemplate(newProp, this.currentData, template);
                     this.$propsPanel.append(html);

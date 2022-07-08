@@ -2011,7 +2011,6 @@
                     }
                     newProp["value"] = value;
 
-
                     var html = this.renderPropTemplate(newProp, this.currentData, template);
                     this.$propsPanel.append(html);
                 }

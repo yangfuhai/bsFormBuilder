@@ -126,6 +126,7 @@
             placeholder: "",
             disabled: true,
             required: true,
+            index: 10,
         },
         {
             name: "id",
@@ -134,6 +135,7 @@
             placeholder: "",
             disabled: false,
             required: true,
+            index: 20,
         },
         {
             name: "name",
@@ -142,6 +144,7 @@
             placeholder: "",
             disabled: false,
             required: true,
+            index: 30,
         },
         {
             name: "label",
@@ -150,6 +153,7 @@
             placeholder: "",
             disabled: false,
             required: false,
+            index: 40,
         },
     ]
 
@@ -1030,7 +1034,7 @@
 
             //根据 index 进行排序
             for (let dragArray of Object.values(allDrags)) {
-                dragArray.sort((a, b) => a.index = b.index);
+                dragArray.sort((a, b) => a.index - b.index);
             }
 
             $('.bsFormDrags').each(function (index, element) {
@@ -1981,7 +1985,7 @@
 
             // 全部属性
             var allProps = this._mergeProps(componentProps, this.defaultProps);
-
+            allProps.sort((a, b) => a.index - b.index);
 
             for (let prop of allProps) {
                 // 若组件定义了 propsfilter 过滤

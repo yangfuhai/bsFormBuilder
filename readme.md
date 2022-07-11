@@ -311,29 +311,33 @@ $('#builder').bsFormBuilder(options)
 在很多场景下，一些组件（比如复选框、下拉菜单等）的内容不是写死的，也不是自定义的，而是来之某个 API 接口，或者说来源于某个 "数据源"。此时，我们要做
 一下配置：
 
-1、在初始化 bsFormBuilder 的时候，定义好数据源分组，例如：
+1、在初始化 bsFormBuilder 的时候，定义好数据源列表，例如：
 
 ```javascript
 var options = {
     optionsDatasources:[
                 {
-                    text: "数据源1", value: "ds1", options: [
+                    text: "数据源1", value: "ds1", 
+                    options: [
                         {text: "aaa1", value: "value"}
                     ]
                 },
                 {
-                    text: "数据源2", value: 'ds2', options: [
+                    text: "数据源2", value: 'ds2', 
+                    options: [
                         {text: "bbb1", value: "value1"},
                         {text: "bbb2", value: "value2"}
                     ]
                 },
                 {
-                    text: "数据源3", value: "ds3", options: function (){
+                    text: "数据源3", value: "ds3", 
+                    options: function (){
                         return ["..."]
                     }
                 },
                 {
-                    text: "数据源4", value: "ds4", options: "http://www.***.com/***.json"
+                    text: "数据源4", value: "ds4", 
+                    options: "http://www.***.com/***.json"
                 }
           ]
 }
@@ -344,13 +348,13 @@ $('#builder').bsFormBuilder(options);
 
 * 1、optionsDatasources 里有多个数据源
 * 2、数据源有 3 个字段： text/value/options 
-* 3、每个数据源通过 options 来定义数据集合
+* 3、每个数据源通过 options 字段来定义数据集合
 * 4、数据（option）是由 value 和 text 组成的
 
 > PS:
 > 数据源里的 options 字段，可以是一个数据集合，也可以是一个 function，或者一个 url 地址 (要求返回 json，json 内容必须有 options 字段来描述数据)。
 
-
+当配置 optionsDatasources 字段后，属性面板会多出一个 "选项类型" 的下拉菜单，用户让用户选择自定义选项，还是使用数据源。
 
 
 

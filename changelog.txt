@@ -1,6 +1,12 @@
 # v1.0.6
-新增：options.optionsDatasourceGroups 配置数据源的配置
-新增：component.optionsDatasourceGroupName 的配置数据源配置
+新增：options.onDataChange 和 options.onDataChanged 监听方法
+新增：renderPropTemplate 新增 $builder 参数
+新增：属性面板的 标题 和 icon 配置
+新增：options.optionsDatasources 数据源列表配置
+新增：prop 属性描述添加排序字段 index 的支持
+修复：options.defaultProps 不起作用的问题
+修复：prop.defaultValue 在 input 组件中无效的问题
+
 
 
 # v1.0.5 2022-06-28
@@ -11,8 +17,6 @@
 新增：自定义拖动组件分类分组支持自定义 placeholder 的配置
 新增：自定义 container 的 sortable group 名称配置
 新增：component 新增 disableTools 配置的支持，用于禁止删除和复制
-
-
 新增：component 支持定义 "不允许在属性面板设置" 的属性 "none"
 新增：component 支持自定义属性私有的面板渲染方法 onRenderPropsPanel()
 新增：component 允许不被从左侧 "拖拽" 到容器来设计的特性，但可以通过 datas 来进行初始化

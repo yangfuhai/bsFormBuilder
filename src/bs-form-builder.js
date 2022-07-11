@@ -1506,18 +1506,15 @@
          */
         _initDataOptionsIfNecessary: function (data) {
             if (data.component.withOptions && !data.options) {
-                var defaultOptions = this._getDatasourceOptions(data.component.defaultOptions);
+                var defaultOptions = this._parseOptions(data.component.defaultOptions);
 
-                // if (typeof defaultOptions === "function") {
-                //     defaultOptions = data.component.defaultOptions(this, data);
-                // }
 
                 if (!defaultOptions) {
 
                     var datasources = this._getOptionDatasources();
 
                     if (datasources && datasources.length > 0) {
-                        defaultOptions = this._getDatasourceOptions(datasources[0].options);
+                        defaultOptions = this._parseOptions(datasources[0].options);
                         data["optionsDatasource"] = datasources[0].value;
                     }
                 }
@@ -2123,7 +2120,7 @@
          * @returns {*}
          * @private
          */
-        _getDatasourceOptions: function (options) {
+        _parseOptions: function (options) {
             if (typeof options === "object" && Array.isArray(options)) {
                 return options;
             }
@@ -2384,7 +2381,7 @@
                 if (datasources && datasources.length > 0) {
                     for (let datasource of datasources) {
                         if (datasource.value.toString() === value) {
-                            options = this._getDatasourceOptions(datasource.options);
+                            options = this._parseOptions(datasource.options);
                         }
                     }
                 }
@@ -2415,7 +2412,7 @@
                 if (value === "datasource") {
                     this._cacheCustomOptions(data);
 
-                    var optionsDatasource = data.optionsDatasource || this._getDatasourceOptions()[0].value;
+                    var optionsDatasource = data.optionsDatasource || this._getOptionDatasources()[0].value;
                     this.updateDataAttr(data, "optionsDatasource", optionsDatasource);
                 } else {
                     this._resumeCustomOptions(data);

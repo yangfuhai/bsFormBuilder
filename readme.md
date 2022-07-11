@@ -65,8 +65,8 @@
   onDataChanged:null, //监听数据更新（更新之后）
   //使用哪些组件
   useComponents:[],
-  customRender:null, //支持自定义渲染方法，或者服务端渲染   
-  optionsDatasourceGroups: null, // 自定义组件里，options 的数据源 {group:array}      
+  customRender:null, //支持自定义渲染方法，或者服务端渲染
+  optionsDatasources: null, // 定义数据源      
   //初始化数据
   datas:[],
   //操作按钮列表      
@@ -305,6 +305,52 @@ var options = {
 }
 $('#builder').bsFormBuilder(options)
 ```
+
+### Options 数据源
+
+在很多场景下，一些组件（比如复选框、下拉菜单等）的内容不是写死的，也不是自定义的，而是来之某个 API 接口，或者说来源于某个 "数据源"。此时，我们要做
+一下配置：
+
+1、在初始化 bsFormBuilder 的时候，定义好数据源分组，例如：
+
+```javascript
+var options = {
+    optionsDatasources:[
+                {
+                    text: "数据源1", value: "ds1", options: [
+                        {text: "aaa1", value: "value"}
+                    ]
+                },
+                {
+                    text: "数据源2", value: 'ds2', options: [
+                        {text: "bbb1", value: "value1"},
+                        {text: "bbb2", value: "value2"}
+                    ]
+                },
+                {
+                    text: "数据源3", value: "ds3", options: function (){
+                        return ["..."]
+                    }
+                },
+                {
+                    text: "数据源4", value: "ds4", options: "http://www.***.com/***.json"
+                }
+          ]
+}
+
+$('#builder').bsFormBuilder(options);
+```
+数据结构说明：
+
+* 1、optionsDatasources 里有多个数据源
+* 2、数据源有 3 个字段： text/value/options 
+* 3、每个数据源通过 options 来定义数据集合
+* 4、数据（option）是由 value 和 text 组成的
+
+> PS:
+> 数据源里的 options 字段，可以是一个数据集合，也可以是一个 function，或者一个 url 地址 (要求返回 json，json 内容必须有 options 字段来描述数据)。
+
+
 
 
 

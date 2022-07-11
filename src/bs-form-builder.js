@@ -49,7 +49,7 @@
         components: [], //初始化时自定义的组件
         useComponents: [], //使用的组件 use components
         customRender: null, //自定义渲染方法，支持后端 url，同步方法 和 异步方法
-        optionsDatasourceGroups: null, // {group:array}
+        optionsDatasources: null, // {group:array}
         actionButtons: [
             {
                 text: '导出 JSON',
@@ -583,6 +583,9 @@
         //默认值是 3 的原因是，一般带有 options 的组件，都会默认有两个 options 了
         this.optionsCounter = 3;
 
+        //http 缓存
+        this.ajaxCache = {};
+
         //初始化
         if (this.options.mode === "view") {
             this._initViewMode();
@@ -970,16 +973,45 @@
         },
 
         _ajaxGet: function (url, attr, func) {
+            var cacheData = this.ajaxCache[url];
+            if (cacheData) {
+                var needData = cacheData[attr];
+                if (needData) {
+                    func(needData);
+                }
+            }
+
+            var bsFormBuilder = this;
+
             $.ajax({
                 url: url,
-                type: 'get',
+                type: 'GET',
                 success: function (data) {
+                    bsFormBuilder.ajaxCache[url] = data;
                     var needData = data[attr];
                     if (needData) {
                         func(needData);
                     }
                 }
             })
+        },
+
+        _ajaxSyncGet: function (url) {
+            var cacheData = this.ajaxCache[url];
+            if (cacheData) {
+                return cacheData;
+            }
+            var ret = "";
+            $.ajax({
+                url: url,
+                async: false,
+                type: 'GET',
+                success: function (data) {
+                    ret = data;
+                }
+            })
+            this.ajaxCache[url] = ret;
+            return ret;
         },
 
         _ajaxSyncPost: function (url, data) {
@@ -1474,28 +1506,20 @@
          */
         _initDataOptionsIfNecessary: function (data) {
             if (data.component.withOptions && !data.options) {
-                var defaultOptions = data.component.defaultOptions;
-                if (typeof defaultOptions === "function") {
-                    defaultOptions = data.component.defaultOptions(this, data);
-                }
+                var defaultOptions = this._getDatasourceOptions(data.component.defaultOptions);
 
-                if (!defaultOptions && data.component.optionsDatasourceGroupName) {
+                // if (typeof defaultOptions === "function") {
+                //     defaultOptions = data.component.defaultOptions(this, data);
+                // }
 
-                    var datasources = this.options.optionsDatasourceGroups[data.component.optionsDatasourceGroupName];
-                    if (typeof datasources === "function") {
-                        datasources = datasources(this, data);
-                    }
+                if (!defaultOptions) {
+
+                    var datasources = this._getOptionDatasources();
 
                     if (datasources && datasources.length > 0) {
-                        defaultOptions = datasources[0].options;
-                        if (typeof defaultOptions === "function") {
-                            defaultOptions = defaultOptions(this, data);
-                        }
-
+                        defaultOptions = this._getDatasourceOptions(datasources[0].options);
                         data["optionsDatasource"] = datasources[0].value;
                     }
-
-
                 }
 
 
@@ -2006,7 +2030,7 @@
                     newProp["id"] = this.genRandomId();
 
                     var value = this.currentData[prop.name];
-                    if (typeof value === "undefined"){
+                    if (typeof value === "undefined") {
                         value = prop.defaultValue;
                     }
                     newProp["value"] = value;
@@ -2017,22 +2041,33 @@
             }
 
             // 渲染 options 功能
-            if (this.currentData.options || this.currentData.component.withOptions) {
+            if (this.currentData.component.withOptions || this.currentData.options) {
 
-                //通过数据源的方式来渲染 options
-                if (this.currentData.component.optionsDatasourceGroupName) {
-
-                    var datasources = this.options.optionsDatasourceGroups[this.currentData.component.optionsDatasourceGroupName];
-                    if (typeof datasources === "function") {
-                        datasources = datasources(this, this.currentData);
-                    }
-
+                //若 options 配置了数据源，那么显示 选项类型 让用户自己选择
+                var datasources = this._getOptionDatasources();
+                if (datasources && datasources.length > 0) {
                     let prop = {
                         id: this.genRandomId(),
-                        options: datasources, // this.currentData.options || [],
+                        options: [{text: '自定义', value: 'custom'}, {text: '数据源', value: 'datasource'}],
+                        label: "选项类型",
+                        name: "optionsType",
+                        value: this.currentData["optionsType"],
+                    }
+
+                    let template = this._getPropTemplateByType("select");
+                    let html = this.renderPropTemplate(prop, this.currentData, template);
+                    this.$propsPanel.append(html);
+                }
+
+
+                //通过数据源的方式来渲染 options
+                if (this.currentData.optionsType === "datasource") {
+                    let prop = {
+                        id: this.genRandomId(),
+                        options: datasources || [{text: '未定义任何数据源', value: ''}],
                         label: "数据源",
                         name: "optionsDatasource",
-                        value: this.currentData["optionsDatasource"] || datasources[0].value,
+                        value: this.currentData["optionsDatasource"],
                     }
 
                     let template = this._getPropTemplateByType("select");
@@ -2052,6 +2087,62 @@
                     this.$propsPanel.append(html);
 
                     this._initOptionsSortable();
+                }
+            }
+        },
+
+
+        /**
+         * 通过数据源分组名称，获取数据源
+         * @returns {string}
+         * @private
+         */
+        _getOptionDatasources: function () {
+            var datasources = this.options.optionsDatasources;
+            if (typeof datasources === "function") {
+                datasources = datasources(this, this.currentData);
+            } else if (typeof datasources === "string" && this._isUrl(datasources)) {
+                var resp = this._ajaxSyncGet(datasources);
+
+                //后台返回的内容应该是：
+                //{
+                //   otherKey:....
+                //   datasources:[]
+                // }
+                if (resp && resp["datasources"]) {
+                    datasources = resp["datasources"];
+                }
+            }
+            return datasources;
+        },
+
+
+        /**
+         * 获取数据源里定义的 options 的内容
+         * @param options
+         * @returns {*}
+         * @private
+         */
+        _getDatasourceOptions: function (options) {
+            if (typeof options === "object" && Array.isArray(options)) {
+                return options;
+            }
+
+            if (typeof options === "function") {
+                return options(this, this.currentData);
+            }
+
+            if (typeof options === "string" && this._isUrl(options)) {
+                var resp = this._ajaxSyncGet(options);
+
+                //后台返回的内容应该是：
+                //{
+                //   otherKey:....
+                //   options:[]
+                // }
+
+                if (resp && resp['options']) {
+                    return resp['options']
                 }
             }
         },
@@ -2168,6 +2259,7 @@
             for (let data of array) {
                 delete data.component;
                 delete data.elementId;
+                delete data.customOptions;
 
                 //remove data.options elementId
                 if (data.options && Array.isArray(data.options)) {
@@ -2274,12 +2366,6 @@
                 return;
             }
 
-            //若没有传入 value 值，设置为默认值
-            if ((!value || value === "") && data.component.defaultValue) {
-                value = data.component.defaultValue;
-            }
-
-
             if (value === "true") value = true;
             else if (value === "false") value = false;
 
@@ -2289,27 +2375,23 @@
 
             //更新数据源
             if (attr === "optionsDatasource") {
-
                 //保存数据源
                 data[attr] = value;
 
-                attr = "options";
-                var datasources = this.options.optionsDatasourceGroups[data.component.optionsDatasourceGroupName];
-                if (typeof datasources === "function") {
-                    datasources = datasources(this, data);
-                }
 
+                var datasources = this._getOptionDatasources();
                 var options = null;
-                for (let datasource of datasources) {
-                    if (datasource.value.toString() === value) {
-                        options = datasource.options;
-                        if (typeof options === "function") {
-                            options = options(this, data);
+                if (datasources && datasources.length > 0) {
+                    for (let datasource of datasources) {
+                        if (datasource.value.toString() === value) {
+                            options = this._getDatasourceOptions(datasource.options);
                         }
                     }
                 }
-                value = options;
+
+                this.updateDataAttr(data, "options", options)
             }
+
 
             //当前组件定义了 onPropChange 监听方法，并且该方法执行成功了
             //那么，可以理解为该方法会去更新 html 内容，而不通过系统继续渲染了
@@ -2326,9 +2408,36 @@
                 this.refreshDataElement(data);
             }
 
+            // 更新：选项类型（数据源 或者 自定义），更新这个属性后，需要刷新属性面板
+            if ("optionsType" === attr) {
+
+                // 更新数据类型为：数据源，则需要刷新设计面板里的原始的 "选项" 列表
+                if (value === "datasource") {
+                    this._cacheCustomOptions(data);
+
+                    var optionsDatasource = data.optionsDatasource || this._getDatasourceOptions()[0].value;
+                    this.updateDataAttr(data, "optionsDatasource", optionsDatasource);
+                } else {
+                    this._resumeCustomOptions(data);
+                }
+
+                this.refreshPropsPanel();
+            }
+
             if (typeof this.options.onDataChanged === "function") {
                 this.options.onDataChanged(data, attr, value, oldValue);
             }
+        },
+
+
+        _cacheCustomOptions: function (data) {
+            // data.customOptions = this.deepCopy(data.options, false);
+            this.updateDataAttr(data, "customOptions", data.options)
+        },
+
+        _resumeCustomOptions: function (data) {
+            this.updateDataAttr(data, "options", data.customOptions)
+            this.updateDataAttr(data, "customOptions", null)
         },
 
         /**

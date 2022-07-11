@@ -84,32 +84,26 @@
     //     datas:datas
     // });
 
-    // var options = {
-    //     optionsDatasourceGroups: {
-    //         group1: function () {
-    //             return [
-    //                 {
-    //                     text: "aaa", value: "bbbb", options: [
-    //                         {text: "aaa1", value: "value"}
-    //                     ]
-    //                 },
-    //                 {
-    //                     text: "type2", value: 1, options: [
-    //                         {text: "bbb1", value: "value1"},
-    //                         {text: "bbb2", value: "value2"}
-    //                     ]
-    //                 }]
-    //         },
-    //
-    //         type2: [{key3: "value3"}, {key4: "value4"}],
-    //
-    //     }
-    // }
-    //
-    // $('#builder').bsFormBuilder(options);
 
+    var options = {
+        optionsDatasources: [
+            {
+                text: "数据源1", value: "ds1", options: [
+                    {text: "aaa1", value: "value"}
+                ]
+            },
+            {
+                text: "数据源2", value: 'ds2', options: [
+                    {text: "bbb1", value: "value1"},
+                    {text: "bbb2", value: "value2"}
+                ]
+            }
+        ]
+    }
 
-    $('#builder').bsFormBuilder();
+    $('#builder').bsFormBuilder(options);
+
+    // $('#builder').bsFormBuilder();
 </script>
 </body>
 

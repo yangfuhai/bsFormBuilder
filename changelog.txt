@@ -1,4 +1,5 @@
-# v1.0.6
+# v1.0.6  2022-07-12
+新增：组件的 options 可以通过数据源来填充的支持
 新增：options.onDataChange 和 options.onDataChanged 监听方法
 新增：renderPropTemplate 新增 $builder 参数
 新增：属性面板的 标题 和 icon 配置
@@ -6,7 +7,6 @@
 新增：prop 属性描述添加排序字段 index 的支持
 修复：options.defaultProps 不起作用的问题
 修复：prop.defaultValue 在 input 组件中无效的问题
-
 
 
 # v1.0.5 2022-06-28
@@ -30,7 +30,6 @@
 修复：自定义组件时，在某些极端情况下，父级的 dataIndex 获取不正确的问题
 修复：deepCopy() 方法的 withNewElementIdAndId 参数不起作用的问题
 修复：_mergeProps() 方法合并的结果不正确的问题
-
 
 
 # v1.0.4 2022-05-24

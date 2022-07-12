@@ -966,12 +966,26 @@
             }
         },
 
+
+        /**
+         * 判断是否是 url
+         * @param text
+         * @returns {boolean}
+         * @private
+         */
         _isUrl: function (text) {
             return text && (text.indexOf("/") === 0
                 || text.indexOf("http://") === 0
                 || text.indexOf("https://") === 0)
         },
 
+        /**
+         * 异步 ajax 获取数据，并回调 func 方法
+         * @param url
+         * @param attr
+         * @param func
+         * @private
+         */
         _ajaxGet: function (url, attr, func) {
             var cacheData = this.ajaxCache[url];
             if (cacheData) {
@@ -996,6 +1010,13 @@
             })
         },
 
+
+        /**
+         * 同步 ajax 获取数据
+         * @param url
+         * @returns {string|*}
+         * @private
+         */
         _ajaxSyncGet: function (url) {
             var cacheData = this.ajaxCache[url];
             if (cacheData) {
@@ -1014,6 +1035,14 @@
             return ret;
         },
 
+
+        /**
+         * 同步进行 post
+         * @param url
+         * @param data
+         * @returns {string}
+         * @private
+         */
         _ajaxSyncPost: function (url, data) {
             var ret = "";
             $.ajax({
@@ -1729,15 +1758,7 @@
             var $template = $(template).attr("id", data.elementId).addClass("bsFormItem");
 
             if (withActive) {
-                if (this.currentData.component.disableTools !== true) {
-                    $template.append('<div class="bs-item-tools">' +
-                        '               <i class="bi bi-stickies-fill bs-item-copy" title="复制"></i>' +
-                        '               <i class="bi bi-trash-fill bs-item-del" title="删除"></i>' +
-                        '           </div>')
-                        .addClass('active')
-                } else {
-                    $template.addClass('active')
-                }
+                this._makeElementActive($template, this.currentData.component.disableTools)
             }
 
             //为 template 配置 id 属性，让 id 的值和 component 的 id 值一致
@@ -1751,7 +1772,6 @@
          * @param elementId
          */
         makeFormItemActive: function (elementId) {
-
             if (this.currentData && this.currentData.elementId === elementId) {
                 return;
             }
@@ -1759,22 +1779,29 @@
             this.currentData = this.getDataByElementId(elementId);
 
             //个别组件禁止选中
-
             this.$container.find(".bsFormItem.active").removeClass("active");
             this.$container.find(".bs-item-tools").remove();
 
+            this._makeElementActive($("#" + elementId), this.currentData.component.disableTools)
+            this.refreshPropsPanel();
+        },
 
-            if (this.currentData.component.disableTools !== true) {
-                $("#" + elementId).append('<div class="bs-item-tools">' +
+
+        /**
+         * 让 element 高亮
+         * @param $el
+         * @param disableTools
+         */
+        _makeElementActive: function ($el, disableTools) {
+            if (disableTools !== true) {
+                $el.append('<div class="bs-item-tools">' +
                     '               <i class="bi bi-stickies-fill bs-item-copy" title="复制"></i>' +
                     '               <i class="bi bi-trash-fill bs-item-del" title="删除"></i>' +
                     '           </div>')
                     .addClass('active');
             } else {
-                $("#" + elementId).addClass('active');
+                $el.addClass('active');
             }
-
-            this.refreshPropsPanel();
         },
 
         /**
@@ -2370,23 +2397,18 @@
             var oldValue = data[attr]
 
 
-            //更新数据源
+            //更新数据源时，需要同时更新数据源自带的 options
             if (attr === "optionsDatasource") {
-                //保存数据源
-                data[attr] = value;
-
-
                 var datasources = this._getOptionDatasources();
-                var options = null;
+                var optionsInDatasource = null;
                 if (datasources && datasources.length > 0) {
                     for (let datasource of datasources) {
                         if (datasource.value.toString() === value) {
-                            options = this._parseOptions(datasource.options);
+                            optionsInDatasource = this._parseOptions(datasource.options);
                         }
                     }
                 }
-
-                this.updateDataAttr(data, "options", options)
+                this.updateDataAttr(data, "options", optionsInDatasource)
             }
 
 
@@ -2396,22 +2418,24 @@
                 && data.component.onPropChange(this, data, attr, value)) {
                 data[attr] = value;
             }
+
             //配置 onDataChange 方法
             else if (this.options.onDataChange && typeof this.options.onDataChange === "function"
                 && this.options.onDataChange(this, data, attr, value)) {
                 data[attr] = value;
-            } else {
+            }
+
+            //默认行为，更新数据并刷新设计面板的 element
+            else {
                 data[attr] = value;
                 this.refreshDataElement(data);
             }
 
             // 更新：选项类型（数据源 或者 自定义），更新这个属性后，需要刷新属性面板
-            if ("optionsType" === attr) {
-
-                // 更新数据类型为：数据源，则需要刷新设计面板里的原始的 "选项" 列表
+            if ("optionsType" === attr && data === this.currentData) {
+                // 更新数据类型为：数据源，则需要刷新设计面板里元素（element）的 "选项" 列表
                 if (value === "datasource") {
                     this._cacheCustomOptions(data);
-
                     var optionsDatasource = data.optionsDatasource || this._getOptionDatasources()[0].value;
                     this.updateDataAttr(data, "optionsDatasource", optionsDatasource);
                 } else {
@@ -2427,15 +2451,26 @@
         },
 
 
+        /**
+         * 缓存 options 数据到 customOptions，防止下次切换的时候造成数据丢失
+         * @param data
+         * @private
+         */
         _cacheCustomOptions: function (data) {
-            // data.customOptions = this.deepCopy(data.options, false);
             this.updateDataAttr(data, "customOptions", data.options)
         },
 
+
+        /**
+         * 恢复（copy） customOptions 数据到 options
+         * @param data
+         * @private
+         */
         _resumeCustomOptions: function (data) {
             this.updateDataAttr(data, "options", data.customOptions)
             this.updateDataAttr(data, "customOptions", null)
         },
+
 
         /**
          * 是否是视图模式

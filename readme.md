@@ -346,13 +346,14 @@ $('#builder').bsFormBuilder(options);
 ```
 数据结构说明：
 
-* 1、optionsDatasources 里有多个数据源
-* 2、数据源有 3 个字段： text/value/options 
+* 1、optionsDatasources 里有多个数据源，可以配置为 array、function、url (String类型)
+* 2、数据源有 3 个字段： text / value / options 
 * 3、每个数据源通过 options 字段来定义数据集合
 * 4、数据（option）是由 value 和 text 组成的
 
 > PS:
-> 数据源里的 options 字段，可以是一个数据集合，也可以是一个 function，或者一个 url 地址 (要求返回 json，json 内容必须有 options 字段来描述数据)。
+> - 1、optionsDatasources 可以配置为一个 url 地址(要求返回 json，json 内容必须有 datasources 字段来描述数据源数据)。
+> - 2、数据源里的 options 字段，可以是一个数据集合，也可以是一个 function，或者一个 url 地址 (要求返回 json，json 内容必须有 options 字段来描述数据)。
 
 当配置 optionsDatasources 字段后，属性面板会多出一个 "选项类型" 的下拉菜单，用户让用户选择自定义选项，还是使用数据源。
 

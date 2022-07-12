@@ -407,6 +407,7 @@
             optionsCounter: 2,
             withOptions: true,
             optionsTitle: '栅格配置',
+            optionsTypes: 'custom', //options 类型值支持自定义一种方式
             opiontsAdd: function () {
                 return {
                     text: "栅格" + (++this.optionsCounter),
@@ -467,6 +468,7 @@
                 "icon": "bi bi-menu-button"
             },
             withOptions: true,
+            optionsTypes: 'custom', //options 类型值支持自定义一种方式
             counter: 1,
             defaultOptions: function (bsFormBuilder, data) {
                 let counter1 = this.counter++;
@@ -1538,8 +1540,8 @@
             if (data.component.withOptions && !data.options) {
 
                 var defaultOptions = data.component.defaultOptions;
-                if (typeof defaultOptions === "function"){
-                    defaultOptions = data.component.defaultOptions(this,this.currentData)
+                if (typeof defaultOptions === "function") {
+                    defaultOptions = data.component.defaultOptions(this, this.currentData)
                 }
 
 
@@ -2076,9 +2078,22 @@
             // 渲染 options 功能
             if (this.currentData.component.withOptions || this.currentData.options) {
 
+                //组件支持的 options 类型
+                var componentSupportTypes = this.currentData.component.optionsTypes;
+                if (typeof componentSupportTypes === "string") {
+                    componentSupportTypes = [componentSupportTypes];
+                } else if (typeof componentSupportTypes === "function") {
+                    componentSupportTypes = this.currentData.component.optionsTypes(this, this.currentData);
+                }
+
+                // 默认支持 custom 和 datasource
+                if (!componentSupportTypes) {
+                    componentSupportTypes = ['custom', 'datasource'];
+                }
+
                 //若 options 配置了数据源，那么显示 选项类型 让用户自己选择
                 var datasources = this._getOptionDatasources();
-                if (datasources && datasources.length > 0) {
+                if (datasources && datasources.length > 0 && componentSupportTypes.length > 1) {
                     let prop = {
                         id: this.genRandomId(),
                         options: [{text: '自定义', value: 'custom'}, {text: '数据源', value: 'datasource'}],

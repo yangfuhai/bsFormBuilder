@@ -43,6 +43,7 @@
         bsFormContainerPlaceHolderSelector: ".bsFormContainer-placeholder", // 设计容器里的提示内容
         bsFormPropsSelector: ".bsFormProps", // 面板内容
         bsFormPropsTitleSelector: ".bsFormPropsTitle", // 面板标题
+        bsFormPropsFilter: null, //function 自定义属性过滤器
         customBuilderStructure: false, // 自定义容器面板
         onDataChange: null, //数据更新的监听器
         onDataChanged: null, //数据更新的监听器
@@ -2034,6 +2035,12 @@
             // 全部属性
             var allProps = this._mergeProps(componentProps, this.defaultProps);
             allProps.sort((a, b) => a.index - b.index);
+
+            //自定义属性过滤器
+            if (this.options.bsFormPropsFilter && typeof this.options.bsFormPropsFilter === "function") {
+                this.options.bsFormPropsFilter(allProps, this.currentData, this)
+            }
+
 
             for (let prop of allProps) {
                 // 若组件定义了 propsfilter 过滤

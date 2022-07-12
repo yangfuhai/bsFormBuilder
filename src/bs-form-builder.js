@@ -1536,13 +1536,15 @@
          */
         _initDataOptionsIfNecessary: function (data) {
             if (data.component.withOptions && !data.options) {
-                var defaultOptions = this._parseOptions(data.component.defaultOptions);
+
+                var defaultOptions = data.component.defaultOptions;
+                if (typeof defaultOptions === "function"){
+                    defaultOptions = data.component.defaultOptions(this,this.currentData)
+                }
 
 
                 if (!defaultOptions) {
-
                     var datasources = this._getOptionDatasources();
-
                     if (datasources && datasources.length > 0) {
                         defaultOptions = this._parseOptions(datasources[0].options);
                         data["optionsDatasource"] = datasources[0].value;

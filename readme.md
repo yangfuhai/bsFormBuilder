@@ -164,7 +164,8 @@
 - propsfilter：系统属性过滤配置，若为配置则显示系统存在的 props 定义
 - withOptions：该属性是否带有 options 配置
 - defaultOptions：options 的默认配置值
-- optionsDatasourceGroupName：options 的数据源分组名称，必须是初始化 bsFormBuilder 时配置的 optionsDatasourceGroups 中的一个
+- optionsTypes：options 支持的类型，目前系统内置两种类型： 自定义(custom) 和 数据源(datasource)
+- optionsTitle：options 属性面板的标题
 - template：模板，可以是一个 string 字符串，也可以是一个返回一个 string 的 function(component, data)。
 - onAdd：当组件被添加到 html 的时候回调，或者被拖动的时候，注意：当组件从一个子容器被拖动到另一个子容器，也会调用此方法。
 - onPropChange：当属性被修改的时候，回调。

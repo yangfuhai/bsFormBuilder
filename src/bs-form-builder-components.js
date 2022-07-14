@@ -107,31 +107,31 @@ componentsDef.push(...[
     },
 
     //空DIV
-    {
-        "name": "空DIV",
-        "tag": "empty-div",
-        "drag": {
-            "title": "空DIV",
-            "type": "assist",
-            "index": 100,
-            "icon": "bi bi-fullscreen"
-        },
-        "propsfilter": ["tag", "id"],
-        props: [
-            {
-                name: "height",
-                type: "number",
-                label: "高度",
-                disabled: false,
-                required: true,
-                defaultValue: 20
-            }
-        ],
-        "template": '<div class="bsFormItem">' +
-            '  <div class="form-group clearfix" id="{{id}}" style="height: {{height}}px">' +
-            '  </div>' +
-            '</div>',
-    },
+    // {
+    //     "name": "空DIV",
+    //     "tag": "empty-div",
+    //     "drag": {
+    //         "title": "空DIV",
+    //         "type": "assist",
+    //         "index": 100,
+    //         "icon": "bi bi-fullscreen"
+    //     },
+    //     "propsfilter": ["tag", "id"],
+    //     props: [
+    //         {
+    //             name: "height",
+    //             type: "number",
+    //             label: "高度",
+    //             disabled: false,
+    //             required: true,
+    //             defaultValue: 20
+    //         }
+    //     ],
+    //     "template": '<div class="bsFormItem">' +
+    //         '  <div class="form-group clearfix" id="{{id}}" style="height: {{height}}px">' +
+    //         '  </div>' +
+    //         '</div>',
+    // },
 
     //引用
     {

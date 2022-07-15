@@ -383,6 +383,11 @@ npm install
 npm run build
 ```
 
-## 交流社区
+## 商业级定制
 
-QQ群：117662146
+- 联系微信：wx198819880
+- 预算要求：1w 以上
+
+案例：
+
+![jpress](./assets/images/jpress.jpg)

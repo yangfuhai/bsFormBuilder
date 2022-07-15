@@ -1663,7 +1663,7 @@
             }
 
             //组件定义的属性，为 data 配置上： data.属性名 = 属性默认值
-            var allProps = this._getComponentAllProps(component);
+            var allProps = this._getComponentAllProps(component, data);
             for (let prop of allProps) {
                 if (typeof prop.defaultValue !== "undefined" && !data[prop.name]) {
                     data[prop.name] = prop.defaultValue;
@@ -2151,9 +2151,10 @@
         /**
          * 获取 component 所有的属性
          * @param component
+         * @param currentData
          * @private
          */
-        _getComponentAllProps: function (component) {
+        _getComponentAllProps: function (component, currentData) {
             //所有默认属性
             var defaultProps = this.deepCopy(this.defaultProps, false);
 
@@ -2181,6 +2182,11 @@
             var allProps = this._mergeProps(componentProps, defaultProps);
             allProps.sort((a, b) => a.index - b.index);
 
+
+            //过滤属性
+            if (this.options.bsFormPropsFilter && typeof this.options.bsFormPropsFilter === "function") {
+                this.options.bsFormPropsFilter(allProps, currentData || this.currentData, this)
+            }
 
             return allProps;
         },

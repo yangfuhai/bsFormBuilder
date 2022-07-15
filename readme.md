@@ -64,8 +64,8 @@
   customBuilderStructure: false, // 自定义容器面板
   onDataChange:null, //监听数据更新（更新之前）
   onDataChanged:null, //监听数据更新（更新之后）
-  //使用哪些组件
-  useComponents:[],
+  useComponents:[], //使用哪些组件
+  unUseComponents:[], //排除哪些组件（不使用哪些组件）
   customRender:null, //支持自定义渲染方法，或者服务端渲染
   optionsDatasources: null, // 定义数据源      
   //初始化数据

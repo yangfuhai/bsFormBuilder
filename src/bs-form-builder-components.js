@@ -247,7 +247,7 @@ componentsDef.push(...[
             '      <label for="label">{{label}}</label>' +
             '    </div>' +
             '    <div class="flex-auto">' +
-            '      <input type="range" class="form-control" name="{{name}}" id="{{id}}"' +
+            '      <input type="range" class="form-control" min="{{min}}" max="{{max}}" step="{{step}}" name="{{name}}" id="{{id}}"' +
             '        placeholder="{{placeholder}}" value="{{value}}" />' +
             '    </div>' +
             '  </div>' +

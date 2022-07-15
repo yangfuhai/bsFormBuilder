@@ -2061,7 +2061,7 @@
             }
 
             //获取组件的所有属性
-            var allProps = this._getComponentAllProps(component);
+            var allProps = this._getComponentAllProps(component, this.currentData);
 
             for (let prop of allProps) {
 
@@ -2151,10 +2151,10 @@
         /**
          * 获取 component 所有的属性
          * @param component
-         * @param currentData
+         * @param componentData
          * @private
          */
-        _getComponentAllProps: function (component, currentData) {
+        _getComponentAllProps: function (component, componentData) {
             //所有默认属性
             var defaultProps = this.deepCopy(this.defaultProps, false);
 
@@ -2185,7 +2185,7 @@
 
             //过滤属性
             if (this.options.bsFormPropsFilter && typeof this.options.bsFormPropsFilter === "function") {
-                this.options.bsFormPropsFilter(allProps, currentData || this.currentData, this)
+                this.options.bsFormPropsFilter(allProps, componentData, this)
             }
 
             return allProps;

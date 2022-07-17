@@ -61,6 +61,7 @@
   bsFormPropsSelector: ".bsFormProps", // 面板内容
   bsFormPropsTitleSelector: ".bsFormPropsTitle", // 面板标题
   bsFormPropsFilter:null, // 属性过滤器，用于对特殊的组件进行属性过滤
+  bsFormPropsItemAppended:null, //监听 props html 内容被追加，可以通其设置 propsPanel 里的表单内容或者事件
   customBuilderStructure: false, // 自定义容器面板
   onDataChange:null, //监听数据更新（更新之前）
   onDataChanged:null, //监听数据更新（更新之后）

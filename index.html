@@ -101,7 +101,11 @@
                     {text: "CCC", value: "ccc"}
                 ]
             }
-        ]
+        ],
+        bsFormPropsItemAppended: function (prop, data, b) {
+            console.log("bsFormPropsItemAppended --> prop:", prop)
+            console.log("bsFormPropsItemAppended --> data:", data)
+        }
     }
 
     $('#builder').bsFormBuilder(options);

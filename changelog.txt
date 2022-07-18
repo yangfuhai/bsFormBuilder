@@ -1,12 +1,19 @@
-# v1.0.6  2022-07-12
+# v1.0.6  2022-07-18
 新增：组件的 options 可以通过数据源来填充的支持
+新增：options.bsFormPropsFilter 配置的支持，可以用来过滤属性面板的属性设置
 新增：options.onDataChange 和 options.onDataChanged 监听方法
 新增：renderPropTemplate 新增 $builder 参数
 新增：属性面板的 标题 和 icon 配置
+新增：options.bsFormPropsItemAppended 配置，可以用户对属性面板的 "控件" 进行监听设置
+新增：options.unUseComponents 用于过滤一些不使用的、系统自带的组件
 新增：options.optionsDatasources 数据源列表配置
+新增：组件新增 optionsTypes 配置的支持，用来定义组件允许哪些 options 类型（目前有 custom 和 dataSource 两种类型）
 新增：prop 属性描述添加排序字段 index 的支持
+新增：DIV 容器组件 和 "分割线" 辅助组件 和 range 基础组件
 修复：options.defaultProps 不起作用的问题
 修复：prop.defaultValue 在 input 组件中无效的问题
+修复：component.defaultOptions 中的配置， "this" 关键字无法使用的问题
+修复：通过 options 配置的默认属性，当其默认值在不设置时，导出的 json 不带有属性值的问题
 
 
 # v1.0.5 2022-06-28

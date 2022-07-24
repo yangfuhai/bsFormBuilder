@@ -466,7 +466,48 @@ componentsDef.push(...[
             '  </div>' +
             '</div>',
     },
-
+    // 多文件上传
+    {
+        "name": "图片上传",
+        "tag": "file-multiple-upload",
+        "drag": {
+            "title": "图片上传",
+            "type": "base",
+            "index": 100,
+            "icon": "bi bi-images"
+        },
+        props: [
+            {
+                name: "placeholder",
+                type: "input",
+                label: "最大上传",
+                defaultValue: 9,
+                disabled: false,
+                required: true,
+            }
+        ],
+        "template": '<div class="bsFormItem">' +
+            '  <div class="form-group clearfix">' +
+            '    <div class="form-label-left">' +
+            '      <label for="label">{{label}}</label>' +
+            '    </div>' +
+            '    <div class="flex-auto">' +
+            '       <div  class="uploadList" data-ride="uploader" data-auto-upload="true" data-url="">' +
+            '           <div class="bsForm-upload-list" id="pictureList">' +
+            '               <button type="button" class="bsForm-upload-btn" id="uploadPicture" multiple="">' +
+            '                   <i class="bi bi-plus-lg bsForm-icon"></i>' +
+            '                   <p>点击上传图片</p> '+
+            '                       <input class="bsForm-upload-file" type="file" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" name="{{name}}" multiple="true" id="{{id}}">' +
+            '                 </button>' +
+            // '               <div class="bsForm-upload-item">' +
+            // '                   <img src="static/images/" alt="">' +
+            // '                   <span class="bsFormDelete"><i class="bi bi-trash"></i></span>' +
+            // '               </div>' +
+            '           </div>' +
+            '      </div>' +
+            '    </div>' +
+            '</div>',
+    },
 ]);
 
 if (window.bsComponentsDef) {

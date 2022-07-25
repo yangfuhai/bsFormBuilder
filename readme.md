@@ -53,7 +53,8 @@
 ```javascript
 {
   //模式: "view" 预览模式, "builder" 构建工具模式，默认值为 builder
-  mode: "builder",
+  mode: "builder", 
+  templateEngine: null, //支持自定义模板渲染引擎，默认使用 fasty
   bsFormContainerSelector: ".bsFormContainer", // 设计容器
   bsFormContainerFilterSelector: ".bsFormFilter", // 设计容器里，不允许拖动的组件 class
   bsFormContainerSortableGroup: "shared", // 配置主容器里的 group 名称

@@ -494,10 +494,10 @@ componentsDef.push(...[
             '    <div class="flex-auto">' +
             '       <div class="uploadList" data-url="{{url}}">' +
             '           <div class="bsForm-upload-list">' +
-            '               <div class="bsForm-upload-item">' +
-            '                   <img src="static/images/" alt="">' +
-            '                   <span class="bsFormDelete"><i class="bi bi-trash"></i></span>' +
-            '               </div>' +
+            // '               <div class="bsForm-upload-item">' +
+            // '                   <img src="static/images/" alt="">' +
+            // '                   <span class="bsFormDelete"><i class="bi bi-trash"></i></span>' +
+            // '               </div>' +
             '               <button type="button" class="bsForm-upload-btn">' +
             '                   <i class="bi bi-plus-lg bsForm-icon"></i>' +
             '                   <p>点击上传图片</p> '+

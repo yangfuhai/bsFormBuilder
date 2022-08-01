@@ -1,3 +1,11 @@
+# v1.0.7  2022-08-01
+新增：图片上传组件
+新增：自定义模板渲染引擎的功能，默认使用 fasty 进行渲染
+新增：options.bsFormPropsItemAppendBefore 配置，可用于自定义 prop 的渲染 html
+修复：在后台渲染的场景下，组件无法正确初始化 options 数据的问题
+修复：bsFormPropsFilter 方式里使用 currentData 不正确的问题
+
+
 # v1.0.6  2022-07-18
 新增：组件的 options 可以通过数据源来填充的支持
 新增：options.bsFormPropsFilter 配置的支持，可以用来过滤属性面板的属性设置

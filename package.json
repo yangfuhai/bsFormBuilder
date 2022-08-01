@@ -1,6 +1,6 @@
 {
   "name": "bsFormBuilder",
-  "version": "1.0.0",
+  "version": "1.0.7",
   "author": "Michael <fuhai999@gmail.com>",
   "description": "A Form Builder base on JQuery and Bootstrap.",
   "license": "LGPL",

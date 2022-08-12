@@ -160,6 +160,15 @@
             required: false,
             index: 40,
         },
+        {
+            name: "required",
+            type: "switch",
+            label: "是否必填",
+            placeholder: "",
+            disabled: false,
+            required: false,
+            index: 40,
+        },
     ]
 
 

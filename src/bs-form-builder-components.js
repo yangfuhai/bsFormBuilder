@@ -27,6 +27,16 @@ componentsDef.push(...[
             "index": 100,
             "icon": "bi bi-terminal"
         },
+        "props": [
+            {
+                name: "placeholder",
+                type: "input",
+                label: "占位符",
+                placeholder: "",
+                disabled: false,
+                required: false,
+            },
+        ],
         "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +
             '    <div class="form-label-left">' +
@@ -61,7 +71,15 @@ componentsDef.push(...[
                 defaultValue: 3,
                 disabled: false,
                 required: true,
-            }
+            },
+            {
+                name: "placeholder",
+                type: "input",
+                label: "占位符",
+                placeholder: "",
+                disabled: false,
+                required: false,
+            },
         ],
         "template": '<div class="bsFormItem">' +
             '  <div class="form-group clearfix">' +

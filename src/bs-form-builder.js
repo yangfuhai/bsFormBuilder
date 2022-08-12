@@ -905,7 +905,7 @@
                 '        </li>' +
                 '      </ul>' +
                 '      <div class="tab-content pt-3">' +
-                '        <div class="tab-pane fade show active" id="bsFormProps" role="tabpanel" aria-labelledby="component-props-tab">' +
+                '        <div class="tab-pane fade show active bsFormProps" id="bsFormProps" role="tabpanel" aria-labelledby="component-props-tab">' +
                 '        </div>' +
                 '      </div>' +
                 '    </div>' +

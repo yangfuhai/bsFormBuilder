@@ -874,7 +874,7 @@
                 '        </li>' +
                 '      </ul>' +
                 '      <div class="tab-content">' +
-                '        <div class="tab-pane fade show active bsFormDrags" id="component" role="tabpanel" aria-labelledby="component-tab" >' +
+                '        <div class="tab-pane fade show active" id="component" role="tabpanel" aria-labelledby="component-tab" >' +
                 '          <div class="bsFormDrags-title">表单组件</div>' +
                 '          <div class="bsFormDrags d-flex align-items-center" data-type="base"></div>' +
                 '          <div class="bsFormDrags-title">辅助组件</div>' +
@@ -905,7 +905,7 @@
                 '        </li>' +
                 '      </ul>' +
                 '      <div class="tab-content pt-3">' +
-                '        <div class="tab-pane fade show active bsFormProps" id="bsFormProps" role="tabpanel" aria-labelledby="component-props-tab">' +
+                '        <div class="tab-pane fade show active" id="bsFormProps" role="tabpanel" aria-labelledby="component-props-tab">' +
                 '        </div>' +
                 '      </div>' +
                 '    </div>' +

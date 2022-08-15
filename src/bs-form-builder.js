@@ -51,6 +51,7 @@
         onDataChange: null, //数据更新的监听器
         onDataChanged: null, //数据更新的监听器
         components: [], //初始化时自定义的组件
+        componentIdPrefix: "",// "id_" 组件的 id 前缀
         useComponents: [], //使用的组件 use components
         unUseComponents: [], //不使用的组件
         customRender: null, //自定义渲染方法，支持后端 url，同步方法 和 异步方法
@@ -1702,7 +1703,7 @@
             for (var i = 0; i < 10; i++) {
                 id[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
             }
-            return id.join("");
+            return this.options.componentIdPrefix + id.join("");
         },
 
 

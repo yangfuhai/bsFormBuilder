@@ -66,6 +66,7 @@
   customBuilderStructure: false, // 自定义容器面板
   onDataChange:null, //监听数据更新（更新之前）
   onDataChanged:null, //监听数据更新（更新之后）
+  renderEmptyDrags: null,//当左边的拖动按钮分类找不到任何组件时，调用该方法
   useComponents:[], //使用哪些组件
   unUseComponents:[], //排除哪些组件（不使用哪些组件）
   customRender:null, //支持自定义渲染方法，或者服务端渲染
